@@ -2,36 +2,35 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const telegramUrl = searchParams.get("url")
+  const driveUrl = searchParams.get("url")
 
-  if (!telegramUrl) {
+  if (!driveUrl) {
     return NextResponse.json({ error: "No URL provided" }, { status: 400 })
   }
 
   try {
-    console.log("[v0] Processing Telegram URL:", telegramUrl)
+    console.log("[v0] Processing Google Drive URL:", driveUrl)
 
-    // Extract message ID from URL
-    const messageId = extractMessageId(telegramUrl)
+    const fileId = extractDriveFileId(driveUrl)
 
-    if (!messageId) {
-      console.log("[v0] Failed to extract message ID from:", telegramUrl)
-      return NextResponse.json({ error: "Invalid Telegram URL" }, { status: 400 })
+    if (!fileId) {
+      console.log("[v0] Failed to extract file ID from:", driveUrl)
+      return NextResponse.json({ error: "Invalid Google Drive URL" }, { status: 400 })
     }
 
-    console.log("[v0] Extracted message ID:", messageId)
+    console.log("[v0] Extracted file ID:", fileId)
 
-    // Create Telegram embed URL for direct video access
-    const embedUrl = `https://t.me/MVBDN/${messageId}?embed=1`
+    const directStreamUrl = `https://drive.google.com/uc?export=download&id=${fileId}`
+    const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
 
-    console.log("[v0] Created embed URL:", embedUrl)
+    console.log("[v0] Created streaming URLs:", { directStreamUrl, embedUrl })
 
-    // Return the embed URL for the video player to use
+    // Return both direct and embed URLs for the video player to use
     return NextResponse.json({
       success: true,
+      directUrl: directStreamUrl,
       embedUrl: embedUrl,
-      directUrl: telegramUrl,
-      messageId: messageId,
+      fileId: fileId,
     })
   } catch (error) {
     console.error("[v0] Streaming error:", error)
@@ -39,24 +38,24 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function extractMessageId(telegramUrl: string): string | null {
-  console.log("[v0] Extracting message ID from URL:", telegramUrl)
+function extractDriveFileId(driveUrl: string): string | null {
+  console.log("[v0] Extracting file ID from Google Drive URL:", driveUrl)
 
   const patterns = [
-    /\/(\d+)$/, // Standard format: https://t.me/MVBDN/1760
-    /\/c\/\d+\/(\d+)/, // Private channel format
-    /message_id=(\d+)/, // Query parameter format
+    /\/file\/d\/([a-zA-Z0-9-_]+)/, // Standard format: https://drive.google.com/file/d/FILE_ID/view
+    /id=([a-zA-Z0-9-_]+)/, // Query parameter format: https://drive.google.com/open?id=FILE_ID
+    /\/d\/([a-zA-Z0-9-_]+)/, // Short format: https://drive.google.com/d/FILE_ID
   ]
 
   for (const pattern of patterns) {
-    const match = telegramUrl.match(pattern)
+    const match = driveUrl.match(pattern)
     if (match) {
-      console.log("[v0] Message ID extracted:", match[1])
+      console.log("[v0] File ID extracted:", match[1])
       return match[1]
     }
   }
 
-  console.log("[v0] No message ID found in URL")
+  console.log("[v0] No file ID found in URL")
   return null
 }
 
