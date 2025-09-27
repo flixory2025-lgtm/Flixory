@@ -12,6 +12,7 @@ interface VideoPlayerProps {
 
 export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [volume, setVolume] = useState([100])
@@ -20,10 +21,50 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [showControls, setShowControls] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const [streamUrl, setStreamUrl] = useState<string | null>(null)
+  const [useTelegramEmbed, setUseTelegramEmbed] = useState(false)
+
+  useEffect(() => {
+    const processVideoUrl = async () => {
+      console.log("[v0] Processing video URL:", videoUrl)
+
+      if (videoUrl.includes("t.me/")) {
+        console.log("[v0] Detected Telegram URL, attempting to process")
+
+        try {
+          const response = await fetch(`/api/stream?url=${encodeURIComponent(videoUrl)}`)
+          const data = await response.json()
+
+          console.log("[v0] Stream API response:", data)
+
+          if (data.success && data.embedUrl) {
+            console.log("[v0] Using Telegram embed approach")
+            setUseTelegramEmbed(true)
+            setStreamUrl(data.embedUrl)
+            setIsLoading(false)
+          } else {
+            console.log("[v0] Falling back to direct URL")
+            setStreamUrl(videoUrl)
+            setUseTelegramEmbed(false)
+          }
+        } catch (error) {
+          console.error("[v0] Error processing Telegram URL:", error)
+          setStreamUrl(videoUrl)
+          setUseTelegramEmbed(false)
+        }
+      } else {
+        console.log("[v0] Using direct video URL")
+        setStreamUrl(videoUrl)
+        setUseTelegramEmbed(false)
+      }
+    }
+
+    processVideoUrl()
+  }, [videoUrl])
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video) return
+    if (!video || useTelegramEmbed) return
 
     const updateTime = () => setCurrentTime(video.currentTime)
     const updateDuration = () => setDuration(video.duration)
@@ -55,7 +96,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
       video.removeEventListener("canplay", handleCanPlay)
       video.removeEventListener("error", handleError)
     }
-  }, [])
+  }, [useTelegramEmbed])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -102,6 +143,11 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }, [onClose])
 
   const togglePlay = () => {
+    if (useTelegramEmbed) {
+      // For Telegram embeds, we can't control playback directly
+      return
+    }
+
     const video = videoRef.current
     if (!video) return
 
@@ -163,15 +209,34 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
       >
-        {/* Video Element */}
-        <video
-          ref={videoRef}
-          className="w-full h-full object-contain"
-          src={videoUrl}
-          onClick={togglePlay}
-          crossOrigin="anonymous"
-          preload="metadata"
-        />
+        {useTelegramEmbed && streamUrl ? (
+          <iframe
+            ref={iframeRef}
+            src={streamUrl}
+            className="w-full h-full"
+            frameBorder="0"
+            allowFullScreen
+            allow="autoplay; encrypted-media"
+            onLoad={() => {
+              console.log("[v0] Telegram embed loaded")
+              setIsLoading(false)
+            }}
+            onError={() => {
+              console.log("[v0] Telegram embed error")
+              setHasError(true)
+              setIsLoading(false)
+            }}
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            className="w-full h-full object-contain"
+            src={streamUrl || undefined}
+            onClick={togglePlay}
+            crossOrigin="anonymous"
+            preload="metadata"
+          />
+        )}
 
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80">
@@ -194,7 +259,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Controls Overlay */}
         {showControls && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60">
             <div className="absolute top-4 left-4 right-4 flex justify-between">
@@ -206,75 +270,96 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
               </Button>
             </div>
 
-            {/* Center Play Button */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="w-16 h-16 text-white hover:bg-white/20 rounded-full"
-                onClick={togglePlay}
-              >
-                {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
-              </Button>
-            </div>
-
-            {/* Bottom Controls */}
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              {/* Progress Bar */}
-              <div className="mb-4">
-                <Slider value={[currentTime]} max={duration} step={1} onValueChange={handleSeek} className="w-full" />
-              </div>
-
-              {/* Control Buttons */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={togglePlay}>
-                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                  </Button>
-
+            {/* Show simplified controls for Telegram embeds */}
+            {!useTelegramEmbed && (
+              <>
+                {/* Center Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
-                    onClick={() => {
-                      const video = videoRef.current
-                      if (video) video.currentTime -= 10
-                    }}
+                    className="w-16 h-16 text-white hover:bg-white/20 rounded-full"
+                    onClick={togglePlay}
                   >
-                    <SkipBack className="w-5 h-5" />
+                    {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
                   </Button>
-
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-white hover:bg-white/20"
-                    onClick={() => {
-                      const video = videoRef.current
-                      if (video) video.currentTime += 10
-                    }}
-                  >
-                    <SkipForward className="w-5 h-5" />
-                  </Button>
-
-                  <div className="flex items-center space-x-2">
-                    <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleMute}>
-                      {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-                    </Button>
-                    <div className="w-20">
-                      <Slider value={volume} max={100} step={1} onValueChange={handleVolumeChange} />
-                    </div>
-                  </div>
-
-                  <span className="text-white text-sm">
-                    {formatTime(currentTime)} / {formatTime(duration)}
-                  </span>
                 </div>
 
-                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleFullscreen}>
-                  <Maximize className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
+                {/* Bottom Controls */}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  {/* Progress Bar */}
+                  <div className="mb-4">
+                    <Slider
+                      value={[currentTime]}
+                      max={duration}
+                      step={1}
+                      onValueChange={handleSeek}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Control Buttons */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={togglePlay}>
+                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-white/20"
+                        onClick={() => {
+                          const video = videoRef.current
+                          if (video) video.currentTime -= 10
+                        }}
+                      >
+                        <SkipBack className="w-5 h-5" />
+                      </Button>
+
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-white/20"
+                        onClick={() => {
+                          const video = videoRef.current
+                          if (video) video.currentTime += 10
+                        }}
+                      >
+                        <SkipForward className="w-5 h-5" />
+                      </Button>
+
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-white hover:bg-white/20"
+                          onClick={toggleMute}
+                        >
+                          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                        </Button>
+                        <div className="w-20">
+                          <Slider value={volume} max={100} step={1} onValueChange={handleVolumeChange} />
+                        </div>
+                      </div>
+
+                      <span className="text-white text-sm">
+                        {formatTime(currentTime)} / {formatTime(duration)}
+                      </span>
+                    </div>
+
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-white hover:bg-white/20"
+                      onClick={toggleFullscreen}
+                    >
+                      <Maximize className="w-5 h-5" />
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
       </div>
