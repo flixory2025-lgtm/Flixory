@@ -24,8 +24,8 @@ const movies = [
       "/dramatic-dialogue-scene.jpg",
       "/emotional-character-moment.jpg",
     ],
-    telegramLink: "https://t.me/MVBDN/1760", // Simplified ID-based format
-    trailerLink: "https://t.me/MVBDN/1001", // Trailer with higher ID
+    driveLink: "https://drive.google.com/file/d/1ABC123DEF456GHI789JKL/view", // Replace with actual Google Drive link
+    trailerLink: "https://drive.google.com/file/d/1TRAILER123ABC456DEF/view", // Replace with actual trailer link
   },
   {
     id: 2,
@@ -42,8 +42,8 @@ const movies = [
       "/traditional-bengali-wedding-scene.jpg",
       "/placeholder.svg?height=200&width=350",
     ],
-    telegramLink: "https://t.me/MVBDN/2", // Easy ID management
-    trailerLink: "https://t.me/MVBDN/1002",
+    driveLink: "https://drive.google.com/file/d/2ABC123DEF456GHI789JKL/view",
+    trailerLink: "https://drive.google.com/file/d/2TRAILER123ABC456DEF/view",
   },
   {
     id: 3,
@@ -56,8 +56,8 @@ const movies = [
     description:
       "A psychological thriller that will keep you on the edge of your seat. Unravel the mysteries of the human mind.",
     screenshots: ["/dark-mysterious-scene.jpg", "/suspenseful-thriller-moment.jpg", "/psychological-drama-scene.jpg"],
-    telegramLink: "https://t.me/MVBDN/3", // Sequential ID system
-    trailerLink: "https://t.me/MVBDN/1003",
+    driveLink: "https://drive.google.com/file/d/3ABC123DEF456GHI789JKL/view",
+    trailerLink: "https://drive.google.com/file/d/3TRAILER123ABC456DEF/view",
   },
   {
     id: 4,
@@ -73,8 +73,8 @@ const movies = [
       "/supernatural-ghost-appearance.jpg",
       "/placeholder.svg?height=200&width=350",
     ],
-    telegramLink: "https://t.me/MVBDN/4", // Simple ID-based linking
-    trailerLink: "https://t.me/MVBDN/1004",
+    driveLink: "https://drive.google.com/file/d/4ABC123DEF456GHI789JKL/view",
+    trailerLink: "https://drive.google.com/file/d/4TRAILER123ABC456DEF/view",
   },
   {
     id: 5,
@@ -91,8 +91,8 @@ const movies = [
       "/placeholder.svg?height=200&width=350",
       "/placeholder.svg?height=200&width=350",
     ],
-    telegramLink: "https://t.me/MVBDN/5", // Consistent ID pattern
-    trailerLink: "https://t.me/MVBDN/1005",
+    driveLink: "https://drive.google.com/file/d/5ABC123DEF456GHI789JKL/view",
+    trailerLink: "https://drive.google.com/file/d/5TRAILER123ABC456DEF/view",
   },
 ]
 
@@ -123,16 +123,15 @@ export default function HomePage() {
         ),
   )
 
-  const handlePlayMovie = (telegramLink: string) => {
-    // Convert Telegram link to streamable format
-    const videoUrl = convertTelegramLink(telegramLink)
+  const handlePlayMovie = (driveLink: string) => {
+    const videoUrl = convertDriveLink(driveLink)
     setCurrentVideoUrl(videoUrl)
     setIsPlaying(true)
     setSelectedMovie(null)
   }
 
   const handlePlayTrailer = (trailerLink: string) => {
-    const videoUrl = convertTelegramLink(trailerLink)
+    const videoUrl = convertDriveLink(trailerLink)
     setCurrentVideoUrl(videoUrl)
     setIsPlaying(true)
     setSelectedMovie(null)
@@ -141,13 +140,13 @@ export default function HomePage() {
   const featuredMovie = movies[currentSlide]
 
   return (
-    <div className={`min-h-screen bg-background ${searchQuery ? "search-active" : ""}`}>
+    <div className={`min-h-screen bg-background touch-manipulation ${searchQuery ? "search-active" : ""}`}>
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-8">
-              <h1 className="text-2xl font-bold text-primary">FLIXORY</h1>
+            <div className="flex items-center space-x-4 md:space-x-8">
+              <h1 className="text-xl md:text-2xl font-bold text-primary">FLIXORY</h1>
               <nav className="hidden md:flex space-x-6">
                 <Button variant="ghost" className="text-foreground hover:text-primary">
                   All
@@ -163,23 +162,24 @@ export default function HomePage() {
                 </Button>
               </nav>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input
                   placeholder="Search movies..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-64 bg-card border-border"
+                  className="pl-10 w-40 md:w-64 bg-card border-border text-sm md:text-base"
                 />
               </div>
-              <Button className="bg-primary hover:bg-primary/90">Subscribe</Button>
+              <Button className="bg-primary hover:bg-primary/90 text-sm md:text-base px-3 md:px-4">Subscribe</Button>
             </div>
           </div>
         </div>
       </header>
 
-      <section className="relative h-[80vh] overflow-hidden slideshow-container">
+      {/* Hero Section */}
+      <section className="relative h-[60vh] md:h-[80vh] overflow-hidden slideshow-container">
         {movies.slice(0, 5).map((movie, index) => (
           <div
             key={movie.id}
@@ -193,34 +193,39 @@ export default function HomePage() {
             />
             <div className="relative z-10 container mx-auto px-4 h-full flex items-center">
               <div className="max-w-3xl">
-                <h2 className="text-6xl font-bold mb-6 text-balance">{movie.title}</h2>
-                <p className="text-xl text-muted-foreground mb-8 text-pretty leading-relaxed">{movie.description}</p>
-                <div className="flex items-center space-x-4 mb-10">
-                  <Badge variant="secondary" className="flex items-center space-x-1 text-lg px-3 py-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                <h2 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 text-balance">{movie.title}</h2>
+                <p className="text-sm md:text-xl text-muted-foreground mb-6 md:mb-8 text-pretty leading-relaxed line-clamp-3 md:line-clamp-none">
+                  {movie.description}
+                </p>
+                <div className="flex items-center space-x-2 md:space-x-4 mb-6 md:mb-10">
+                  <Badge
+                    variant="secondary"
+                    className="flex items-center space-x-1 text-sm md:text-lg px-2 md:px-3 py-1"
+                  >
+                    <Star className="w-3 md:w-4 h-3 md:h-4 fill-yellow-400 text-yellow-400" />
                     <span>{movie.rating}</span>
                   </Badge>
-                  <Badge variant="outline" className="text-lg px-3 py-1">
+                  <Badge variant="outline" className="text-sm md:text-lg px-2 md:px-3 py-1">
                     {movie.year}
                   </Badge>
-                  <Badge variant="outline" className="flex items-center space-x-1 text-lg px-3 py-1">
-                    <Clock className="w-4 h-4" />
+                  <Badge variant="outline" className="flex items-center space-x-1 text-sm md:text-lg px-2 md:px-3 py-1">
+                    <Clock className="w-3 md:w-4 h-3 md:h-4" />
                     <span>{movie.duration}</span>
                   </Badge>
                 </div>
-                <div className="flex space-x-6">
+                <div className="flex space-x-3 md:space-x-6">
                   <Button
                     size="lg"
-                    className="bg-primary hover:bg-primary/90 text-lg px-8 py-3"
-                    onClick={() => handlePlayMovie(movie.telegramLink)}
+                    className="bg-primary hover:bg-primary/90 text-sm md:text-lg px-4 md:px-8 py-2 md:py-3"
+                    onClick={() => handlePlayMovie(movie.driveLink)}
                   >
-                    <Play className="w-6 h-6 mr-3" />
+                    <Play className="w-4 md:w-6 h-4 md:h-6 mr-2 md:mr-3" />
                     Play
                   </Button>
                   <Button
                     size="lg"
                     variant="outline"
-                    className="text-lg px-8 py-3 bg-transparent"
+                    className="text-sm md:text-lg px-4 md:px-8 py-2 md:py-3 bg-transparent"
                     onClick={() => setSelectedMovie(movie)}
                   >
                     More Info
@@ -232,53 +237,54 @@ export default function HomePage() {
         ))}
 
         {/* Slideshow indicators */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {movies.slice(0, 5).map((_, index) => (
             <button
               key={index}
-              className={`w-3 h-3 rounded-full transition-all ${index === currentSlide ? "bg-primary" : "bg-white/30"}`}
+              className={`w-2 md:w-3 h-2 md:h-3 rounded-full transition-all ${index === currentSlide ? "bg-primary" : "bg-white/30"}`}
               onClick={() => setCurrentSlide(index)}
             />
           ))}
         </div>
       </section>
 
+      {/* Search Results */}
       {searchQuery && (
-        <section className="search-results container mx-auto px-4 py-12">
-          <h3 className="text-2xl font-bold mb-8">Search Results for "{searchQuery}"</h3>
+        <section className="search-results container mx-auto px-4 py-8 md:py-12">
+          <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">Search Results for "{searchQuery}"</h3>
           {filteredMovies.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
               {filteredMovies.map((movie) => (
                 <div key={movie.id} className="movie-card cursor-pointer group" onClick={() => setSelectedMovie(movie)}>
                   <div className="relative overflow-hidden rounded-lg bg-card">
                     <img
                       src={movie.poster || "/placeholder.svg"}
                       alt={movie.title}
-                      className="w-full h-[300px] object-cover"
+                      className="w-full h-[200px] md:h-[300px] object-cover"
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <Play className="w-12 h-12 text-white" />
+                      <Play className="w-8 md:w-12 h-8 md:h-12 text-white" />
                     </div>
                     <div className="absolute top-2 right-2">
-                      <Badge className="bg-primary/90 text-primary-foreground">
-                        <Star className="w-3 h-3 mr-1 fill-current" />
+                      <Badge className="bg-primary/90 text-primary-foreground text-xs">
+                        <Star className="w-2 md:w-3 h-2 md:h-3 mr-1 fill-current" />
                         {movie.rating}
                       </Badge>
                     </div>
                   </div>
-                  <div className="mt-3">
-                    <h4 className="font-semibold text-sm line-clamp-2 text-balance">{movie.title}</h4>
+                  <div className="mt-2 md:mt-3">
+                    <h4 className="font-semibold text-xs md:text-sm line-clamp-2 text-balance">{movie.title}</h4>
                     <p className="text-xs text-muted-foreground mt-1">{movie.year}</p>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 max-w-2xl mx-auto">
+            <div className="text-center py-12 md:py-16 max-w-2xl mx-auto">
               <div className="mb-6">
-                <Search className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                <h4 className="text-xl font-semibold mb-3">কোনো মুভি পাওয়া যায়নি</h4>
-                <p className="text-muted-foreground text-lg leading-relaxed">
+                <Search className="w-12 md:w-16 h-12 md:h-16 text-muted-foreground mx-auto mb-4" />
+                <h4 className="text-lg md:text-xl font-semibold mb-3">কোনো মুভি পাওয়া যায়নি</h4>
+                <p className="text-muted-foreground text-sm md:text-lg leading-relaxed px-4">
                   আপনার দেওয়া নামে কোনো মুভি এখানে নেই অথবা আপনার নামে ভুল আছে। গুগল থেকে IMDB তে গিয়ে সঠিক নাম দিয়ে এখানে সার্চ করুন।
                 </p>
               </div>
@@ -290,36 +296,36 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Movies Grid - Hidden when searching */}
-      <section className="movies-grid container mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-2xl font-bold">Hot and Fresh</h3>
-          <Button variant="ghost" className="text-primary hover:text-primary/80">
+      {/* Movies Grid */}
+      <section className="movies-grid container mx-auto px-4 py-8 md:py-12">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h3 className="text-xl md:text-2xl font-bold">Hot and Fresh</h3>
+          <Button variant="ghost" className="text-primary hover:text-primary/80 text-sm md:text-base">
             View More
           </Button>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
           {movies.map((movie) => (
             <div key={movie.id} className="movie-card cursor-pointer group" onClick={() => setSelectedMovie(movie)}>
               <div className="relative overflow-hidden rounded-lg bg-card">
                 <img
                   src={movie.poster || "/placeholder.svg"}
                   alt={movie.title}
-                  className="w-full h-[300px] object-cover"
+                  className="w-full h-[200px] md:h-[300px] object-cover"
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <Play className="w-12 h-12 text-white" />
+                  <Play className="w-8 md:w-12 h-8 md:h-12 text-white" />
                 </div>
                 <div className="absolute top-2 right-2">
-                  <Badge className="bg-primary/90 text-primary-foreground">
-                    <Star className="w-3 h-3 mr-1 fill-current" />
+                  <Badge className="bg-primary/90 text-primary-foreground text-xs">
+                    <Star className="w-2 md:w-3 h-2 md:h-3 mr-1 fill-current" />
                     {movie.rating}
                   </Badge>
                 </div>
               </div>
-              <div className="mt-3">
-                <h4 className="font-semibold text-sm line-clamp-2 text-balance">{movie.title}</h4>
+              <div className="mt-2 md:mt-3">
+                <h4 className="font-semibold text-xs md:text-sm line-clamp-2 text-balance">{movie.title}</h4>
                 <p className="text-xs text-muted-foreground mt-1">{movie.year}</p>
               </div>
             </div>
@@ -366,12 +372,7 @@ export default function HomePage() {
                 </Button>
                 <Button size="sm" variant="outline" className="w-10 h-10 p-0 bg-transparent">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
-                  </svg>
-                </Button>
-                <Button size="sm" variant="outline" className="w-10 h-10 p-0 bg-transparent">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 .34.04.67.11.98C8.28 9.09 5.7 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z" />
+                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z" />
                   </svg>
                 </Button>
               </div>
@@ -497,9 +498,7 @@ export default function HomePage() {
   )
 }
 
-// Function to convert Telegram link to streamable format
-function convertTelegramLink(telegramLink: string): string {
-  // This is a simplified conversion - you'll need to implement actual Telegram bot API integration
-  // For now, returning a placeholder video URL
-  return `/api/stream?url=${encodeURIComponent(telegramLink)}`
+// Function to convert Google Drive link to streamable format
+function convertDriveLink(driveLink: string): string {
+  return `/api/stream?url=${encodeURIComponent(driveLink)}`
 }
