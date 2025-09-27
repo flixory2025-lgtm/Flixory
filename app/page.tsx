@@ -24,7 +24,7 @@ const movies = [
       "/dramatic-dialogue-scene.jpg",
       "/emotional-character-moment.jpg",
     ],
-    driveLink: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view", // Replace with actual Google Drive link
+    driveLink: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
     trailerLink: "https://drive.google.com/file/d/1TRAILER123ABC456DEF/view", // Replace with actual trailer link
   },
   {
@@ -500,5 +500,12 @@ export default function HomePage() {
 
 // Function to convert Google Drive link to streamable format
 function convertDriveLink(driveLink: string): string {
-  return `/api/stream?url=${encodeURIComponent(driveLink)}`
+  // Extract file ID from Google Drive URL
+  const fileIdMatch = driveLink.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
+  if (fileIdMatch) {
+    const fileId = fileIdMatch[1]
+    // Return direct embed URL for Google Drive
+    return `https://drive.google.com/file/d/${fileId}/preview`
+  }
+  return driveLink
 }
