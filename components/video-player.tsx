@@ -18,6 +18,8 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [showControls, setShowControls] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
   useEffect(() => {
     const video = videoRef.current
@@ -25,13 +27,33 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
     const updateTime = () => setCurrentTime(video.currentTime)
     const updateDuration = () => setDuration(video.duration)
+    const handleLoadStart = () => {
+      console.log("[v0] Video loading started")
+      setIsLoading(true)
+      setHasError(false)
+    }
+    const handleCanPlay = () => {
+      console.log("[v0] Video can play")
+      setIsLoading(false)
+    }
+    const handleError = (e: Event) => {
+      console.log("[v0] Video error:", e)
+      setHasError(true)
+      setIsLoading(false)
+    }
 
     video.addEventListener("timeupdate", updateTime)
     video.addEventListener("loadedmetadata", updateDuration)
+    video.addEventListener("loadstart", handleLoadStart)
+    video.addEventListener("canplay", handleCanPlay)
+    video.addEventListener("error", handleError)
 
     return () => {
       video.removeEventListener("timeupdate", updateTime)
       video.removeEventListener("loadedmetadata", updateDuration)
+      video.removeEventListener("loadstart", handleLoadStart)
+      video.removeEventListener("canplay", handleCanPlay)
+      video.removeEventListener("error", handleError)
     }
   }, [])
 
@@ -142,7 +164,35 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         onMouseLeave={() => setShowControls(false)}
       >
         {/* Video Element */}
-        <video ref={videoRef} className="w-full h-full object-contain" src={videoUrl} onClick={togglePlay} />
+        <video
+          ref={videoRef}
+          className="w-full h-full object-contain"
+          src={videoUrl}
+          onClick={togglePlay}
+          crossOrigin="anonymous"
+          preload="metadata"
+        />
+
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p>Loading video...</p>
+            </div>
+          </div>
+        )}
+
+        {hasError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80">
+            <div className="text-white text-center max-w-md">
+              <p className="text-xl mb-4">Video could not be loaded</p>
+              <p className="text-sm text-gray-300 mb-4">Please check your internet connection and try again.</p>
+              <Button onClick={() => window.location.reload()} variant="outline">
+                Retry
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Controls Overlay */}
         {showControls && (
