@@ -133,7 +133,6 @@ export function MovieModal({ movie, onClose, onPlay, onPlayTrailer }: MovieModal
           {/* Action Buttons */}
           <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
             <Button
-              size="lg"
               className="bg-primary hover:bg-primary/90 flex-1 text-sm md:text-base"
               onClick={() => onPlay(movie.driveLink)}
             >
@@ -141,7 +140,6 @@ export function MovieModal({ movie, onClose, onPlay, onPlayTrailer }: MovieModal
               Play Movie
             </Button>
             <Button
-              size="lg"
               variant="outline"
               className="flex-1 bg-transparent text-sm md:text-base"
               onClick={() => onPlayTrailer(movie.trailerLink)}
