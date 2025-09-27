@@ -24,7 +24,7 @@ const movies = [
       "/dramatic-dialogue-scene.jpg",
       "/emotional-character-moment.jpg",
     ],
-    driveLink: "https://drive.google.com/file/d/1ABC123DEF456GHI789JKL/view", // Replace with actual Google Drive link
+    driveLink: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view", // Replace with actual Google Drive link
     trailerLink: "https://drive.google.com/file/d/1TRAILER123ABC456DEF/view", // Replace with actual trailer link
   },
   {
