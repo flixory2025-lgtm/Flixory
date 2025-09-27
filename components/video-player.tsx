@@ -22,14 +22,14 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [streamUrl, setStreamUrl] = useState<string | null>(null)
-  const [useTelegramEmbed, setUseTelegramEmbed] = useState(false)
+  const [useDriveEmbed, setUseDriveEmbed] = useState(false)
 
   useEffect(() => {
     const processVideoUrl = async () => {
       console.log("[v0] Processing video URL:", videoUrl)
 
-      if (videoUrl.includes("t.me/")) {
-        console.log("[v0] Detected Telegram URL, attempting to process")
+      if (videoUrl.includes("drive.google.com")) {
+        console.log("[v0] Detected Google Drive URL, attempting to process")
 
         try {
           const response = await fetch(`/api/stream?url=${encodeURIComponent(videoUrl)}`)
@@ -38,24 +38,29 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           console.log("[v0] Stream API response:", data)
 
           if (data.success && data.embedUrl) {
-            console.log("[v0] Using Telegram embed approach")
-            setUseTelegramEmbed(true)
+            console.log("[v0] Using Google Drive embed approach")
+            setUseDriveEmbed(true)
             setStreamUrl(data.embedUrl)
             setIsLoading(false)
+          } else if (data.success && data.directUrl) {
+            console.log("[v0] Using Google Drive direct URL")
+            setStreamUrl(data.directUrl)
+            setUseDriveEmbed(false)
+            setIsLoading(false)
           } else {
-            console.log("[v0] Falling back to direct URL")
+            console.log("[v0] Falling back to original URL")
             setStreamUrl(videoUrl)
-            setUseTelegramEmbed(false)
+            setUseDriveEmbed(false)
           }
         } catch (error) {
-          console.error("[v0] Error processing Telegram URL:", error)
+          console.error("[v0] Error processing Google Drive URL:", error)
           setStreamUrl(videoUrl)
-          setUseTelegramEmbed(false)
+          setUseDriveEmbed(false)
         }
       } else {
         console.log("[v0] Using direct video URL")
         setStreamUrl(videoUrl)
-        setUseTelegramEmbed(false)
+        setUseDriveEmbed(false)
       }
     }
 
@@ -64,7 +69,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video || useTelegramEmbed) return
+    if (!video || useDriveEmbed) return
 
     const updateTime = () => setCurrentTime(video.currentTime)
     const updateDuration = () => setDuration(video.duration)
@@ -96,7 +101,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
       video.removeEventListener("canplay", handleCanPlay)
       video.removeEventListener("error", handleError)
     }
-  }, [useTelegramEmbed])
+  }, [useDriveEmbed])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -143,8 +148,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }, [onClose])
 
   const togglePlay = () => {
-    if (useTelegramEmbed) {
-      // For Telegram embeds, we can't control playback directly
+    if (useDriveEmbed) {
       return
     }
 
@@ -208,8 +212,9 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         className="relative w-full h-full"
         onMouseEnter={() => setShowControls(true)}
         onMouseLeave={() => setShowControls(false)}
+        onTouchStart={() => setShowControls(true)}
       >
-        {useTelegramEmbed && streamUrl ? (
+        {useDriveEmbed && streamUrl ? (
           <iframe
             ref={iframeRef}
             src={streamUrl}
@@ -218,11 +223,11 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
             allowFullScreen
             allow="autoplay; encrypted-media"
             onLoad={() => {
-              console.log("[v0] Telegram embed loaded")
+              console.log("[v0] Google Drive embed loaded")
               setIsLoading(false)
             }}
             onError={() => {
-              console.log("[v0] Telegram embed error")
+              console.log("[v0] Google Drive embed error")
               setHasError(true)
               setIsLoading(false)
             }}
@@ -235,22 +240,24 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
             onClick={togglePlay}
             crossOrigin="anonymous"
             preload="metadata"
+            controls={false}
+            playsInline
           />
         )}
 
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80">
             <div className="text-white text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-              <p>Loading video...</p>
+              <div className="animate-spin rounded-full h-8 md:h-12 w-8 md:w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p className="text-sm md:text-base">Loading video...</p>
             </div>
           </div>
         )}
 
         {hasError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80">
-            <div className="text-white text-center max-w-md">
-              <p className="text-xl mb-4">Video could not be loaded</p>
+            <div className="text-white text-center max-w-md px-4">
+              <p className="text-lg md:text-xl mb-4">Video could not be loaded</p>
               <p className="text-sm text-gray-300 mb-4">Please check your internet connection and try again.</p>
               <Button onClick={() => window.location.reload()} variant="outline">
                 Retry
@@ -261,34 +268,34 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
         {showControls && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/60">
-            <div className="absolute top-4 left-4 right-4 flex justify-between">
+            <div className="absolute top-2 md:top-4 left-2 md:left-4 right-2 md:right-4 flex justify-between">
               <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 md:hidden" onClick={onClose}>
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 md:w-6 h-5 md:h-6" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
-                <X className="w-6 h-6" />
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 ml-auto" onClick={onClose}>
+                <X className="w-5 md:w-6 h-5 md:h-6" />
               </Button>
             </div>
 
-            {/* Show simplified controls for Telegram embeds */}
-            {!useTelegramEmbed && (
+            {!useDriveEmbed && (
               <>
-                {/* Center Play Button */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="w-16 h-16 text-white hover:bg-white/20 rounded-full"
+                    className="w-12 md:w-16 h-12 md:h-16 text-white hover:bg-white/20 rounded-full"
                     onClick={togglePlay}
                   >
-                    {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+                    {isPlaying ? (
+                      <Pause className="w-6 md:w-8 h-6 md:h-8" />
+                    ) : (
+                      <Play className="w-6 md:w-8 h-6 md:h-8" />
+                    )}
                   </Button>
                 </div>
 
-                {/* Bottom Controls */}
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  {/* Progress Bar */}
-                  <div className="mb-4">
+                <div className="absolute bottom-0 left-0 right-0 p-2 md:p-4">
+                  <div className="mb-2 md:mb-4">
                     <Slider
                       value={[currentTime]}
                       max={duration}
@@ -298,52 +305,59 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                     />
                   </div>
 
-                  {/* Control Buttons */}
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2 md:space-x-4">
                       <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={togglePlay}>
-                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                        {isPlaying ? (
+                          <Pause className="w-4 md:w-5 h-4 md:h-5" />
+                        ) : (
+                          <Play className="w-4 md:w-5 h-4 md:h-5" />
+                        )}
                       </Button>
 
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-white hover:bg-white/20"
+                        className="text-white hover:bg-white/20 hidden md:flex"
                         onClick={() => {
                           const video = videoRef.current
                           if (video) video.currentTime -= 10
                         }}
                       >
-                        <SkipBack className="w-5 h-5" />
+                        <SkipBack className="w-4 md:w-5 h-4 md:h-5" />
                       </Button>
 
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-white hover:bg-white/20"
+                        className="text-white hover:bg-white/20 hidden md:flex"
                         onClick={() => {
                           const video = videoRef.current
                           if (video) video.currentTime += 10
                         }}
                       >
-                        <SkipForward className="w-5 h-5" />
+                        <SkipForward className="w-4 md:w-5 h-4 md:h-5" />
                       </Button>
 
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 hidden md:flex">
                         <Button
                           variant="ghost"
                           size="icon"
                           className="text-white hover:bg-white/20"
                           onClick={toggleMute}
                         >
-                          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                          {isMuted ? (
+                            <VolumeX className="w-4 md:w-5 h-4 md:h-5" />
+                          ) : (
+                            <Volume2 className="w-4 md:w-5 h-4 md:h-5" />
+                          )}
                         </Button>
-                        <div className="w-20">
+                        <div className="w-16 md:w-20">
                           <Slider value={volume} max={100} step={1} onValueChange={handleVolumeChange} />
                         </div>
                       </div>
 
-                      <span className="text-white text-sm">
+                      <span className="text-white text-xs md:text-sm">
                         {formatTime(currentTime)} / {formatTime(duration)}
                       </span>
                     </div>
@@ -354,7 +368,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                       className="text-white hover:bg-white/20"
                       onClick={toggleFullscreen}
                     >
-                      <Maximize className="w-5 h-5" />
+                      <Maximize className="w-4 md:w-5 h-4 md:h-5" />
                     </Button>
                   </div>
                 </div>
