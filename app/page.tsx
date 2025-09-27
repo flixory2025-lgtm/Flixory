@@ -25,7 +25,7 @@ const movies = [
       "/emotional-character-moment.jpg",
     ],
     driveLink: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
-    trailerLink: "https://drive.google.com/file/d/1TRAILER123ABC456DEF/view", // Replace with actual trailer link
+    trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with actual trailer link
   },
   {
     id: 2,
@@ -43,7 +43,7 @@ const movies = [
       "/placeholder.svg?height=200&width=350",
     ],
     driveLink: "https://drive.google.com/file/d/2ABC123DEF456GHI789JKL/view",
-    trailerLink: "https://drive.google.com/file/d/2TRAILER123ABC456DEF/view",
+    trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
     id: 3,
@@ -57,7 +57,7 @@ const movies = [
       "A psychological thriller that will keep you on the edge of your seat. Unravel the mysteries of the human mind.",
     screenshots: ["/dark-mysterious-scene.jpg", "/suspenseful-thriller-moment.jpg", "/psychological-drama-scene.jpg"],
     driveLink: "https://drive.google.com/file/d/3ABC123DEF456GHI789JKL/view",
-    trailerLink: "https://drive.google.com/file/d/3TRAILER123ABC456DEF/view",
+    trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
     id: 4,
@@ -74,7 +74,7 @@ const movies = [
       "/placeholder.svg?height=200&width=350",
     ],
     driveLink: "https://drive.google.com/file/d/4ABC123DEF456GHI789JKL/view",
-    trailerLink: "https://drive.google.com/file/d/4TRAILER123ABC456DEF/view",
+    trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
     id: 5,
@@ -92,7 +92,7 @@ const movies = [
       "/placeholder.svg?height=200&width=350",
     ],
     driveLink: "https://drive.google.com/file/d/5ABC123DEF456GHI789JKL/view",
-    trailerLink: "https://drive.google.com/file/d/5TRAILER123ABC456DEF/view",
+    trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
 ]
 
@@ -131,7 +131,7 @@ export default function HomePage() {
   }
 
   const handlePlayTrailer = (trailerLink: string) => {
-    const videoUrl = convertDriveLink(trailerLink)
+    const videoUrl = convertYouTubeLink(trailerLink)
     setCurrentVideoUrl(videoUrl)
     setIsPlaying(true)
     setSelectedMovie(null)
@@ -508,4 +508,16 @@ function convertDriveLink(driveLink: string): string {
     return `https://drive.google.com/file/d/${fileId}/preview`
   }
   return driveLink
+}
+
+// Function to convert YouTube link to embed format
+function convertYouTubeLink(youtubeLink: string): string {
+  // Extract video ID from YouTube URL
+  const videoIdMatch = youtubeLink.match(/v=([a-zA-Z0-9_-]+)/)
+  if (videoIdMatch) {
+    const videoId = videoIdMatch[1]
+    // Return embed URL for YouTube
+    return `https://www.youtube.com/embed/${videoId}`
+  }
+  return youtubeLink
 }
