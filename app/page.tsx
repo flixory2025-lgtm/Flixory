@@ -24,7 +24,7 @@ const movies = [
       "/dramatic-dialogue-scene.jpg",
       "/emotional-character-moment.jpg",
     ],
-    telegramLink: "https://t.me/MVBDN/1", // Simplified ID-based format
+    telegramLink: "https://t.me/MVBDN/1760", // Simplified ID-based format
     trailerLink: "https://t.me/MVBDN/1001", // Trailer with higher ID
   },
   {
