@@ -31,6 +31,8 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [embedUrl, setEmbedUrl] = useState<string | null>(null)
+  const [fallbackUrls, setFallbackUrls] = useState<string[]>([])
+  const [currentFallbackIndex, setCurrentFallbackIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isYouTube, setIsYouTube] = useState(false)
   const [isLocked, setIsLocked] = useState(false)
@@ -46,6 +48,8 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   useEffect(() => {
     const processVideoUrl = async () => {
+      console.log("[v0] Processing video URL:", videoUrl)
+
       if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
         setIsYouTube(true)
         const youtubeUrl = convertYouTubeLink(videoUrl)
@@ -53,18 +57,25 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         setIsLoading(false)
       } else if (videoUrl.includes("drive.google.com")) {
         try {
+          console.log("[v0] Processing Google Drive URL")
           const response = await fetch(`/api/stream?url=${encodeURIComponent(videoUrl)}`)
           const data = await response.json()
 
+          console.log("[v0] API response:", data)
+
           if (data.success && data.embedUrl) {
             setEmbedUrl(data.embedUrl)
+            if (data.fallbackUrls) {
+              setFallbackUrls(data.fallbackUrls)
+            }
             setIsLoading(false)
           } else {
+            console.log("[v0] API returned error:", data.error)
             setHasError(true)
             setIsLoading(false)
           }
         } catch (error) {
-          console.error("Error processing Google Drive URL:", error)
+          console.error("[v0] Error processing Google Drive URL:", error)
           setHasError(true)
           setIsLoading(false)
         }
@@ -235,11 +246,31 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }
 
   const handleRetry = () => {
+    console.log("[v0] Retrying video load")
     setIsLoading(true)
     setHasError(false)
-    if (iframeRef.current) {
+
+    if (fallbackUrls.length > 0 && currentFallbackIndex < fallbackUrls.length) {
+      const nextUrl = fallbackUrls[currentFallbackIndex]
+      console.log("[v0] Trying fallback URL:", nextUrl)
+      setEmbedUrl(nextUrl)
+      setCurrentFallbackIndex((prev) => prev + 1)
+    } else if (iframeRef.current) {
+      // Reload current iframe
       iframeRef.current.src = iframeRef.current.src
     }
+  }
+
+  const handleIframeError = () => {
+    console.log("[v0] Iframe failed to load")
+    setHasError(true)
+    setIsLoading(false)
+  }
+
+  const handleIframeLoad = () => {
+    console.log("[v0] Iframe loaded successfully")
+    setIsLoading(false)
+    setHasError(false)
   }
 
   const enterPictureInPicture = async () => {
@@ -273,11 +304,8 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                 frameBorder="0"
                 allowFullScreen
                 allow="autoplay; encrypted-media; fullscreen; accelerometer; gyroscope; picture-in-picture; web-share"
-                onLoad={() => setIsLoading(false)}
-                onError={() => {
-                  setHasError(true)
-                  setIsLoading(false)
-                }}
+                onLoad={handleIframeLoad}
+                onError={handleIframeError}
               />
             ) : (
               <video
@@ -317,13 +345,19 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           <div className="absolute inset-0 flex items-center justify-center bg-black">
             <div className="text-white text-center max-w-md px-4">
               <p className="text-lg md:text-xl mb-4">Video could not be loaded</p>
-              <p className="text-sm text-gray-300 mb-4">Please check your internet connection and try again.</p>
-              <Button onClick={handleRetry} variant="outline" className="mr-2 bg-transparent">
-                Retry
-              </Button>
-              <Button onClick={onClose} variant="ghost">
-                Close
-              </Button>
+              <p className="text-sm text-gray-300 mb-4">
+                {fallbackUrls.length > 0 && currentFallbackIndex < fallbackUrls.length
+                  ? "Trying alternative source..."
+                  : "Please check your internet connection and try again."}
+              </p>
+              <div className="space-x-2">
+                <Button onClick={handleRetry} variant="outline" className="bg-transparent">
+                  {fallbackUrls.length > 0 && currentFallbackIndex < fallbackUrls.length ? "Try Alternative" : "Retry"}
+                </Button>
+                <Button onClick={onClose} variant="ghost">
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -471,3 +505,4 @@ function convertYouTubeLink(youtubeUrl: string): string {
 
   return youtubeUrl
 }
+
