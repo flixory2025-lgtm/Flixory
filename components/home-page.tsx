@@ -114,6 +114,7 @@ export function HomePage() {
   )
 
   const handlePlayMovie = (driveLink: string) => {
+    console.log("[v0] Playing movie with drive link:", driveLink)
     setCurrentVideoUrl(driveLink)
     setIsPlaying(true)
     setSelectedMovie(null)
