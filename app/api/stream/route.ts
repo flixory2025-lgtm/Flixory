@@ -1,58 +1,90 @@
 import { type NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
-  const driveUrl = searchParams.get("url")
+  const searchParams = request.nextUrl.searchParams
+  const url = searchParams.get("url")
 
-  if (!driveUrl) {
-    return NextResponse.json({ error: "No URL provided" }, { status: 400 })
+  if (!url) {
+    return NextResponse.json({ success: false, error: "URL parameter is required" }, { status: 400 })
   }
 
   try {
-    const fileId = extractDriveFileId(driveUrl)
+    if (url.includes("drive.google.com")) {
+      // Extract file ID from various Google Drive URL formats
+      let fileId = ""
 
-    if (!fileId) {
-      return NextResponse.json({ error: "Invalid Google Drive URL" }, { status: 400 })
+      // Handle different Google Drive URL formats
+      const patterns = [/\/file\/d\/([a-zA-Z0-9_-]+)/, /id=([a-zA-Z0-9_-]+)/, /\/d\/([a-zA-Z0-9_-]+)/]
+
+      for (const pattern of patterns) {
+        const match = url.match(pattern)
+        if (match) {
+          fileId = match[1]
+          break
+        }
+      }
+
+      if (!fileId) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Could not extract file ID from Google Drive URL",
+          },
+          { status: 400 },
+        )
+      }
+
+      // Create multiple fallback URLs for better compatibility
+      const embedUrls = [
+        `https://drive.google.com/file/d/${fileId}/preview`,
+        `https://drive.google.com/uc?export=download&id=${fileId}`,
+        `https://drive.google.com/uc?id=${fileId}&export=stream`,
+      ]
+
+      // Try to verify the file is accessible
+      try {
+        const testResponse = await fetch(`https://drive.google.com/file/d/${fileId}/view`, {
+          method: "HEAD",
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          },
+        })
+
+        if (testResponse.ok || testResponse.status === 302) {
+          return NextResponse.json({
+            success: true,
+            embedUrl: embedUrls[0],
+            fallbackUrls: embedUrls.slice(1),
+            fileId: fileId,
+          })
+        }
+      } catch (error) {
+        console.log("File accessibility check failed, proceeding with embed URL")
+      }
+
+      // Return the embed URL even if verification fails
+      return NextResponse.json({
+        success: true,
+        embedUrl: embedUrls[0],
+        fallbackUrls: embedUrls.slice(1),
+        fileId: fileId,
+        warning: "File accessibility could not be verified",
+      })
     }
 
-    // Use Google Drive's embed URL which works reliably
-    const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
-
+    // For non-Google Drive URLs, return as-is
     return NextResponse.json({
       success: true,
-      embedUrl: embedUrl,
-      fileId: fileId,
+      embedUrl: url,
     })
   } catch (error) {
-    console.error("Streaming error:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error processing video URL:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to process video URL",
+      },
+      { status: 500 },
+    )
   }
-}
-
-function extractDriveFileId(driveUrl: string): string | null {
-  const patterns = [
-    /\/file\/d\/([a-zA-Z0-9-_]+)/, // Standard format: https://drive.google.com/file/d/FILE_ID/view
-    /id=([a-zA-Z0-9-_]+)/, // Query parameter format: https://drive.google.com/open?id=FILE_ID
-    /\/d\/([a-zA-Z0-9-_]+)/, // Short format: https://drive.google.com/d/FILE_ID
-  ]
-
-  for (const pattern of patterns) {
-    const match = driveUrl.match(pattern)
-    if (match) {
-      return match[1]
-    }
-  }
-
-  return null
-}
-
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
-      "Access-Control-Allow-Headers": "Range, Content-Range",
-    },
-  })
 }
