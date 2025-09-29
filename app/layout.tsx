@@ -7,7 +7,7 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "FLIXORY - Bengali Movie Streaming Platform",
+  title: "FLIXORY",
   description: "Watch the latest Bengali movies and web series online. Stream HD quality content on FLIXORY.",
   generator: "v0.app",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
