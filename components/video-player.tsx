@@ -66,10 +66,10 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         setUseIframe(true)
         setIsLoading(false)
       } else if (videoUrl.includes("drive.google.com")) {
-        // Google Drive videos - use iframe with embed format
         const fileId = extractFileId(videoUrl)
         if (fileId) {
-          setEmbedUrl(`https://drive.google.com/file/d/${fileId}/preview`)
+          // Use enhanced Google Drive embed URL with autoplay and controls
+          setEmbedUrl(`https://drive.google.com/file/d/${fileId}/preview?usp=sharing&autoplay=1`)
           setUseIframe(true)
           setIsLoading(false)
         } else {
@@ -363,6 +363,9 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
     console.log("[v0] Iframe loaded successfully")
     setIsLoading(false)
     setHasError(false)
+    if (useIframe) {
+      setIsPlaying(true)
+    }
   }
 
   const handleIframeError = () => {
@@ -375,6 +378,20 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
     console.log("[v0] Video element failed to load")
     setHasError(true)
     setIsLoading(false)
+  }
+
+  const handleIframeClick = () => {
+    if (useIframe && iframeRef.current) {
+      // Try to trigger play by sending a message to the iframe
+      try {
+        const iframe = iframeRef.current
+        if (iframe.contentWindow) {
+          iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*")
+        }
+      } catch (error) {
+        console.log("[v0] Could not send play command to iframe")
+      }
+    }
   }
 
   return (
@@ -396,6 +413,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                 allow="autoplay; encrypted-media; fullscreen; accelerometer; gyroscope; picture-in-picture; web-share"
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
+                onClick={handleIframeClick}
                 style={{
                   border: "none",
                   outline: "none",
@@ -518,23 +536,20 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
               </div>
             </div>
 
-            {/* Center Play/Pause */}
-            {!useIframe && (
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-white/20 bg-black/50 backdrop-blur-sm w-16 h-16 rounded-full"
-                  onClick={togglePlayPause}
-                >
-                  {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
-                </Button>
-              </div>
-            )}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/20 bg-black/50 backdrop-blur-sm w-16 h-16 rounded-full"
+                onClick={useIframe ? handleIframeClick : togglePlayPause}
+              >
+                {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+              </Button>
+            </div>
 
             {/* Bottom Controls */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 pointer-events-auto">
-              {/* Progress Bar */}
+              {/* Progress Bar - only for non-iframe videos */}
               {!useIframe && (
                 <div className="mb-4">
                   <Slider
@@ -554,6 +569,21 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
               {/* Control Buttons */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={
+                      useIframe
+                        ? handleIframeClick
+                        : isPlaying
+                          ? () => videoRef.current?.pause()
+                          : () => videoRef.current?.play()
+                    }
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  </Button>
+
                   {!useIframe && (
                     <>
                       <Button
@@ -563,14 +593,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                         onClick={skipBackward}
                       >
                         <SkipBack className="w-5 h-5" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-white hover:bg-white/20"
-                        onClick={togglePlayPause}
-                      >
-                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                       </Button>
                       <Button
                         variant="ghost"
@@ -708,8 +730,7 @@ function convertPCloudLink(pcloudUrl: string): string {
     const codeMatch = pcloudUrl.match(/code=([^&]+)/)
     if (codeMatch) {
       const code = codeMatch[1]
-      // Use pCloud's direct streaming API instead of iframe embedding
-      const streamUrl = `https://api.pcloud.com/getpubthumb?code=${code}&linkpassword=&size=1920x1080&crop=0&type=auto`
+      const streamUrl = `https://u.pcloud.link/publink/download?code=${code}&forcedownload=0`
       console.log("[v0] pCloud stream URL generated:", streamUrl)
       return streamUrl
     }
