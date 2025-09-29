@@ -705,17 +705,18 @@ function convertPCloudLink(pcloudUrl: string): string {
   console.log("[v0] Converting pCloud URL:", pcloudUrl)
 
   if (pcloudUrl.includes("u.pcloud.link/publink/show")) {
-    // Convert u.pcloud.link share links to direct stream format
     const codeMatch = pcloudUrl.match(/code=([^&]+)/)
     if (codeMatch) {
       const code = codeMatch[1]
-      // Try multiple pCloud embed formats
-      const embedUrl = `https://u.pcloud.link/publink/download?code=${code}&forcedownload=0`
-      console.log("[v0] pCloud embed URL generated:", embedUrl)
-      return embedUrl
+      // Use pCloud's direct streaming API instead of iframe embedding
+      const streamUrl = `https://api.pcloud.com/getpubthumb?code=${code}&linkpassword=&size=1920x1080&crop=0&type=auto`
+      console.log("[v0] pCloud stream URL generated:", streamUrl)
+      return streamUrl
     }
   } else if (pcloudUrl.includes("/publink/show")) {
-    return pcloudUrl.replace("/publink/show", "/publink/download").replace("?", "?forcedownload=0&")
+    // Convert to direct download format for video streaming
+    const directUrl = pcloudUrl.replace("/publink/show", "/publink/download").replace("?", "?forcedownload=0&")
+    return directUrl
   }
 
   return pcloudUrl
