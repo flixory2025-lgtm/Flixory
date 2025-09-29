@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { Camera, Edit, Save, X } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Camera, Edit, Save, X, CheckCircle, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,6 +26,48 @@ export function ProfileSection() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [tempProfile, setTempProfile] = useState<UserProfile>(profile)
+  const [subscriptionStatus, setSubscriptionStatus] = useState<"active" | "inactive" | "pending">("inactive")
+  const [currentUser, setCurrentUser] = useState<string>("")
+
+  useEffect(() => {
+    const savedProfile = localStorage.getItem("flixory_user_profile")
+    if (savedProfile) {
+      const profileData = JSON.parse(savedProfile)
+      setProfile(profileData)
+      setTempProfile(profileData)
+    }
+
+    // Check current authenticated user
+    const savedAuth = localStorage.getItem("flixory_user_auth")
+    if (savedAuth) {
+      const authData = JSON.parse(savedAuth)
+      setCurrentUser(authData.username || "")
+    }
+  }, [])
+
+  useEffect(() => {
+    const checkSubscriptionStatus = () => {
+      const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
+      const profileName = profile.name.trim()
+
+      if (!profileName || profileName === "User Name") {
+        setSubscriptionStatus("inactive")
+        return
+      }
+
+      const approvedUser = approvedUsers.find(
+        (u: any) => u.username.toLowerCase() === profileName.toLowerCase() && u.isActive,
+      )
+
+      if (approvedUser) {
+        setSubscriptionStatus("active")
+      } else {
+        setSubscriptionStatus("pending")
+      }
+    }
+
+    checkSubscriptionStatus()
+  }, [profile.name, currentUser])
 
   const handleEdit = () => {
     setTempProfile(profile)
@@ -35,6 +77,17 @@ export function ProfileSection() {
   const handleSave = () => {
     setProfile(tempProfile)
     setIsEditing(false)
+    localStorage.setItem("flixory_user_profile", JSON.stringify(tempProfile))
+
+    if (tempProfile.name !== profile.name && tempProfile.name.trim()) {
+      const authData = localStorage.getItem("flixory_user_auth")
+      if (authData) {
+        const auth = JSON.parse(authData)
+        auth.username = tempProfile.name.trim()
+        localStorage.setItem("flixory_user_auth", JSON.stringify(auth))
+        setCurrentUser(tempProfile.name.trim())
+      }
+    }
   }
 
   const handleCancel = () => {
@@ -63,6 +116,31 @@ export function ProfileSection() {
       reader.readAsDataURL(file)
     }
   }
+
+  const getSubscriptionDisplay = () => {
+    switch (subscriptionStatus) {
+      case "active":
+        return {
+          text: "Active",
+          color: "text-green-500",
+          icon: <CheckCircle className="w-4 h-4 text-green-500" />,
+        }
+      case "pending":
+        return {
+          text: "Pending Approval",
+          color: "text-yellow-500",
+          icon: <XCircle className="w-4 h-4 text-yellow-500" />,
+        }
+      default:
+        return {
+          text: "Inactive",
+          color: "text-red-500",
+          icon: <XCircle className="w-4 h-4 text-red-500" />,
+        }
+    }
+  }
+
+  const subscriptionDisplay = getSubscriptionDisplay()
 
   return (
     <div className="min-h-screen bg-black text-white pb-20">
@@ -177,8 +255,22 @@ export function ProfileSection() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <span className="text-white">Subscription Status</span>
-                <span className="text-green-500 text-sm">Active</span>
+                <div className="flex items-center space-x-2">
+                  {subscriptionDisplay.icon}
+                  <span className={`text-sm ${subscriptionDisplay.color}`}>{subscriptionDisplay.text}</span>
+                </div>
               </div>
+              {subscriptionStatus === "pending" && (
+                <p className="text-xs text-yellow-400 mt-2">
+                  Your username is not approved yet. Contact admin for access.
+                </p>
+              )}
+              {subscriptionStatus === "inactive" && (
+                <p className="text-xs text-red-400 mt-2">Set your username in profile to check approval status.</p>
+              )}
+              {subscriptionStatus === "active" && (
+                <p className="text-xs text-green-400 mt-2">You have access to all movies and features.</p>
+              )}
             </CardContent>
           </Card>
 
@@ -199,6 +291,17 @@ export function ProfileSection() {
               </div>
             </CardContent>
           </Card>
+
+          {currentUser && (
+            <Card className="bg-gray-900 border-gray-700">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-white">Current Session</span>
+                  <span className="text-blue-400 text-sm">{currentUser}</span>
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
