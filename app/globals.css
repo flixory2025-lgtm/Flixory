@@ -319,3 +319,269 @@
     font-size: 16px !important;
   }
 }
+
+/* Enhanced video player animations and effects */
+/* Video player entrance animation */
+@keyframes videoPlayerEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.video-player-enter {
+  animation: videoPlayerEnter 0.3s ease-out;
+}
+
+/* Controls fade in/out animations */
+@keyframes controlsFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes controlsFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.controls-enter {
+  animation: controlsFadeIn 0.3s ease-out;
+}
+
+.controls-exit {
+  animation: controlsFadeOut 0.3s ease-out;
+}
+
+/* Enhanced loading spinner */
+@keyframes spinGlow {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(239, 68, 68, 0.8);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+  }
+}
+
+.loading-spinner {
+  animation: spinGlow 2s linear infinite;
+}
+
+/* Progress bar animations */
+@keyframes progressPulse {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.progress-active {
+  animation: progressPulse 2s ease-in-out infinite;
+}
+
+/* Button hover effects */
+.video-control-btn {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-control-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.video-control-btn:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+.video-control-btn:active {
+  transform: scale(0.95);
+}
+
+/* Volume slider animation */
+@keyframes volumeWave {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(1.2);
+  }
+}
+
+.volume-active {
+  animation: volumeWave 0.5s ease-in-out;
+}
+
+/* Subtitle animation */
+@keyframes subtitleSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subtitle-enter {
+  animation: subtitleSlide 0.3s ease-out;
+}
+
+/* Fullscreen transition */
+@keyframes fullscreenEnter {
+  0% {
+    transform: scale(0.95);
+    border-radius: 12px;
+  }
+  100% {
+    transform: scale(1);
+    border-radius: 0;
+  }
+}
+
+.fullscreen-enter {
+  animation: fullscreenEnter 0.3s ease-out;
+}
+
+/* Lock screen animation */
+@keyframes lockPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.lock-pulse {
+  animation: lockPulse 2s ease-in-out infinite;
+}
+
+/* Time display glow effect */
+.time-display {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  transition: text-shadow 0.3s ease;
+}
+
+.time-display:hover {
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* Error state animation */
+@keyframes errorShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.error-shake {
+  animation: errorShake 0.5s ease-in-out;
+}
+
+/* Buffering animation */
+@keyframes bufferPulse {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.buffering {
+  animation: bufferPulse 1.5s ease-in-out infinite;
+}
+
+/* Quality indicator animation */
+@keyframes qualityBadge {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.quality-badge {
+  animation: qualityBadge 0.3s ease-out;
+}
+
+/* Ripple effect for buttons */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s linear;
+}
