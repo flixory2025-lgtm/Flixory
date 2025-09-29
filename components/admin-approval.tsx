@@ -55,6 +55,8 @@ export function AdminApproval() {
   const addUser = () => {
     if (!newUsername.trim()) return
 
+    setIsLoading(true)
+
     const newUser: ApprovedUser = {
       id: Date.now().toString(),
       username: newUsername.trim(),
@@ -62,8 +64,25 @@ export function AdminApproval() {
       isActive: true,
     }
 
-    setApprovedUsers((prev) => [...prev, newUser])
+    // Update state and localStorage immediately
+    const updatedUsers = [...approvedUsers, newUser]
+    setApprovedUsers(updatedUsers)
+
+    // Force immediate localStorage save
+    localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
+
+    // Trigger a custom event to notify other components
+    window.dispatchEvent(
+      new CustomEvent("userListUpdated", {
+        detail: { users: updatedUsers },
+      }),
+    )
+
     setNewUsername("")
+    setIsLoading(false)
+
+    // Show success feedback
+    console.log("[v0] User added successfully:", newUser.username)
   }
 
   const removeUser = (userId: string) => {
@@ -71,11 +90,36 @@ export function AdminApproval() {
       alert("Cannot remove default test user 'abdul mazid'")
       return
     }
-    setApprovedUsers((prev) => prev.filter((user) => user.id !== userId))
+
+    const updatedUsers = approvedUsers.filter((user) => user.id !== userId)
+    setApprovedUsers(updatedUsers)
+
+    // Force immediate localStorage save
+    localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
+
+    // Trigger update event
+    window.dispatchEvent(
+      new CustomEvent("userListUpdated", {
+        detail: { users: updatedUsers },
+      }),
+    )
   }
 
   const toggleUserStatus = (userId: string) => {
-    setApprovedUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, isActive: !user.isActive } : user)))
+    const updatedUsers = approvedUsers.map((user) =>
+      user.id === userId ? { ...user, isActive: !user.isActive } : user,
+    )
+    setApprovedUsers(updatedUsers)
+
+    // Force immediate localStorage save
+    localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
+
+    // Trigger update event
+    window.dispatchEvent(
+      new CustomEvent("userListUpdated", {
+        detail: { users: updatedUsers },
+      }),
+    )
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
