@@ -18,6 +18,7 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [deviceInfo, setDeviceInfo] = useState<string>("")
+  const [approvedUsers, setApprovedUsers] = useState<any[]>([])
 
   useEffect(() => {
     const generateDeviceFingerprint = () => {
@@ -42,17 +43,30 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
     setDeviceInfo(generateDeviceFingerprint())
   }, [])
 
-  // Check if user is already authenticated
+  useEffect(() => {
+    const handleUserListUpdate = (event: CustomEvent) => {
+      console.log("[v0] User list updated, refreshing approved users")
+      setApprovedUsers(event.detail.users)
+    }
+
+    const savedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
+    setApprovedUsers(savedUsers)
+
+    window.addEventListener("userListUpdated", handleUserListUpdate as EventListener)
+
+    return () => {
+      window.removeEventListener("userListUpdated", handleUserListUpdate as EventListener)
+    }
+  }, [])
+
   useEffect(() => {
     const savedAuth = localStorage.getItem("flixory_user_auth")
     if (savedAuth) {
       const authData = JSON.parse(savedAuth)
       if (authData.username && authData.deviceId) {
-        // Verify device matches
         if (authData.deviceFingerprint === deviceInfo) {
           onAuth(authData.username)
         } else {
-          // Device changed, clear auth
           localStorage.removeItem("flixory_user_auth")
         }
       }
@@ -68,8 +82,6 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
     setIsLoading(true)
     setError("")
 
-    // Get approved users from localStorage
-    const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
     const user = approvedUsers.find((u: any) => u.username.toLowerCase() === username.toLowerCase() && u.isActive)
 
     if (!user) {
@@ -80,9 +92,7 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
 
     const currentDeviceId = `device_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
-    // Check if user is already logged in on another device
     if (user.deviceId && user.deviceFingerprint && user.deviceFingerprint !== deviceInfo) {
-      // Check if the device session is still active (within 24 hours)
       const lastLogin = user.lastLoginTime ? new Date(user.lastLoginTime) : new Date(0)
       const now = new Date()
       const hoursSinceLogin = (now.getTime() - lastLogin.getTime()) / (1000 * 60 * 60)
@@ -94,7 +104,6 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
       }
     }
 
-    // Update user's device information
     const updatedUsers = approvedUsers.map((u: any) =>
       u.username.toLowerCase() === username.toLowerCase()
         ? {
@@ -112,13 +121,12 @@ export function UserAuthModal({ onAuth, onClose }: UserAuthModalProps) {
     )
     localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
 
-    // Save user authentication with device binding
     const authData = {
       username: username.trim(),
       deviceId: currentDeviceId,
       deviceFingerprint: deviceInfo,
       loginTime: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     }
     localStorage.setItem("flixory_user_auth", JSON.stringify(authData))
 
