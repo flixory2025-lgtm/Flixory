@@ -88,7 +88,7 @@ const movies = [
   {
     id: 6,
     title: "Titanic (1997)",
-    poster: "/2id.jpg",
+    poster: "/6id.jpg",
     rating: 7.9,
     year: 2025,
     duration: "3h 14m",
