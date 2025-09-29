@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Smartphone } from "lucide-react"
+import { Check, Smartphone, Shield, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { AdminApproval } from "@/components/admin-approval"
 
 interface SubscriptionPlan {
   id: string
@@ -61,6 +62,9 @@ export function SubscriptionSection() {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [showPayment, setShowPayment] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showAdmin, setShowAdmin] = useState(false)
+  const [adminPassword, setAdminPassword] = useState("")
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId)
@@ -77,14 +81,77 @@ export function SubscriptionSection() {
     setSelectedPlan(null)
   }
 
+  const handleAdminAccess = () => {
+    if (adminPassword === "flixory2025") {
+      setShowAdmin(true)
+      setShowAdminLogin(false)
+      setAdminPassword("")
+    } else {
+      alert("Incorrect password")
+    }
+  }
+
   const selectedPlanData = subscriptionPlans.find((plan) => plan.id === selectedPlan)
+
+  if (showAdmin) {
+    return <AdminApproval />
+  }
 
   return (
     <div className="min-h-screen bg-black text-white pb-20">
       {/* Header */}
       <div className="p-4 border-b border-gray-800">
-        <h1 className="text-xl font-bold text-center">Subscription Plans</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold text-center flex-1">Subscription Plans</h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowAdminLogin(true)}
+            className="text-gray-400 hover:text-white"
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
+
+      {/* Admin Login Modal */}
+      {showAdminLogin && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <Card className="bg-gray-900 border-gray-700 max-w-md w-full">
+            <CardHeader>
+              <CardTitle className="text-white text-center flex items-center justify-center space-x-2">
+                <Shield className="w-5 h-5" />
+                <span>Admin Access</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <input
+                type="password"
+                placeholder="Enter admin password"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                className="w-full p-3 bg-gray-800 border border-gray-600 rounded text-white"
+                onKeyPress={(e) => e.key === "Enter" && handleAdminAccess()}
+              />
+              <div className="flex space-x-2">
+                <Button onClick={handleAdminAccess} className="flex-1 bg-primary">
+                  Access
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setShowAdminLogin(false)
+                    setAdminPassword("")
+                  }}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {!showPayment && !showConfirmation && (
         <div className="p-4">
@@ -129,6 +196,18 @@ export function SubscriptionSection() {
                 </CardContent>
               </Card>
             ))}
+
+            <div className="mt-8 pt-6 border-t border-gray-800">
+              <Button
+                onClick={() => setShowAdminLogin(true)}
+                variant="outline"
+                className="w-full bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Admin Access
+              </Button>
+              <p className="text-xs text-gray-500 text-center mt-2">For administrators only</p>
+            </div>
           </div>
         </div>
       )}
@@ -204,7 +283,7 @@ export function SubscriptionSection() {
                 আপনি যদি পেমেন্ট সম্পন্ন করে থাকেন, তাহলে পেমেন্টের স্ক্রিনশট নিচের WhatsApp নম্বরে পাঠান।
               </p>
               <div className="bg-green-900/20 border border-green-500 rounded-lg p-4">
-                <p className="text-green-400 font-medium">WhatsApp: +880 1865522275</p>
+                <p className="text-green-400 font-medium">WhatsApp: +880 1610916777</p>
               </div>
               <p className="text-sm text-gray-400">
                 স্ক্রিনশট পাঠানোর পর আপনার প্ল্যান {selectedPlanData?.duration} এর জন্য সক্রিয় হবে।
