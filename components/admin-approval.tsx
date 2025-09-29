@@ -31,6 +31,36 @@ export function AdminApproval() {
       approvedAt: new Date().toISOString(),
       isActive: true,
     },
+    {
+      id: "admin-3",
+      username: "sayid",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
+    {
+      id: "admin-4",
+      username: "fahad",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
+    {
+      id: "admin-5",
+      username: "efti",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
+    {
+      id: "admin-6",
+      username: "siam",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
+    {
+      id: "admin-7",
+      username: "mazid",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
   ])
   const [newUsername, setNewUsername] = useState("")
   const [isLoading, setIsLoading] = useState(false)
