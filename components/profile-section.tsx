@@ -28,6 +28,7 @@ export function ProfileSection() {
   const [tempProfile, setTempProfile] = useState<UserProfile>(profile)
   const [subscriptionStatus, setSubscriptionStatus] = useState<"active" | "inactive" | "pending">("inactive")
   const [currentUser, setCurrentUser] = useState<string>("")
+  const [approvedUsers, setApprovedUsers] = useState<any[]>([])
 
   useEffect(() => {
     const savedProfile = localStorage.getItem("flixory_user_profile")
@@ -43,11 +44,26 @@ export function ProfileSection() {
       const authData = JSON.parse(savedAuth)
       setCurrentUser(authData.username || "")
     }
+
+    const handleUserListUpdate = (event: CustomEvent) => {
+      console.log("[v0] User list updated in profile section")
+      setApprovedUsers(event.detail.users)
+    }
+
+    // Load initial approved users
+    const savedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
+    setApprovedUsers(savedUsers)
+
+    // Listen for updates
+    window.addEventListener("userListUpdated", handleUserListUpdate as EventListener)
+
+    return () => {
+      window.removeEventListener("userListUpdated", handleUserListUpdate as EventListener)
+    }
   }, [])
 
   useEffect(() => {
     const checkSubscriptionStatus = () => {
-      const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
       const profileName = profile.name.trim()
 
       if (!profileName || profileName === "User Name") {
@@ -67,7 +83,7 @@ export function ProfileSection() {
     }
 
     checkSubscriptionStatus()
-  }, [profile.name, currentUser])
+  }, [profile.name, currentUser, approvedUsers]) // Added approvedUsers dependency
 
   const handleEdit = () => {
     setTempProfile(profile)
