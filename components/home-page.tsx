@@ -96,12 +96,12 @@ const movies = [
     description:
       "বিখ্যাত RMS Titanic জাহাজের ট্র্যাজেডির পটভূমিতে তৈরি এক অবিস্মরণীয় প্রেমকাহিনি। রোজ আর জ্যাকের ভালোবাসা ইতিহাসে এক ক্লাসিক গল্প হিসেবে জায়গা করে নিয়েছে।",
     screenshots: [
-      "/ss6.png",
-      "/ss66.png",
-      "/ss666.png",
-      "/ss6666.png",
-       "/ss66666.png",
-      "/ss666666.png",
+      "/ss6.jpg",
+      "/ss66.jpg",
+      "/ss666.jpg",
+      "/ss6666.jpg",
+       "/ss66666.jpg",
+      "/ss666666.jpg",
     ],
     driveLink: "https://u.pcloud.link/publink/show?code=XZrLge5ZJ0uKU083S2BbRXAbmBRlh4cFFznk",
     trailerLink: "https://www.youtube.com/embed/kVrqfYjkTdQ?si",
