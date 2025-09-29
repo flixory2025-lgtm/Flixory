@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Play, Star, Clock } from "lucide-react"
+import { Search, Play, Star, Clock, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { MovieModal } from "@/components/movie-modal"
 import { VideoPlayer } from "@/components/video-player"
+import { UserAuthModal } from "@/components/user-auth-modal"
 
 const movies = [
   {
@@ -39,7 +40,7 @@ const movies = [
     duration: "2h 30m",
     genre: ["History", "Drama", "Action"],
     description:
-      "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে ‘রঘু ডাকাত’ বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
+      "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: ["/ss2.png", "/ss22.png", "/ss222.png", "/ss2222.png"],
     driveLink: "https://drive.google.com/file/d/10n6l6FRQsn3eLUS4RbnIOpmjTzXWO-V_/view?usp=drivesdk",
     trailerLink: "https://www.youtube.com/embed/QrWh3Ww3Zn0?si",
@@ -92,13 +93,56 @@ export function HomePage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentVideoUrl, setCurrentVideoUrl] = useState("")
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [showAuthModal, setShowAuthModal] = useState(false)
+  const [authenticatedUser, setAuthenticatedUser] = useState<string | null>(null)
+  const [sessionExpired, setSessionExpired] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 5) // Cycle through movies 1-5
+      setCurrentSlide((prev) => (prev + 1) % 4) // Now 4 slides (movies 1, 2, 4, 5)
     }, 3000) // Change every 3 seconds
 
     return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const savedAuth = localStorage.getItem("flixory_user_auth")
+      if (savedAuth) {
+        const authData = JSON.parse(savedAuth)
+
+        // Check if session has expired
+        if (authData.expiresAt && new Date(authData.expiresAt) < new Date()) {
+          localStorage.removeItem("flixory_user_auth")
+          setAuthenticatedUser(null)
+          setSessionExpired(true)
+          return
+        }
+
+        // Verify user is still approved and active
+        const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
+        const user = approvedUsers.find(
+          (u: any) => u.username.toLowerCase() === authData.username.toLowerCase() && u.isActive,
+        )
+
+        if (!user) {
+          localStorage.removeItem("flixory_user_auth")
+          setAuthenticatedUser(null)
+          return
+        }
+
+        if (authData.username) {
+          setAuthenticatedUser(authData.username)
+        }
+      }
+    }
+
+    checkAuthStatus()
+
+    // Check auth status every minute
+    const authCheckInterval = setInterval(checkAuthStatus, 60000)
+
+    return () => clearInterval(authCheckInterval)
   }, [])
 
   const filteredMovies = movies.filter(
@@ -113,7 +157,15 @@ export function HomePage() {
         ),
   )
 
+  const slideshowMovies = movies.filter((movie) => [1, 2, 4, 5].includes(movie.id))
+  const featuredMovie = slideshowMovies[currentSlide]
+
   const handlePlayMovie = (driveLink: string) => {
+    if (!authenticatedUser) {
+      setShowAuthModal(true)
+      return
+    }
+
     console.log("[v0] Playing movie with drive link:", driveLink)
     setCurrentVideoUrl(driveLink)
     setIsPlaying(true)
@@ -127,10 +179,38 @@ export function HomePage() {
     setSelectedMovie(null)
   }
 
-  const featuredMovie = movies[currentSlide]
+  const handleUserAuth = (username: string) => {
+    setAuthenticatedUser(username)
+    setShowAuthModal(false)
+    setSessionExpired(false)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("flixory_user_auth")
+
+    // Clear device binding from approved users
+    const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
+    const updatedUsers = approvedUsers.map((u: any) =>
+      u.username.toLowerCase() === authenticatedUser?.toLowerCase()
+        ? { ...u, deviceId: null, deviceFingerprint: null, lastLoginTime: null }
+        : u,
+    )
+    localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
+
+    setAuthenticatedUser(null)
+  }
 
   return (
     <div className={`min-h-screen bg-background touch-manipulation pb-20 ${searchQuery ? "search-active" : ""}`}>
+      {/* Session Expired Notification */}
+      {sessionExpired && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg">
+            <p className="text-sm">Session expired. Please login again.</p>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
@@ -162,6 +242,22 @@ export function HomePage() {
                   className="pl-10 w-40 md:w-64 bg-card border-border text-sm md:text-base"
                 />
               </div>
+              {authenticatedUser && (
+                <div className="flex items-center space-x-2">
+                  <div className="hidden md:flex items-center space-x-2 text-sm text-muted-foreground">
+                    <span>Welcome, {authenticatedUser}</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={handleLogout}
+                    className="text-muted-foreground hover:text-foreground"
+                    title="Logout"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -169,10 +265,10 @@ export function HomePage() {
 
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-[80vh] overflow-hidden slideshow-container">
-        {movies.slice(0, 5).map((movie, index) => (
+        {slideshowMovies.map((movie, index) => (
           <div
             key={movie.id}
-            className={`slide ${index === currentSlide ? "active" : ""} ${index === currentSlide - 1 || (currentSlide === 0 && index === 4) ? "prev" : ""}`}
+            className={`slide ${index === currentSlide ? "active" : ""} ${index === currentSlide - 1 || (currentSlide === 0 && index === slideshowMovies.length - 1) ? "prev" : ""}`}
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -225,7 +321,7 @@ export function HomePage() {
 
         {/* Slideshow indicators */}
         <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
-          {movies.slice(0, 5).map((_, index) => (
+          {slideshowMovies.map((_, index) => (
             <button
               key={index}
               className={`w-2 md:w-3 h-2 md:h-3 rounded-full transition-all ${index === currentSlide ? "bg-primary" : "bg-white/30"}`}
@@ -340,17 +436,17 @@ export function HomePage() {
           }}
         />
       )}
+
+      {showAuthModal && <UserAuthModal onAuth={handleUserAuth} onClose={() => setShowAuthModal(false)} />}
     </div>
   )
 }
 
 // Function to convert YouTube link to embed format
 function convertYouTubeLink(youtubeLink: string): string {
-  // Extract video ID from YouTube URL
   const videoIdMatch = youtubeLink.match(/v=([a-zA-Z0-9_-]+)/)
   if (videoIdMatch) {
     const videoId = videoIdMatch[1]
-    // Return embed URL for YouTube
     return `https://www.youtube.com/embed/${videoId}`
   }
   return youtubeLink
