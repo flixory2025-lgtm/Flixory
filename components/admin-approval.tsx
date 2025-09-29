@@ -25,6 +25,12 @@ export function AdminApproval() {
       approvedAt: new Date().toISOString(),
       isActive: true,
     },
+    {
+      id: "admin-2",
+      username: "ajim",
+      approvedAt: new Date().toISOString(),
+      isActive: true,
+    },
   ])
   const [newUsername, setNewUsername] = useState("")
   const [isLoading, setIsLoading] = useState(false)
