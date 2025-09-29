@@ -103,7 +103,7 @@ const movies = [
        "/ss66666.jpg",
       "/ss666666.jpg",
     ],
-    driveLink: "https://u.pcloud.link/publink/show?code=XZrLge5ZJ0uKU083S2BbRXAbmBRlh4cFFznk",
+    driveLink: "https://u.pcloud.link/publink/embed?code=XZrLge5ZJ0uKU083S2BbRXAbmBRlh4cFFznk",
     trailerLink: "https://www.youtube.com/embed/kVrqfYjkTdQ?si",
   },
 ]
