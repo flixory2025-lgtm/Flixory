@@ -85,6 +85,27 @@ const movies = [
     driveLink: "https://drive.google.com/file/d/14YRbj1MRECwb0b6fkrD6Rzv9XuDN5N_X/view?usp=drivesdk",
     trailerLink: "https://www.youtube.com/embed/J0SzT_184SE?si",
   },
+  {
+    id: 6,
+    title: "Titanic (1997)",
+    poster: "/2id.jpg",
+    rating: 7.9,
+    year: 2025,
+    duration: "3h 14m",
+    genre: ["Romance", "Drama", "Action"],
+    description:
+      "বিখ্যাত RMS Titanic জাহাজের ট্র্যাজেডির পটভূমিতে তৈরি এক অবিস্মরণীয় প্রেমকাহিনি। রোজ আর জ্যাকের ভালোবাসা ইতিহাসে এক ক্লাসিক গল্প হিসেবে জায়গা করে নিয়েছে।",
+    screenshots: [
+      "/ss6.png",
+      "/ss66.png",
+      "/ss666.png",
+      "/ss6666.png",
+       "/ss66666.png",
+      "/ss666666.png",
+    ],
+    driveLink: "https://u.pcloud.link/publink/show?code=XZrLge5ZJ0uKU083S2BbRXAbmBRlh4cFFznk",
+    trailerLink: "https://www.youtube.com/embed/kVrqfYjkTdQ?si",
+  },
 ]
 
 export function HomePage() {
