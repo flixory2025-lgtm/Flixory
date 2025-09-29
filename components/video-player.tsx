@@ -76,9 +76,13 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           setHasError(true)
           setIsLoading(false)
         }
-      } else if (videoUrl.includes("pcloud.com") || videoUrl.includes("my.pcloud.com")) {
-        // pCloud videos - convert to direct stream
+      } else if (
+        videoUrl.includes("pcloud.com") ||
+        videoUrl.includes("my.pcloud.com") ||
+        videoUrl.includes("u.pcloud.link")
+      ) {
         const pcloudEmbedUrl = convertPCloudLink(videoUrl)
+        console.log("[v0] pCloud embed URL:", pcloudEmbedUrl)
         setEmbedUrl(pcloudEmbedUrl)
         setUseIframe(true)
         setIsLoading(false)
@@ -698,10 +702,22 @@ function extractFileId(driveUrl: string): string | null {
 }
 
 function convertPCloudLink(pcloudUrl: string): string {
-  // pCloud share links can be embedded directly
-  if (pcloudUrl.includes("/publink/show")) {
-    return pcloudUrl.replace("/publink/show", "/publink/embed")
+  console.log("[v0] Converting pCloud URL:", pcloudUrl)
+
+  if (pcloudUrl.includes("u.pcloud.link/publink/show")) {
+    // Convert u.pcloud.link share links to direct stream format
+    const codeMatch = pcloudUrl.match(/code=([^&]+)/)
+    if (codeMatch) {
+      const code = codeMatch[1]
+      // Try multiple pCloud embed formats
+      const embedUrl = `https://u.pcloud.link/publink/download?code=${code}&forcedownload=0`
+      console.log("[v0] pCloud embed URL generated:", embedUrl)
+      return embedUrl
+    }
+  } else if (pcloudUrl.includes("/publink/show")) {
+    return pcloudUrl.replace("/publink/show", "/publink/download").replace("?", "?forcedownload=0&")
   }
+
   return pcloudUrl
 }
 
