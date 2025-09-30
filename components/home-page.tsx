@@ -42,7 +42,7 @@ const movies = [
     description:
       "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: ["/ss2.png", "/ss22.png", "/ss222.png", "/ss2222.png"],
-    driveLink: "https://drive.google.com/file/d/10n6l6FRQsn3eLUS4RbnIOpmjTzXWO-V_/view?usp=drivesdk",
+    driveLink: "https://www.dailymotion.com/embed/video/x9rffng",
     trailerLink: "https://www.youtube.com/embed/QrWh3Ww3Zn0?si",
   },
   {
