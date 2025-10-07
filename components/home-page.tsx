@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Search, Play, Star, Clock, LogOut } from "lucide-react"
+import { Search, Play, Star, Clock, LogOut, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +9,8 @@ import { MovieModal } from "@/components/movie-modal"
 import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
+
+const TRENDING_MOVIE_IDS = [1, 3, 5, 6]
 
 const movies = [
   {
@@ -115,13 +117,17 @@ export function HomePage() {
   const [currentTelegramLink, setCurrentTelegramLink] = useState("")
   const [currentMovieTitle, setCurrentMovieTitle] = useState("")
 
+  const sortedMovies = [...movies].sort((a, b) => b.id - a.id)
+
+  const slideshowMovies = sortedMovies.filter((movie) => TRENDING_MOVIE_IDS.includes(movie.id))
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 4)
+      setCurrentSlide((prev) => (prev + 1) % slideshowMovies.length)
     }, 3000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [slideshowMovies.length])
 
   useEffect(() => {
     const checkAuthStatus = () => {
@@ -160,7 +166,7 @@ export function HomePage() {
     return () => clearInterval(authCheckInterval)
   }, [])
 
-  const filteredMovies = movies.filter(
+  const filteredMovies = sortedMovies.filter(
     (movie) =>
       movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       movie.genre.some((g) => g.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -172,8 +178,15 @@ export function HomePage() {
         ),
   )
 
-  const slideshowMovies = movies.filter((movie) => [1, 2, 4, 5].includes(movie.id))
   const featuredMovie = slideshowMovies[currentSlide]
+
+  const handlePrevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + slideshowMovies.length) % slideshowMovies.length)
+  }
+
+  const handleNextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slideshowMovies.length)
+  }
 
   const handleOpenTelegram = (telegramLink: string, movieTitle: string) => {
     console.log("[v0] Opening Telegram link:", telegramLink)
@@ -279,6 +292,8 @@ export function HomePage() {
           <div
             key={movie.id}
             className={`slide ${index === currentSlide ? "active" : ""} ${index === currentSlide - 1 || (currentSlide === 0 && index === slideshowMovies.length - 1) ? "prev" : ""}`}
+            onClick={() => setSelectedMovie(movie)}
+            style={{ cursor: "pointer" }}
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -311,7 +326,10 @@ export function HomePage() {
                 <div className="flex space-x-3 md:space-x-6">
                   <Button
                     className="bg-primary hover:bg-primary/90 text-sm md:text-lg px-4 md:px-8 py-2 md:py-3"
-                    onClick={() => handleOpenTelegram(movie.telegramLink, movie.title)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleOpenTelegram(movie.telegramLink, movie.title)
+                    }}
                   >
                     <Play className="w-4 md:w-6 h-4 md:h-6 mr-2 md:mr-3" />
                     Play
@@ -319,7 +337,10 @@ export function HomePage() {
                   <Button
                     variant="outline"
                     className="text-sm md:text-lg px-4 md:px-8 py-2 md:py-3 bg-transparent"
-                    onClick={() => setSelectedMovie(movie)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setSelectedMovie(movie)
+                    }}
                   >
                     More Info
                   </Button>
@@ -329,7 +350,22 @@ export function HomePage() {
           </div>
         ))}
 
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <button
+          onClick={handlePrevSlide}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 md:p-3 rounded-full transition-all"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
+        </button>
+        <button
+          onClick={handleNextSlide}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white p-2 md:p-3 rounded-full transition-all"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
+        </button>
+
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
           {slideshowMovies.map((_, index) => (
             <button
               key={index}
@@ -398,7 +434,7 @@ export function HomePage() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
-          {movies.map((movie) => (
+          {sortedMovies.map((movie) => (
             <div key={movie.id} className="movie-card cursor-pointer group" onClick={() => setSelectedMovie(movie)}>
               <div className="relative overflow-hidden rounded-lg bg-card">
                 <img
