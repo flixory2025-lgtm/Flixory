@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { X, Play, Eraser as Trailer, Star, Clock, Calendar, ArrowLeft } from "lucide-react"
+import { X, Send, Eraser as Trailer, Star, Clock, Calendar, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { useEffect } from "react"
@@ -17,18 +17,18 @@ interface Movie {
   genre: string[]
   description: string
   screenshots: string[]
-  driveLink: string
+  telegramLink: string
   trailerLink: string
 }
 
 interface MovieModalProps {
   movie: Movie
   onClose: () => void
-  onPlay: (driveLink: string) => void
+  onOpenTelegram: (telegramLink: string, movieTitle: string) => void
   onPlayTrailer: (trailerLink: string) => void
 }
 
-export function MovieModal({ movie, onClose, onPlay, onPlayTrailer }: MovieModalProps) {
+export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: MovieModalProps) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -40,7 +40,6 @@ export function MovieModal({ movie, onClose, onPlay, onPlayTrailer }: MovieModal
       onClose()
     }
 
-    // Add history entry for back button support
     window.history.pushState({ modal: "movie" }, "", window.location.href)
 
     document.addEventListener("keydown", handleKeyDown)
@@ -133,11 +132,11 @@ export function MovieModal({ movie, onClose, onPlay, onPlayTrailer }: MovieModal
           {/* Action Buttons */}
           <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
             <Button
-              className="bg-primary hover:bg-primary/90 flex-1 text-sm md:text-base"
-              onClick={() => onPlay(movie.driveLink)}
+              className="bg-blue-500 hover:bg-blue-600 flex-1 text-sm md:text-base"
+              onClick={() => onOpenTelegram(movie.telegramLink, movie.title)}
             >
-              <Play className="w-4 md:w-5 h-4 md:h-5 mr-2" />
-              Play Movie
+              <Send className="w-4 md:w-5 h-4 md:h-5 mr-2" />
+              Watch on Telegram
             </Button>
             <Button
               variant="outline"
