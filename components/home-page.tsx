@@ -176,11 +176,6 @@ export function HomePage() {
   const featuredMovie = slideshowMovies[currentSlide]
 
   const handleOpenTelegram = (telegramLink: string, movieTitle: string) => {
-    if (!authenticatedUser) {
-      setShowAuthModal(true)
-      return
-    }
-
     console.log("[v0] Opening Telegram link:", telegramLink)
     setCurrentTelegramLink(telegramLink)
     setCurrentMovieTitle(movieTitle)
@@ -451,6 +446,7 @@ export function HomePage() {
         />
       )}
 
+      {/* Telegram Popup */}
       {showTelegramPopup && (
         <TelegramPopup
           telegramLink={currentTelegramLink}
@@ -460,6 +456,7 @@ export function HomePage() {
             setCurrentTelegramLink("")
             setCurrentMovieTitle("")
           }}
+          isShort={false}
         />
       )}
 
