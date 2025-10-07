@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { Camera, Edit, Save, X, CheckCircle, XCircle } from "lucide-react"
+import { Camera, Edit, Save, X, CheckCircle, Phone, Facebook, Instagram, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,7 +26,6 @@ export function ProfileSection() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [tempProfile, setTempProfile] = useState<UserProfile>(profile)
-  const [subscriptionStatus, setSubscriptionStatus] = useState<"active" | "inactive" | "pending">("inactive")
   const [currentUser, setCurrentUser] = useState<string>("")
   const [approvedUsers, setApprovedUsers] = useState<any[]>([])
 
@@ -38,7 +37,6 @@ export function ProfileSection() {
       setTempProfile(profileData)
     }
 
-    // Check current authenticated user
     const savedAuth = localStorage.getItem("flixory_user_auth")
     if (savedAuth) {
       const authData = JSON.parse(savedAuth)
@@ -50,40 +48,15 @@ export function ProfileSection() {
       setApprovedUsers(event.detail.users)
     }
 
-    // Load initial approved users
     const savedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
     setApprovedUsers(savedUsers)
 
-    // Listen for updates
     window.addEventListener("userListUpdated", handleUserListUpdate as EventListener)
 
     return () => {
       window.removeEventListener("userListUpdated", handleUserListUpdate as EventListener)
     }
   }, [])
-
-  useEffect(() => {
-    const checkSubscriptionStatus = () => {
-      const profileName = profile.name.trim()
-
-      if (!profileName || profileName === "User Name") {
-        setSubscriptionStatus("inactive")
-        return
-      }
-
-      const approvedUser = approvedUsers.find(
-        (u: any) => u.username.toLowerCase() === profileName.toLowerCase() && u.isActive,
-      )
-
-      if (approvedUser) {
-        setSubscriptionStatus("active")
-      } else {
-        setSubscriptionStatus("pending")
-      }
-    }
-
-    checkSubscriptionStatus()
-  }, [profile.name, currentUser, approvedUsers]) // Added approvedUsers dependency
 
   const handleEdit = () => {
     setTempProfile(profile)
@@ -133,31 +106,6 @@ export function ProfileSection() {
     }
   }
 
-  const getSubscriptionDisplay = () => {
-    switch (subscriptionStatus) {
-      case "active":
-        return {
-          text: "Active",
-          color: "text-green-500",
-          icon: <CheckCircle className="w-4 h-4 text-green-500" />,
-        }
-      case "pending":
-        return {
-          text: "Pending Approval",
-          color: "text-yellow-500",
-          icon: <XCircle className="w-4 h-4 text-yellow-500" />,
-        }
-      default:
-        return {
-          text: "Inactive",
-          color: "text-red-500",
-          icon: <XCircle className="w-4 h-4 text-red-500" />,
-        }
-    }
-  }
-
-  const subscriptionDisplay = getSubscriptionDisplay()
-
   return (
     <div className="min-h-screen bg-black text-white pb-20">
       {/* Header */}
@@ -204,7 +152,7 @@ export function ProfileSection() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name" className="text-white">
-                Name
+                Name <span className="text-gray-500 text-xs">(Optional)</span>
               </Label>
               {isEditing ? (
                 <Input
@@ -212,7 +160,7 @@ export function ProfileSection() {
                   value={tempProfile.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
                   className="bg-gray-800 border-gray-600 text-white"
-                  placeholder="Enter your name"
+                  placeholder="Enter your name (optional)"
                 />
               ) : (
                 <div className="p-3 bg-gray-800 rounded-md text-gray-300">{profile.name || "Not set"}</div>
@@ -270,23 +218,13 @@ export function ProfileSection() {
           <Card className="bg-gray-900 border-gray-700">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <span className="text-white">Subscription Status</span>
+                <span className="text-white">Flixory Proxy Status</span>
                 <div className="flex items-center space-x-2">
-                  {subscriptionDisplay.icon}
-                  <span className={`text-sm ${subscriptionDisplay.color}`}>{subscriptionDisplay.text}</span>
+                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <span className="text-sm text-green-500">Fully Working</span>
                 </div>
               </div>
-              {subscriptionStatus === "pending" && (
-                <p className="text-xs text-yellow-400 mt-2">
-                  Your username is not approved yet. Contact admin for access.
-                </p>
-              )}
-              {subscriptionStatus === "inactive" && (
-                <p className="text-xs text-red-400 mt-2">Set your username in profile to check approval status.</p>
-              )}
-              {subscriptionStatus === "active" && (
-                <p className="text-xs text-green-400 mt-2">You have access to all movies and features.</p>
-              )}
+              <p className="text-xs text-green-400 mt-2">All systems operational. Enjoy seamless streaming!</p>
             </CardContent>
           </Card>
 
@@ -318,6 +256,138 @@ export function ProfileSection() {
               </CardContent>
             </Card>
           )}
+
+          <Card className="bg-gray-900 border-gray-700">
+            <CardHeader>
+              <CardTitle className="text-white text-lg">Contact Us</CardTitle>
+              <CardDescription className="text-gray-400">Get in touch with us</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {/* Manager Phone */}
+              <a
+                href="tel:01945715199"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Manager</p>
+                  <p className="text-gray-400 text-xs">01945715199</p>
+                </div>
+              </a>
+
+              {/* Facebook Pages */}
+              <a
+                href="https://www.facebook.com/share/1WnQnBoNYk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Facebook Page 1</p>
+                  <p className="text-gray-400 text-xs">Visit our page</p>
+                </div>
+              </a>
+
+              <a
+                href="https://www.facebook.com/share/174JXpBbRv/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Facebook Page 2</p>
+                  <p className="text-gray-400 text-xs">Visit our page</p>
+                </div>
+              </a>
+
+              {/* Facebook Groups */}
+              <a
+                href="https://www.facebook.com/groups/963258709145001/?ref=share&mibextid=NSMWBT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Private Request Group</p>
+                  <p className="text-gray-400 text-xs">Join our private group</p>
+                </div>
+              </a>
+
+              <a
+                href="https://www.facebook.com/groups/733950559669339/?ref=share&mibextid=NSMWBT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center">
+                  <Facebook className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Public Request Group</p>
+                  <p className="text-gray-400 text-xs">Join our public group</p>
+                </div>
+              </a>
+
+              {/* TikTok */}
+              <a
+                href="https://www.tiktok.com/@mvies.vrse.bd?lang=en-GB&is_from_webapp=1&sender_device=mobile&sender_web_id=7553157383032440328"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center border border-gray-600">
+                  <span className="text-white text-lg">🎵</span>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">TikTok</p>
+                  <p className="text-gray-400 text-xs">@mvies.vrse.bd</p>
+                </div>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/moviesverse.bd?igsh=YzljYTk1ODg3Zg=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-600 flex items-center justify-center">
+                  <Instagram className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Instagram</p>
+                  <p className="text-gray-400 text-xs">@moviesverse.bd</p>
+                </div>
+              </a>
+
+              {/* Telegram */}
+              <a
+                href="https://t.me/addlist/vXPR8-A8Qco1ODM9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-3 p-3 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center">
+                  <Send className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-medium">Telegram Channels</p>
+                  <p className="text-gray-400 text-xs">Join all our channels</p>
+                </div>
+              </a>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
