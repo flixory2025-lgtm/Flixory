@@ -64,6 +64,7 @@ export function ShortsSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
+  const [isScrolling, setIsScrolling] = useState(false)
 
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientY)
@@ -74,33 +75,40 @@ export function ShortsSection() {
   }
 
   const handleTouchEnd = () => {
+    if (isScrolling) return
+
     if (touchStart - touchEnd > 50) {
-      // Swipe up
       handleNextShort()
     }
 
     if (touchStart - touchEnd < -50) {
-      // Swipe down
       handlePrevShort()
     }
   }
 
   const handleNextShort = () => {
-    if (currentIndex < shortsData.length - 1) {
+    if (currentIndex < shortsData.length - 1 && !isScrolling) {
+      setIsScrolling(true)
       setCurrentIndex(currentIndex + 1)
+      setTimeout(() => setIsScrolling(false), 500)
     }
   }
 
   const handlePrevShort = () => {
-    if (currentIndex > 0) {
+    if (currentIndex > 0 && !isScrolling) {
+      setIsScrolling(true)
       setCurrentIndex(currentIndex - 1)
+      setTimeout(() => setIsScrolling(false), 500)
     }
   }
 
   const handleWheel = (e: WheelEvent) => {
+    e.preventDefault()
+    if (isScrolling) return
+
     if (e.deltaY > 0) {
       handleNextShort()
-    } else {
+    } else if (e.deltaY < 0) {
       handlePrevShort()
     }
   }
@@ -108,10 +116,25 @@ export function ShortsSection() {
   useEffect(() => {
     const container = containerRef.current
     if (container) {
-      container.addEventListener("wheel", handleWheel)
+      container.addEventListener("wheel", handleWheel, { passive: false })
       return () => container.removeEventListener("wheel", handleWheel)
     }
-  }, [currentIndex])
+  }, [currentIndex, isScrolling])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        handleNextShort()
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault()
+        handlePrevShort()
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+    return () => window.removeEventListener("keydown", handleKeyDown)
+  }, [currentIndex, isScrolling])
 
   const currentShort = shortsData[currentIndex]
 
@@ -127,81 +150,104 @@ export function ShortsSection() {
       <div className="absolute top-0 left-0 right-0 z-20 bg-gradient-to-b from-black/80 to-transparent p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold text-white">Shorts</h1>
+          <span className="text-white/60 text-sm">
+            {currentIndex + 1} / {shortsData.length}
+          </span>
         </div>
       </div>
 
       {/* Video Container */}
       <div className="relative w-full h-full flex items-center justify-center">
-        <div className="relative w-full h-full max-w-[500px] mx-auto">
-          <iframe
-            src={`https://www.youtube.com/embed/${currentShort.youtubeId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${currentShort.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1`}
-            className="w-full h-full"
-            frameBorder="0"
-            allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
-            style={{
-              border: "none",
-              outline: "none",
-            }}
-          />
+        <div
+          className="relative w-full h-full max-w-[500px] mx-auto transition-transform duration-300"
+          style={{
+            transform: `translateY(${-currentIndex * 100}vh)`,
+          }}
+        >
+          {shortsData.map((short, index) => (
+            <div
+              key={short.id}
+              className="absolute inset-0 w-full h-full"
+              style={{
+                transform: `translateY(${index * 100}vh)`,
+              }}
+            >
+              {Math.abs(index - currentIndex) <= 1 && (
+                <iframe
+                  src={`https://www.youtube.com/embed/${short.youtubeId}?autoplay=${index === currentIndex ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${short.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1`}
+                  className="w-full h-full"
+                  frameBorder="0"
+                  allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
+                  style={{
+                    border: "none",
+                    outline: "none",
+                  }}
+                />
+              )}
 
-          {/* Side Actions */}
-          <div className="absolute right-4 bottom-24 z-20 flex flex-col space-y-6">
-            <button className="flex flex-col items-center space-y-1 text-white">
-              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                <Heart className="w-6 h-6" />
-              </div>
-              <span className="text-xs">{currentShort.likes}</span>
-            </button>
+              {index === currentIndex && (
+                <>
+                  <div className="absolute right-4 bottom-24 z-20 flex flex-col space-y-6">
+                    <button className="flex flex-col items-center space-y-1 text-white">
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <Heart className="w-6 h-6" />
+                      </div>
+                      <span className="text-xs">{short.likes}</span>
+                    </button>
 
-            <button className="flex flex-col items-center space-y-1 text-white">
-              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                <MessageCircle className="w-6 h-6" />
-              </div>
-              <span className="text-xs">{currentShort.comments}</span>
-            </button>
+                    <button className="flex flex-col items-center space-y-1 text-white">
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <MessageCircle className="w-6 h-6" />
+                      </div>
+                      <span className="text-xs">{short.comments}</span>
+                    </button>
 
-            <button className="flex flex-col items-center space-y-1 text-white">
-              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                <Share2 className="w-6 h-6" />
-              </div>
-              <span className="text-xs">Share</span>
-            </button>
+                    <button className="flex flex-col items-center space-y-1 text-white">
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
+                        <Share2 className="w-6 h-6" />
+                      </div>
+                      <span className="text-xs">Share</span>
+                    </button>
 
-            <button className="flex flex-col items-center space-y-1 text-white" onClick={() => setIsMuted(!isMuted)}>
-              <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
-              </div>
-            </button>
-          </div>
+                    <button
+                      className="flex flex-col items-center space-y-1 text-white"
+                      onClick={() => setIsMuted(!isMuted)}
+                    >
+                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
+                        {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                      </div>
+                    </button>
+                  </div>
 
-          {/* Bottom Info */}
-          <div className="absolute bottom-24 left-4 right-20 z-20">
-            <h3 className="text-white font-semibold text-lg mb-2 text-balance">{currentShort.title}</h3>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-20 flex space-x-1">
-            {shortsData.map((_, index) => (
-              <div
-                key={index}
-                className={`h-1 rounded-full transition-all ${
-                  index === currentIndex ? "w-8 bg-white" : "w-1 bg-white/40"
-                }`}
-              />
-            ))}
-          </div>
+                  <div className="absolute bottom-24 left-4 right-20 z-20">
+                    <h3 className="text-white font-semibold text-lg mb-2 text-balance">{short.title}</h3>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
         </div>
+      </div>
+
+      {/* Progress Indicator */}
+      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-20 flex space-x-1">
+        {shortsData.map((_, index) => (
+          <div
+            key={index}
+            className={`h-1 rounded-full transition-all ${index === currentIndex ? "w-8 bg-white" : "w-1 bg-white/40"}`}
+          />
+        ))}
       </div>
 
       {/* Navigation Hints */}
       {currentIndex > 0 && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 -mt-32 z-10 pointer-events-none">
-          <div className="text-white/30 text-sm animate-bounce">↑ Swipe up</div>
+        <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 z-10 pointer-events-none">
+          <div className="text-white/30 text-sm">↑ Swipe up or scroll</div>
         </div>
       )}
       {currentIndex < shortsData.length - 1 && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 mt-32 z-10 pointer-events-none">
-          <div className="text-white/30 text-sm animate-bounce">↓ Swipe down</div>
+        <div className="absolute bottom-1/3 left-1/2 transform -translate-x-1/2 z-10 pointer-events-none">
+          <div className="text-white/30 text-sm">↓ Swipe down or scroll</div>
         </div>
       )}
     </div>
