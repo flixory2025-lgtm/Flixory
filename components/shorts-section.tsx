@@ -176,10 +176,13 @@ const shortsData: Short[] = [
 ]
 
 export function ShortsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    return Math.floor(Math.random() * shortsData.length)
+  })
   const [isMuted, setIsMuted] = useState(false)
   const [showTelegramPopup, setShowTelegramPopup] = useState(false)
   const [selectedTelegramLink, setSelectedTelegramLink] = useState("")
+  const [selectedMovieTitle, setSelectedMovieTitle] = useState("")
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = () => {
@@ -215,10 +218,21 @@ export function ShortsSection() {
     }
   }
 
-  const handleWatchMovie = (telegramLink: string) => {
+  const handleWatchMovie = (telegramLink: string, title: string) => {
     setSelectedTelegramLink(telegramLink)
+    setSelectedMovieTitle(title)
     setShowTelegramPopup(true)
   }
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const itemHeight = containerRef.current.clientHeight
+      containerRef.current.scrollTo({
+        top: currentIndex * itemHeight,
+        behavior: "auto",
+      })
+    }
+  }, [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -307,7 +321,7 @@ export function ShortsSection() {
                     <h3 className="text-white font-semibold text-lg mb-3 text-balance">{short.title}</h3>
                     {/* Watch Movie button */}
                     <button
-                      onClick={() => handleWatchMovie(short.telegramLink)}
+                      onClick={() => handleWatchMovie(short.telegramLink, short.title)}
                       className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-full font-semibold transition-all shadow-lg"
                     >
                       <Play className="w-5 h-5" />
@@ -353,7 +367,11 @@ export function ShortsSection() {
 
       {/* Telegram popup */}
       {showTelegramPopup && (
-        <TelegramPopup telegramLink={selectedTelegramLink} onClose={() => setShowTelegramPopup(false)} />
+        <TelegramPopup
+          telegramLink={selectedTelegramLink}
+          movieTitle={selectedMovieTitle}
+          onClose={() => setShowTelegramPopup(false)}
+        />
       )}
     </div>
   )
