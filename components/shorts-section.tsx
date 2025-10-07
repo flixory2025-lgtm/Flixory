@@ -371,6 +371,7 @@ export function ShortsSection() {
           telegramLink={selectedTelegramLink}
           movieTitle={selectedMovieTitle}
           onClose={() => setShowTelegramPopup(false)}
+          isShort={true}
         />
       )}
     </div>
