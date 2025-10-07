@@ -1,6 +1,6 @@
 "use client"
 
-import { Home, Play, CreditCard, User } from "lucide-react"
+import { Home, Play, Film, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface BottomNavigationProps {
@@ -12,7 +12,7 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
   const tabs = [
     { id: "home", label: "Home", icon: Home },
     { id: "series", label: "Series", icon: Play },
-    { id: "subscription", label: "Subscription", icon: CreditCard },
+    { id: "shorts", label: "Shorts", icon: Film },
     { id: "profile", label: "Profile", icon: User },
   ]
 
