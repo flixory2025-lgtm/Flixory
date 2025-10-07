@@ -57,6 +57,13 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
     }
   }
 
+  const handleWatchOnTelegram = () => {
+    // Remove embed parameter and open directly in new tab
+    const cleanLink = movie.telegramLink.replace("?embed=1", "")
+    window.open(cleanLink, "_blank")
+    onClose()
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-2 md:p-4"
@@ -133,7 +140,7 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
           <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
             <Button
               className="bg-blue-500 hover:bg-blue-600 flex-1 text-sm md:text-base"
-              onClick={() => onOpenTelegram(movie.telegramLink, movie.title)}
+              onClick={handleWatchOnTelegram}
             >
               <Send className="w-4 md:w-5 h-4 md:h-5 mr-2" />
               Watch on Telegram
