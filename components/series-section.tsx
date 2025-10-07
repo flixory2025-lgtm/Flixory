@@ -121,6 +121,12 @@ export function SeriesSection() {
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null)
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
 
+  const sortedSeries = [...seriesData].sort((a, b) => {
+    const idA = Number.parseInt(a.id.split("-").pop() || "0")
+    const idB = Number.parseInt(b.id.split("-").pop() || "0")
+    return idB - idA
+  })
+
   const handleSeriesClick = (series: Series) => {
     setSelectedSeries(series)
     setCurrentView("details")
@@ -170,7 +176,7 @@ export function SeriesSection() {
       {currentView === "list" && (
         <div className="p-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {seriesData.map((series) => (
+            {sortedSeries.map((series) => (
               <div key={series.id} className="cursor-pointer group" onClick={() => handleSeriesClick(series)}>
                 <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-2">
                   <img
