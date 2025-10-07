@@ -15,11 +15,11 @@ interface Short {
 const shortsData: Short[] = [
   {
     id: "1",
-    title: "INSAAF - Epic Action Scene",
-    youtubeId: "dQw4w9WgXcQ",
+    title: "alice in boarderland",
+    youtubeId: "aCZVOqBV3ug?si",
     likes: 1200,
     comments: 45,
-    telegramLink: "https://t.me/your_channel/123",
+    telegramLink: "https://t.me/MVPMCC/326",
   },
   {
     id: "2",
