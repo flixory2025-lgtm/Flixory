@@ -16,7 +16,7 @@ const shortsData: Short[] = [
   {
     id: "1",
     title: "alice in boarderland",
-    youtubeId: "aCZVOqBV3ug?si",
+    youtubeId: "aCZVOqBV3ug",
     likes: 1200,
     comments: 45,
     telegramLink: "https://t.me/MVPMCC/326",
