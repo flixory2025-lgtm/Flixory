@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { BottomNavigation } from "@/components/bottom-navigation"
 import { SeriesSection } from "@/components/series-section"
-import { SubscriptionSection } from "@/components/subscription-section"
 import { ProfileSection } from "@/components/profile-section"
 import { HomePage } from "@/components/home-page"
+import { ShortsSection } from "@/components/shorts-section"
 
 export default function MainApp() {
   const [activeTab, setActiveTab] = useState("home")
@@ -16,8 +16,8 @@ export default function MainApp() {
         return <HomePage />
       case "series":
         return <SeriesSection />
-      case "subscription":
-        return <SubscriptionSection />
+      case "shorts":
+        return <ShortsSection />
       case "profile":
         return <ProfileSection />
       default:
