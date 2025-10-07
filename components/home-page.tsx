@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { MovieModal } from "@/components/movie-modal"
 import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
+import { TelegramPopup } from "@/components/telegram-popup"
 
 const movies = [
   {
@@ -28,7 +29,7 @@ const movies = [
       "/dramatic-courtroom-scene-in-bengali-movie.jpg",
       "/emotional-family-moment-in-bengali-drama.jpg",
     ],
-    driveLink: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+    telegramLink: "https://t.me/your_channel/123?embed=1",
     trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
   },
   {
@@ -42,7 +43,7 @@ const movies = [
     description:
       "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: ["/ss2.png", "/ss22.png", "/ss222.png", "/ss2222.png"],
-    driveLink: "https://streamtape.com/e/ko1Qxz6Vq7cOqv0/",
+    telegramLink: "https://t.me/your_channel/124?embed=1",
     trailerLink: "https://www.youtube.com/embed/QrWh3Ww3Zn0?si",
   },
   {
@@ -55,7 +56,7 @@ const movies = [
     genre: ["Action", "Romance", "Thriller"],
     description: "পুরনো ভিলেনের ছায়ায় নতুন প্রেম, নতুন প্রতিশোধ আর খুনের রহস্য—হিরো নয়, এখানে গল্প বলে শুধু ভিলেনরা।",
     screenshots: ["/ss3.jpg", "/ss33.jpg", "/ss333.jpg", "/ss3333.jpg"],
-    driveLink: "https://drive.google.com/file/d/1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W/view?usp=drivesdk",
+    telegramLink: "https://t.me/your_channel/125?embed=1",
     trailerLink: "https://www.youtube.com/embed/swPhyd0g6K8?si",
   },
   {
@@ -69,7 +70,7 @@ const movies = [
     description:
       "এক ভয়ংকর বন্য প্রাণীর আক্রমণে আটকে পড়া মানুষদের টিকে থাকার সংগ্রাম। প্রতিটি মুহূর্তেই জীবন-মৃত্যুর লড়াই, আর প্রকৃতির ভয়ংকর শক্তির সামনে মানুষ কতটা অসহায়—সেই কাহিনি।",
     screenshots: ["/ss4.jpg", "/ss44.jpg", "/ss444.jpg", "/ss4444.jpg"],
-    driveLink: "https://drive.google.com/file/d/1aM6ddxMvhW3kHoav5Oe9rbaOiAaaOW6D/view?usp=drivesdk",
+    telegramLink: "https://t.me/your_channel/126?embed=1",
     trailerLink: "https://www.youtube.com/embed/j19tLLKiYKY?si",
   },
   {
@@ -82,7 +83,7 @@ const movies = [
     genre: ["Action", "Drama", "Thriller"],
     description: "পরিচালক Sanjoy Somadder-এর এই ছবিতে অন্ধকার আন্ডারওয়ার্ল্ড, প্রতিশোধ আর ভালোবাসার গল্প মিলেছে একসাথে।",
     screenshots: ["/ss5.jpg", "/ss55.jpg"],
-    driveLink: "https://drive.google.com/file/d/14YRbj1MRECwb0b6fkrD6Rzv9XuDN5N_X/view?usp=drivesdk",
+    telegramLink: "https://t.me/your_channel/127?embed=1",
     trailerLink: "https://www.youtube.com/embed/J0SzT_184SE?si",
   },
   {
@@ -94,16 +95,9 @@ const movies = [
     duration: "3h 14m",
     genre: ["Romance", "Drama", "Action"],
     description:
-      "বিখ্যাত RMS Titanic জাহাজের ট্র্যাজেডির পটভূমিতে তৈরি এক অবিস্মরণীয় প্রেমকাহিনি। রোজ আর জ্যাকের ভালোবাসা ইতিহাসে এক ক্লাসিক গল্প হিসেবে জায়গা করে নিয়েছে।",
-    screenshots: [
-      "/ss6.jpg",
-      "/ss66.jpg",
-      "/ss666.jpg",
-      "/ss6666.jpg",
-       "/ss66666.jpg",
-      "/ss666666.jpg",
-    ],
-    driveLink: "https://u.pcloud.link/publink/embed?code=XZrLge5ZJ0uKU083S2BbRXAbmBRlh4cFFznk",
+      "বিখ্যাত RMS Titanic জাহাজের ট্র্যাজেডির পটভূমিতে তৈরি এক অবিস্মরণীয় প্রেমকাহিনি। রোজ আর জ্যাকের ভালোবাসা ইতিহাসে এক ক্লাসিক গল্প হিসেবে জায়গা করে নিয়েছে।",
+    screenshots: ["/ss6.jpg", "/ss66.jpg", "/ss666.jpg", "/ss6666.jpg", "/ss66666.jpg", "/ss666666.jpg"],
+    telegramLink: "https://t.me/your_channel/128?embed=1",
     trailerLink: "https://www.youtube.com/embed/kVrqfYjkTdQ?si",
   },
 ]
@@ -117,11 +111,14 @@ export function HomePage() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [authenticatedUser, setAuthenticatedUser] = useState<string | null>(null)
   const [sessionExpired, setSessionExpired] = useState(false)
+  const [showTelegramPopup, setShowTelegramPopup] = useState(false)
+  const [currentTelegramLink, setCurrentTelegramLink] = useState("")
+  const [currentMovieTitle, setCurrentMovieTitle] = useState("")
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % 4) // Now 4 slides (movies 1, 2, 4, 5)
-    }, 3000) // Change every 3 seconds
+      setCurrentSlide((prev) => (prev + 1) % 4)
+    }, 3000)
 
     return () => clearInterval(interval)
   }, [])
@@ -132,7 +129,6 @@ export function HomePage() {
       if (savedAuth) {
         const authData = JSON.parse(savedAuth)
 
-        // Check if session has expired
         if (authData.expiresAt && new Date(authData.expiresAt) < new Date()) {
           localStorage.removeItem("flixory_user_auth")
           setAuthenticatedUser(null)
@@ -140,7 +136,6 @@ export function HomePage() {
           return
         }
 
-        // Verify user is still approved and active
         const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
         const user = approvedUsers.find(
           (u: any) => u.username.toLowerCase() === authData.username.toLowerCase() && u.isActive,
@@ -160,7 +155,6 @@ export function HomePage() {
 
     checkAuthStatus()
 
-    // Check auth status every minute
     const authCheckInterval = setInterval(checkAuthStatus, 60000)
 
     return () => clearInterval(authCheckInterval)
@@ -181,15 +175,16 @@ export function HomePage() {
   const slideshowMovies = movies.filter((movie) => [1, 2, 4, 5].includes(movie.id))
   const featuredMovie = slideshowMovies[currentSlide]
 
-  const handlePlayMovie = (driveLink: string) => {
+  const handleOpenTelegram = (telegramLink: string, movieTitle: string) => {
     if (!authenticatedUser) {
       setShowAuthModal(true)
       return
     }
 
-    console.log("[v0] Playing movie with drive link:", driveLink)
-    setCurrentVideoUrl(driveLink)
-    setIsPlaying(true)
+    console.log("[v0] Opening Telegram link:", telegramLink)
+    setCurrentTelegramLink(telegramLink)
+    setCurrentMovieTitle(movieTitle)
+    setShowTelegramPopup(true)
     setSelectedMovie(null)
   }
 
@@ -209,7 +204,6 @@ export function HomePage() {
   const handleLogout = () => {
     localStorage.removeItem("flixory_user_auth")
 
-    // Clear device binding from approved users
     const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
     const updatedUsers = approvedUsers.map((u: any) =>
       u.username.toLowerCase() === authenticatedUser?.toLowerCase()
@@ -322,7 +316,7 @@ export function HomePage() {
                 <div className="flex space-x-3 md:space-x-6">
                   <Button
                     className="bg-primary hover:bg-primary/90 text-sm md:text-lg px-4 md:px-8 py-2 md:py-3"
-                    onClick={() => handlePlayMovie(movie.driveLink)}
+                    onClick={() => handleOpenTelegram(movie.telegramLink, movie.title)}
                   >
                     <Play className="w-4 md:w-6 h-4 md:h-6 mr-2 md:mr-3" />
                     Play
@@ -340,7 +334,6 @@ export function HomePage() {
           </div>
         ))}
 
-        {/* Slideshow indicators */}
         <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
           {slideshowMovies.map((_, index) => (
             <button
@@ -442,7 +435,7 @@ export function HomePage() {
         <MovieModal
           movie={selectedMovie}
           onClose={() => setSelectedMovie(null)}
-          onPlay={handlePlayMovie}
+          onOpenTelegram={handleOpenTelegram}
           onPlayTrailer={handlePlayTrailer}
         />
       )}
@@ -458,12 +451,23 @@ export function HomePage() {
         />
       )}
 
+      {showTelegramPopup && (
+        <TelegramPopup
+          telegramLink={currentTelegramLink}
+          movieTitle={currentMovieTitle}
+          onClose={() => {
+            setShowTelegramPopup(false)
+            setCurrentTelegramLink("")
+            setCurrentMovieTitle("")
+          }}
+        />
+      )}
+
       {showAuthModal && <UserAuthModal onAuth={handleUserAuth} onClose={() => setShowAuthModal(false)} />}
     </div>
   )
 }
 
-// Function to convert YouTube link to embed format
 function convertYouTubeLink(youtubeLink: string): string {
   const videoIdMatch = youtubeLink.match(/v=([a-zA-Z0-9_-]+)/)
   if (videoIdMatch) {
