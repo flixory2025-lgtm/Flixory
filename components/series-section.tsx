@@ -91,7 +91,7 @@ const seriesData: Series[] = [
   {
     id: "TV-series-2",
     title: "school (2017)",
-    poster: "/s2id",
+    poster: "/s2id.jpg",
     description: "flixory proxy site school k-drama tv series",
     genre: "Comedy , Drama , Mystery",
     year: "2017",
