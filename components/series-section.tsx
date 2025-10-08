@@ -236,7 +236,7 @@ const seriesData: Series[] = [
   {
     id: "TV-series-3",
     title: "CID season 2 bangla (2025)",
-    poster: "/s3id",
+    poster: "/s3id.jpg",
     description: "flixory proxy site CID BANGLA tv series",
     genre: "Comedy , Drama , Mystery",
     year: "2017",
