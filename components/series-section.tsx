@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Play, Folder } from "lucide-react"
+import { ArrowLeft, Play, Folder, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { VideoPlayer } from "./video-player"
@@ -33,7 +33,7 @@ interface Series {
 }
 
 const seriesData: Series[] = [
-  {
+ {
     id: "hoichoi-original-1",
     title: "Byomkesh",
     poster: "/bengali-detective-series-poster.jpg",
@@ -546,6 +546,31 @@ const seriesData: Series[] = [
       },
     ],
   },
+  {
+    id: "hoichoi-original-2",
+    title: "Tansener Tanpura",
+    poster: "/bengali-musical-series-poster.jpg",
+    description: "A musical journey through the life and times of legendary musician Tansen.",
+    genre: "Musical, Drama",
+    year: "2023",
+    rating: "8.2",
+    seasons: [
+      {
+        id: "season-1",
+        title: "Season 1",
+        episodes: [
+          {
+            id: "ep1",
+            title: "Raag Bhairav",
+            episode: 1,
+            duration: "50:25",
+            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            thumbnail: "/tansen-episode-1-thumbnail.jpg",
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 export function SeriesSection() {
@@ -553,6 +578,10 @@ export function SeriesSection() {
   const [selectedSeries, setSelectedSeries] = useState<Series | null>(null)
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null)
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
+  const [episodePopup, setEpisodePopup] = useState<{ show: boolean; episode: Episode | null }>({
+    show: false,
+    episode: null,
+  })
 
   const sortedSeries = [...seriesData].sort((a, b) => {
     const idA = Number.parseInt(a.id.split("-").pop() || "0")
@@ -570,8 +599,15 @@ export function SeriesSection() {
     setCurrentView("episodes")
   }
 
-  const handleEpisodePlay = (videoUrl: string) => {
-    setPlayingVideo(videoUrl)
+  const handleEpisodePlay = (episode: Episode) => {
+    setEpisodePopup({ show: true, episode })
+  }
+
+  const handleWatchOnTelegram = () => {
+    if (episodePopup.episode?.videoUrl) {
+      window.open(episodePopup.episode.videoUrl, "_blank")
+      setEpisodePopup({ show: false, episode: null })
+    }
   }
 
   const handleBack = () => {
@@ -682,7 +718,7 @@ export function SeriesSection() {
               <div
                 key={episode.id}
                 className="flex items-center space-x-4 p-4 bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors cursor-pointer"
-                onClick={() => handleEpisodePlay(episode.videoUrl)}
+                onClick={() => handleEpisodePlay(episode)}
               >
                 <div className="relative w-20 h-12 rounded overflow-hidden flex-shrink-0">
                   <img
@@ -702,6 +738,44 @@ export function SeriesSection() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Episode Telegram Popup */}
+      {episodePopup.show && episodePopup.episode && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button
+              onClick={() => setEpisodePopup({ show: false, episode: null })}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center space-y-6">
+              <div className="text-5xl mb-4">📺</div>
+
+              <h3 className="text-xl font-bold text-white mb-2">Episode {episodePopup.episode.episode}</h3>
+
+              <div className="space-y-3 text-gray-300 leading-relaxed">
+                <p className="text-base">
+                  🎬 আপনি এই episode টি{" "}
+                  <span className="text-red-500 font-semibold">Telegram Flixory Proxy Channel</span> থেকে দেখতে হবে।
+                </p>
+                <p className="text-base">
+                  👇 দেখতে নিচে <span className="text-blue-400 font-semibold">Watch on Telegram</span> বাটনে ক্লিক করুন।
+                </p>
+              </div>
+
+              <Button
+                onClick={handleWatchOnTelegram}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Watch on Telegram
+              </Button>
+            </div>
           </div>
         </div>
       )}
