@@ -36,9 +36,19 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
 
   const handleDirectDownload = () => {
     if (movie.googleDriveDownloadUrl) {
-      const fileIdMatch = movie.googleDriveDownloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
+      let downloadUrl = movie.googleDriveDownloadUrl
+
+      // If URL already contains download link format, use it directly
+      if (downloadUrl.includes("uc?export=download")) {
+        window.open(downloadUrl, "_blank")
+        return
+      }
+
+      // Otherwise, extract file ID and create download URL
+      const fileIdMatch = downloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || downloadUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
+
       if (fileIdMatch && fileIdMatch[1]) {
-        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
+        downloadUrl = `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
         window.open(downloadUrl, "_blank")
       }
     }
