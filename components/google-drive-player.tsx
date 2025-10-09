@@ -41,7 +41,7 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
       </div>
 
       {/* Video Player */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative hide-drive-controls">
         <iframe
           src={getPreviewUrl(driveUrl)}
           className="w-full h-full"
@@ -49,6 +49,9 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
           allowFullScreen
           title={title}
         />
+        <div className="absolute top-2 right-2 bg-black/80 px-3 py-1.5 rounded-md pointer-events-none z-10">
+          <span className="text-red-600 font-bold text-sm tracking-wider">FLIXORY</span>
+        </div>
       </div>
     </div>
   )
