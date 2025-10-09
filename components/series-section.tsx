@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Play, Folder, X } from "lucide-react"
+import { ArrowLeft, Play, Folder, X, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { VideoPlayer } from "./video-player"
+import { GoogleDrivePlayer } from "./google-drive-player"
 
 interface Episode {
   id: string
@@ -13,6 +14,8 @@ interface Episode {
   duration: string
   videoUrl: string
   thumbnail: string
+  googleDrivePlayUrl?: string
+  googleDriveDownloadUrl?: string
 }
 
 interface Season {
@@ -33,7 +36,7 @@ interface Series {
 }
 
 const seriesData: Series[] = [
- {
+  {
     id: "hoichoi-original-1",
     title: "Byomkesh",
     poster: "/bengali-detective-series-poster.jpg",
@@ -51,8 +54,11 @@ const seriesData: Series[] = [
             title: "Satyanweshi",
             episode: 1,
             duration: "45:30",
-            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            videoUrl: "https://t.me/flixoryproxy/3489",
             thumbnail: "/byomkesh-episode-1-thumbnail.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W/preview",
+            googleDriveDownloadUrl:
+              "https://drive.google.com/uc?export=download&id=1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W",
           },
           {
             id: "ep2",
@@ -61,6 +67,9 @@ const seriesData: Series[] = [
             duration: "42:15",
             videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
             thumbnail: "/byomkesh-episode-2-thumbnail.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            googleDriveDownloadUrl:
+              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
           },
           {
             id: "ep3",
@@ -69,6 +78,9 @@ const seriesData: Series[] = [
             duration: "48:20",
             videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
             thumbnail: "/byomkesh-episode-3-thumbnail.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            googleDriveDownloadUrl:
+              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
           },
         ],
       },
@@ -83,464 +95,9 @@ const seriesData: Series[] = [
             duration: "46:10",
             videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
             thumbnail: "/byomkesh-s2-episode-1-thumbnail.jpg",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "TV-series-2",
-    title: "school (2017)",
-    poster: "/s2id.jpg",
-    description: "flixory proxy site school k-drama tv series",
-    genre: "Comedy , Drama , Mystery",
-    year: "2017",
-    rating: "7.1",
-    seasons: [
-      {
-        id: "season-1",
-        title: "Season 1",
-        episodes: [
-          {
-            id: "ep1",
-            title: "school k-drama",
-            episode: 1,
-            duration: "01:02:11",
-            videoUrl: "https://t.me/flixoryproxy/25",
-            thumbnail: "/th1id.jpg",
-          },
-          {
-            id: "ep2",
-            title: "school k-drama",
-            episode: 2,
-            duration: "01:02:49",
-            videoUrl: "https://t.me/flixoryproxy/27",
-            thumbnail: "/th2id.jpg",
-          },
-          {
-            id: "ep3",
-            title: "school k-drama",
-            episode: 3,
-            duration: "01:03:05",
-            videoUrl: "https://t.me/flixoryproxy/29",
-            thumbnail: "/th3id.jpg",
-          },
-          {
-            id: "ep4",
-            title: "school k-drama",
-            episode: 4,
-            duration: "01:03:29",
-            videoUrl: "https://t.me/flixoryproxy/31",
-            thumbnail: "/th4id.jpg",
-          },
-          {
-            id: "ep5",
-            title: "school k-drama",
-            episode: 5,
-            duration: "01:04:20",
-            videoUrl: "https://t.me/flixoryproxy/33",
-            thumbnail: "/th5id.jpg",
-          },
-          {
-            id: "ep6",
-            title: "school k-drama",
-            episode: 6,
-            duration: "01:04:43",
-            videoUrl: "https://t.me/flixoryproxy/35",
-            thumbnail: "/th6id.jpg",
-          },
-          {
-            id: "ep7",
-            title: "school k-drama",
-            episode: 7,
-            duration: "01:05:09",
-            videoUrl: "https://t.me/flixoryproxy/37",
-            thumbnail: "/th7id.jpg",
-          },
-          {
-            id: "ep8",
-            title: "school k-drama",
-            episode: 8,
-            duration: "01:05:39",
-            videoUrl: "https://t.me/flixoryproxy/39",
-            thumbnail: "/th8id.jpg",
-          },
-          {
-            id: "ep9",
-            title: "school k-drama",
-            episode: 9,
-            duration: "01:04:59",
-            videoUrl: "https://t.me/flixoryproxy/41",
-            thumbnail: "/th9id.jpg",
-          },
-          {
-            id: "ep10",
-            title: "school k-drama",
-            episode: 10,
-            duration: "01:04:48",
-            videoUrl: "https://t.me/flixoryproxy/43",
-            thumbnail: "/th10id.jpg",
-          },
-          {
-            id: "ep11",
-            title: "school k-drama",
-            episode: 11,
-            duration: "01:05:36",
-            videoUrl: "https://t.me/flixoryproxy/45",
-            thumbnail: "/th11id.jpg",
-          },
-          {
-            id: "ep12",
-            title: "school k-drama",
-            episode: 12,
-            duration: "01:03:13",
-            videoUrl: "https://t.me/flixoryproxy/47",
-            thumbnail: "/th12id.jpg",
-          },
-          {
-            id: "ep13",
-            title: "school k-drama",
-            episode: 13,
-            duration: "01:03:13",
-            videoUrl: "https://t.me/flixoryproxy/49",
-            thumbnail: "/th13id.jpg",
-          },
-          {
-            id: "ep14",
-            title: "school k-drama",
-            episode: 14,
-            duration: "01:03:52",
-            videoUrl: "https://t.me/flixoryproxy/51",
-            thumbnail: "/th14id.jpg",
-          },
-          {
-            id: "ep15",
-            title: "school k-drama",
-            episode: 15,
-            duration: "01:03:32",
-            videoUrl: "https://t.me/flixoryproxy/53",
-            thumbnail: "/th15id.jpg",
-          },
-          {
-            id: "ep16 season 1 complete",
-            title: "school k-drama",
-            episode: 16,
-            duration: "01:04:23",
-            videoUrl: "https://t.me/flixoryproxy/55",
-            thumbnail: "/th16id.jpg",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "TV-series-3",
-    title: "CID season 2 bangla (2025)",
-    poster: "/s3id.jpg",
-    description: "flixory proxy site CID BANGLA tv series",
-    genre: "Comedy , Drama , Mystery",
-    year: "2017",
-    rating: "7.1",
-    seasons: [
-      {
-        id: "season-2",
-        title: "Season 2",
-        episodes: [
-          {
-            id: "ep1",
-            title: "CID bangla 2025",
-            episode: 1,
-            duration: "51:50",
-            videoUrl: "https://t.me/flixoryproxy/102",
-            thumbnail: "/th1id.jpg",
-          },
-          {
-            id: "ep2",
-            title: "CID bangla 2025",
-            episode: 2,
-            duration: "47:52",
-            videoUrl: "https://t.me/flixoryproxy/104",
-            thumbnail: "/th2id.jpg",
-          },
-          {
-            id: "ep3",
-            title: "CID bangla 2025",
-            episode: 3,
-            duration: "48:55",
-            videoUrl: "https://t.me/flixoryproxy/106",
-            thumbnail: "/th3id.jpg",
-          },
-          {
-            id: "ep4",
-            title: "CID bangla 2025",
-            episode: 4,
-            duration: "48:59",
-            videoUrl: "https://t.me/flixoryproxy/108",
-            thumbnail: "/th4id.jpg",
-          },
-          {
-            id: "ep5",
-            title: "CID bangla 2025",
-            episode: 5,
-            duration: "48:06",
-            videoUrl: "https://t.me/flixoryproxy/110",
-            thumbnail: "/th5id.jpg",
-          },
-          {
-            id: "ep6",
-            title: "CID bangla 2025",
-            episode: 6,
-            duration: "43:50",
-            videoUrl: "https://t.me/flixoryproxy/112",
-            thumbnail: "/th6id.jpg",
-          },
-          {
-            id: "ep7",
-            title: "CID bangla 2025",
-            episode: 7,
-            duration: "46:42",
-            videoUrl: "https://t.me/flixoryproxy/114",
-            thumbnail: "/th7id.jpg",
-          },
-          {
-            id: "ep8",
-            title: "CID bangla 2025",
-            episode: 8,
-            duration: "47:47",
-            videoUrl: "https://t.me/flixoryproxy/116",
-            thumbnail: "/th8id.jpg",
-          },
-          {
-            id: "ep9",
-            title: "CID bangla 2025",
-            episode: 9,
-            duration: "44:36",
-            videoUrl: "https://t.me/flixoryproxy/118",
-            thumbnail: "/th9id.jpg",
-          },
-          {
-            id: "ep10",
-            title: "CID bangla 2025",
-            episode: 10,
-            duration: "46:35",
-            videoUrl: "https://t.me/flixoryproxy/120",
-            thumbnail: "/th10id.jpg",
-          },
-          {
-            id: "ep11",
-            title: "CID bangla 2025",
-            episode: 11,
-            duration: "46:45",
-            videoUrl: "https://t.me/flixoryproxy/122",
-            thumbnail: "/th11id.jpg",
-          },
-          {
-            id: "ep12",
-            title: "CID bangla 2025",
-            episode: 12,
-            duration: "44:15",
-            videoUrl: "https://t.me/flixoryproxy/124",
-            thumbnail: "/th12id.jpg",
-          },
-          {
-            id: "ep13",
-            title: "CID bangla 2025",
-            episode: 13,
-            duration: "46:27",
-            videoUrl: "https://t.me/flixoryproxy/126",
-            thumbnail: "/th13id.jpg",
-          },
-          {
-            id: "ep14",
-            title: "CID bangla 2025",
-            episode: 14,
-            duration: "46:12",
-            videoUrl: "https://t.me/flixoryproxy/128",
-            thumbnail: "/th14id.jpg",
-          },
-          {
-            id: "ep15",
-            title: "CID bangla 2025",
-            episode: 15,
-            duration: "44:51",
-            videoUrl: "https://t.me/flixoryproxy/130",
-            thumbnail: "/th15id.jpg",
-          },
-          {
-            id: "ep16",
-            title: "CID bangla 2025",
-            episode: 16,
-            duration: "50:57",
-            videoUrl: "https://t.me/flixoryproxy/132",
-            thumbnail: "/th16id.jpg",
-          },
-          {
-            id: "ep17",
-            title: "CID bangla 2025",
-            episode: 17,
-            duration: "48:39",
-            videoUrl: "https://t.me/flixoryproxy/134",
-            thumbnail: "/th17id.jpg",
-          },
-          {
-            id: "ep18",
-            title: "CID bangla 2025",
-            episode: 18,
-            duration: "48:54",
-            videoUrl: "https://t.me/flixoryproxy/136",
-            thumbnail: "/th18id.jpg",
-          },
-          {
-            id: "ep19",
-            title: "CID bangla 2025",
-            episode: 19,
-            duration: "45:40",
-            videoUrl: "https://t.me/flixoryproxy/138",
-            thumbnail: "/th19id.jpg",
-          },
-          {
-            id: "ep20",
-            title: "CID bangla 2025",
-            episode: 20,
-            duration: "48:37",
-            videoUrl: "https://t.me/flixoryproxy/140",
-            thumbnail: "/th20id.jpg",
-          },
-          {
-            id: "ep21",
-            title: "CID bangla 2025",
-            episode: 21,
-            duration: "43:52",
-            videoUrl: "https://t.me/flixoryproxy/142",
-            thumbnail: "/th21id.jpg",
-          },
-          {
-            id: "ep22",
-            title: "CID bangla 2025",
-            episode: 22,
-            duration: "45:41",
-            videoUrl: "https://t.me/flixoryproxy/144",
-            thumbnail: "/th22id.jpg",
-          },
-          {
-            id: "ep23",
-            title: "CID bangla 2025",
-            episode: 23,
-            duration: "50:43",
-            videoUrl: "https://t.me/flixoryproxy/146",
-            thumbnail: "/th23id.jpg",
-          },
-          {
-            id: "ep24",
-            title: "CID bangla 2025",
-            episode: 24,
-            duration: "45:14",
-            videoUrl: "https://t.me/flixoryproxy/148",
-            thumbnail: "/th24id.jpg",
-          },
-          {
-            id: "ep25",
-            title: "CID bangla 2025",
-            episode: 25,
-            duration: "45:01",
-            videoUrl: "https://t.me/flixoryproxy/150",
-            thumbnail: "/th25id.jpg",
-          },
-          {
-            id: "ep26",
-            title: "CID bangla 2025",
-            episode: 26,
-            duration: "45:01",
-            videoUrl: "https://t.me/flixoryproxy/152",
-            thumbnail: "/th26id.jpg",
-          },
-          {
-            id: "ep27",
-            title: "CID bangla 2025",
-            episode: 27,
-            duration: "45:44",
-            videoUrl: "https://t.me/flixoryproxy/154",
-            thumbnail: "/th27id.jpg",
-          },
-          {
-            id: "ep28",
-            title: "CID bangla 2025",
-            episode: 28,
-            duration: "45:11",
-            videoUrl: "https://t.me/flixoryproxy/156",
-            thumbnail: "/th28id.jpg",
-          },
-          {
-            id: "ep29",
-            title: "CID bangla 2025",
-            episode: 29,
-            duration: "46:10",
-            videoUrl: "https://t.me/flixoryproxy/158",
-            thumbnail: "/th29id.jpg",
-          },
-          {
-            id: "ep30",
-            title: "CID bangla 2025",
-            episode: 30,
-            duration: "45:41",
-            videoUrl: "https://t.me/flixoryproxy/160",
-            thumbnail: "/th30id.jpg",
-          },
-          {
-            id: "ep31",
-            title: "CID bangla 2025",
-            episode: 31,
-            duration: "44:45",
-            videoUrl: "https://t.me/flixoryproxy/162",
-            thumbnail: "/th31id.jpg",
-          },
-          {
-            id: "ep32",
-            title: "CID bangla 2025",
-            episode: 32,
-            duration: "44:48",
-            videoUrl: "https://t.me/flixoryproxy/164",
-            thumbnail: "/th32id.jpg",
-          },
-          {
-            id: "ep33",
-            title: "CID bangla 2025",
-            episode: 33,
-            duration: "44:14",
-            videoUrl: "https://t.me/flixoryproxy/166",
-            thumbnail: "/th33id.jpg",
-          },
-          {
-            id: "ep34",
-            title: "CID bangla 2025",
-            episode: 34,
-            duration: "44:22",
-            videoUrl: "https://t.me/flixoryproxy/168",
-            thumbnail: "/th34id.jpg",
-          },
-          {
-            id: "ep35",
-            title: "CID bangla 2025",
-            episode: 35,
-            duration: "47:02",
-            videoUrl: "https://t.me/flixoryproxy/3007",
-            thumbnail: "/th35id.jpg",
-          },
-          {
-            id: "ep36",
-            title: "CID bangla 2025",
-            episode: 36,
-            duration: "48:59",
-            videoUrl: "https://t.me/flixoryproxy/3009",
-            thumbnail: "/th36id.jpg",
-          },
-          {
-            id: "ep37",
-            title: "CID bangla 2025",
-            episode: 37,
-            duration: "45:49",
-            videoUrl: "https://t.me/flixoryproxy/3490",
-            thumbnail: "/th37id.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            googleDriveDownloadUrl:
+              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
           },
         ],
       },
@@ -566,6 +123,9 @@ const seriesData: Series[] = [
             duration: "50:25",
             videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
             thumbnail: "/tansen-episode-1-thumbnail.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            googleDriveDownloadUrl:
+              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
           },
         ],
       },
@@ -579,6 +139,10 @@ export function SeriesSection() {
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null)
   const [playingVideo, setPlayingVideo] = useState<string | null>(null)
   const [episodePopup, setEpisodePopup] = useState<{ show: boolean; episode: Episode | null }>({
+    show: false,
+    episode: null,
+  })
+  const [showDrivePlayer, setShowDrivePlayer] = useState<{ show: boolean; episode: Episode | null }>({
     show: false,
     episode: null,
   })
@@ -610,6 +174,23 @@ export function SeriesSection() {
     }
   }
 
+  const handleDirectDownload = () => {
+    if (episodePopup.episode?.googleDriveDownloadUrl) {
+      const fileIdMatch = episodePopup.episode.googleDriveDownloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
+      if (fileIdMatch && fileIdMatch[1]) {
+        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
+        window.open(downloadUrl, "_blank")
+      }
+    }
+  }
+
+  const handleOnlinePlay = () => {
+    if (episodePopup.episode) {
+      setShowDrivePlayer({ show: true, episode: episodePopup.episode })
+      setEpisodePopup({ show: false, episode: null })
+    }
+  }
+
   const handleBack = () => {
     if (currentView === "episodes") {
       setCurrentView("details")
@@ -622,6 +203,16 @@ export function SeriesSection() {
 
   if (playingVideo) {
     return <VideoPlayer videoUrl={playingVideo} onClose={() => setPlayingVideo(null)} />
+  }
+
+  if (showDrivePlayer.show && showDrivePlayer.episode?.googleDrivePlayUrl) {
+    return (
+      <GoogleDrivePlayer
+        driveUrl={showDrivePlayer.episode.googleDrivePlayUrl}
+        title={`${selectedSeries?.title} - Episode ${showDrivePlayer.episode.episode}`}
+        onClose={() => setShowDrivePlayer({ show: false, episode: null })}
+      />
+    )
   }
 
   return (
@@ -768,13 +359,35 @@ export function SeriesSection() {
                 </p>
               </div>
 
-              <Button
-                onClick={handleWatchOnTelegram}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch on Telegram
-              </Button>
+              <div className="space-y-3">
+                <Button
+                  onClick={handleWatchOnTelegram}
+                  className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Watch on Telegram
+                </Button>
+
+                {episodePopup.episode.googleDrivePlayUrl && (
+                  <Button
+                    onClick={handleOnlinePlay}
+                    className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-green-500/50 transition-all duration-300"
+                  >
+                    <Play className="w-5 h-5 mr-2" />
+                    Online Play
+                  </Button>
+                )}
+
+                {episodePopup.episode.googleDriveDownloadUrl && (
+                  <Button
+                    onClick={handleDirectDownload}
+                    className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
+                  >
+                    <Download className="w-5 h-5 mr-2" />
+                    Direct Download
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
