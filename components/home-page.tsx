@@ -10,7 +10,7 @@ import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
 
-const TRENDING_MOVIE_IDS = [1, 3, 5, 6]
+const TRENDING_MOVIE_IDS = [2, 4, 6, 5]
 
 const movies = [
   {
@@ -33,6 +33,8 @@ const movies = [
     ],
     telegramLink: "https://t.me/your_channel/123?embed=1",
     trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1ABC123xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1ABC123xyz/view?usp=sharing",
   },
   {
     id: 2,
@@ -47,6 +49,8 @@ const movies = [
     screenshots: ["/ss2.png", "/ss22.png", "/ss222.png", "/ss2222.png"],
     telegramLink: "https://t.me/your_channel/124?embed=1",
     trailerLink: "https://www.youtube.com/embed/QrWh3Ww3Zn0?si",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1DEF456xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1DEF456xyz/view?usp=sharing",
   },
   {
     id: 3,
@@ -60,6 +64,8 @@ const movies = [
     screenshots: ["/ss3.jpg", "/ss33.jpg", "/ss333.jpg", "/ss3333.jpg"],
     telegramLink: "https://t.me/your_channel/125?embed=1",
     trailerLink: "https://www.youtube.com/embed/swPhyd0g6K8?si",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1GHI789xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1GHI789xyz/view?usp=sharing",
   },
   {
     id: 4,
@@ -74,6 +80,8 @@ const movies = [
     screenshots: ["/ss4.jpg", "/ss44.jpg", "/ss444.jpg", "/ss4444.jpg"],
     telegramLink: "https://t.me/your_channel/126?embed=1",
     trailerLink: "https://www.youtube.com/embed/j19tLLKiYKY?si",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1JKL012xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1JKL012xyz/view?usp=sharing",
   },
   {
     id: 5,
@@ -87,6 +95,8 @@ const movies = [
     screenshots: ["/ss5.jpg", "/ss55.jpg"],
     telegramLink: "https://t.me/your_channel/127?embed=1",
     trailerLink: "https://www.youtube.com/embed/J0SzT_184SE?si",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1MNO345xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1MNO345xyz/view?usp=sharing",
   },
   {
     id: 6,
@@ -101,6 +111,8 @@ const movies = [
     screenshots: ["/ss6.jpg", "/ss66.jpg", "/ss666.jpg", "/ss6666.jpg", "/ss66666.jpg", "/ss666666.jpg"],
     telegramLink: "https://t.me/your_channel/128?embed=1",
     trailerLink: "https://www.youtube.com/embed/kVrqfYjkTdQ?si",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1PQR678xyz/view?usp=sharing",
+    googleDriveDownloadUrl: "https://drive.google.com/file/d/1PQR678xyz/view?usp=sharing",
   },
 ]
 
