@@ -2,10 +2,11 @@
 
 import type React from "react"
 
-import { X, Send, Eraser as Trailer, Star, Clock, Calendar, ArrowLeft } from "lucide-react"
+import { X, Send, Eraser as Trailer, Star, Clock, Calendar, ArrowLeft, Play, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { GoogleDrivePlayer } from "./google-drive-player"
 
 interface Movie {
   id: number
@@ -19,6 +20,8 @@ interface Movie {
   screenshots: string[]
   telegramLink: string
   trailerLink: string
+  googleDrivePlayUrl?: string
+  googleDriveDownloadUrl?: string
 }
 
 interface MovieModalProps {
@@ -29,6 +32,18 @@ interface MovieModalProps {
 }
 
 export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: MovieModalProps) {
+  const [showDrivePlayer, setShowDrivePlayer] = useState(false)
+
+  const handleDirectDownload = () => {
+    if (movie.googleDriveDownloadUrl) {
+      const fileIdMatch = movie.googleDriveDownloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
+      if (fileIdMatch && fileIdMatch[1]) {
+        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
+        window.open(downloadUrl, "_blank")
+      }
+    }
+  }
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -58,10 +73,19 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
   }
 
   const handleWatchOnTelegram = () => {
-    // Remove embed parameter and open directly in new tab
     const cleanLink = movie.telegramLink.replace("?embed=1", "")
     window.open(cleanLink, "_blank")
     onClose()
+  }
+
+  if (showDrivePlayer && movie.googleDrivePlayUrl) {
+    return (
+      <GoogleDrivePlayer
+        driveUrl={movie.googleDrivePlayUrl}
+        title={movie.title}
+        onClose={() => setShowDrivePlayer(false)}
+      />
+    )
   }
 
   return (
@@ -70,7 +94,6 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
       onClick={handleBackdropClick}
     >
       <div className="bg-card rounded-lg max-w-4xl w-full max-h-[95vh] md:max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="relative">
           <img
             src={movie.poster || "/placeholder.svg"}
@@ -107,12 +130,9 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-4 md:p-6">
-          {/* Description */}
           <p className="text-muted-foreground mb-4 md:mb-6 text-pretty text-sm md:text-base">{movie.description}</p>
 
-          {/* Genres */}
           <div className="flex flex-wrap gap-2 mb-4 md:mb-6">
             {movie.genre.map((genre) => (
               <Badge key={genre} variant="outline" className="text-xs md:text-sm">
@@ -121,7 +141,6 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
             ))}
           </div>
 
-          {/* Screenshots */}
           <div className="mb-4 md:mb-6">
             <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Screenshots</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
@@ -136,18 +155,40 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
             </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
+          <div className="space-y-3">
             <Button
-              className="bg-blue-500 hover:bg-blue-600 flex-1 text-sm md:text-base"
+              className="bg-blue-500 hover:bg-blue-600 w-full text-sm md:text-base"
               onClick={handleWatchOnTelegram}
             >
               <Send className="w-4 md:w-5 h-4 md:h-5 mr-2" />
               Watch on Telegram
             </Button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {movie.googleDrivePlayUrl && (
+                <Button
+                  className="bg-green-600 hover:bg-green-700 text-sm md:text-base"
+                  onClick={() => setShowDrivePlayer(true)}
+                >
+                  <Play className="w-4 md:w-5 h-4 md:h-5 mr-2" />
+                  Online Play
+                </Button>
+              )}
+
+              {movie.googleDriveDownloadUrl && (
+                <Button
+                  className="bg-purple-600 hover:bg-purple-700 text-sm md:text-base"
+                  onClick={handleDirectDownload}
+                >
+                  <Download className="w-4 md:w-5 h-4 md:h-5 mr-2" />
+                  Direct Download
+                </Button>
+              )}
+            </div>
+
             <Button
               variant="outline"
-              className="flex-1 bg-transparent text-sm md:text-base"
+              className="w-full bg-transparent text-sm md:text-base"
               onClick={() => onPlayTrailer(movie.trailerLink)}
             >
               <Trailer className="w-4 md:w-5 h-4 md:h-5 mr-2" />
