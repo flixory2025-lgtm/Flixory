@@ -1,18 +1,20 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Play, Folder, X, Download } from "lucide-react"
+import { ArrowLeft, Play, Folder, X, Download, Film } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { VideoPlayer } from "./video-player"
 import { GoogleDrivePlayer } from "./google-drive-player"
+import { YouTubePlayer } from "./youtube-player"
 
 interface Episode {
   id: string
   title: string
   episode: number
   duration: string
-  videoUrl: string
+  trailerUrl: string // Renamed from videoUrl to trailerUrl
+  telegramUrl: string
   thumbnail: string
   googleDrivePlayUrl?: string
   googleDriveDownloadUrl?: string
@@ -54,33 +56,33 @@ const seriesData: Series[] = [
             title: "Satyanweshi",
             episode: 1,
             duration: "45:30",
-            videoUrl: "https://t.me/flixoryproxy/3489",
+            trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            telegramUrl: "https://t.me/flixoryproxy/3490",
             thumbnail: "/byomkesh-episode-1-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W/preview",
-            googleDriveDownloadUrl:
-              "https://drive.google.com/uc?export=download&id=1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W",
+            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W",
           },
           {
             id: "ep2",
             title: "Pother Kanta",
             episode: 2,
             duration: "42:15",
-            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-episode-2-thumbnail.jpg",
-            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
-            googleDriveDownloadUrl:
-              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
+            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
           },
           {
             id: "ep3",
             title: "Seemanto Heera",
             episode: 3,
             duration: "48:20",
-            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-episode-3-thumbnail.jpg",
-            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
-            googleDriveDownloadUrl:
-              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
+            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
           },
         ],
       },
@@ -93,11 +95,11 @@ const seriesData: Series[] = [
             title: "Adim Ripu",
             episode: 1,
             duration: "46:10",
-            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-s2-episode-1-thumbnail.jpg",
-            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
-            googleDriveDownloadUrl:
-              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
+            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
           },
         ],
       },
@@ -121,11 +123,11 @@ const seriesData: Series[] = [
             title: "Raag Bhairav",
             episode: 1,
             duration: "50:25",
-            videoUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
+            trailerUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/tansen-episode-1-thumbnail.jpg",
-            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=drivesdk",
-            googleDriveDownloadUrl:
-              "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/view?usp=sharing",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
+            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
           },
         ],
       },
@@ -143,6 +145,10 @@ export function SeriesSection() {
     episode: null,
   })
   const [showDrivePlayer, setShowDrivePlayer] = useState<{ show: boolean; episode: Episode | null }>({
+    show: false,
+    episode: null,
+  })
+  const [showTrailerPlayer, setShowTrailerPlayer] = useState<{ show: boolean; episode: Episode | null }>({
     show: false,
     episode: null,
   })
@@ -168,25 +174,28 @@ export function SeriesSection() {
   }
 
   const handleWatchOnTelegram = () => {
-    if (episodePopup.episode?.videoUrl) {
-      window.open(episodePopup.episode.videoUrl, "_blank")
+    if (episodePopup.episode?.telegramUrl) {
+      window.open(episodePopup.episode.telegramUrl, "_blank")
       setEpisodePopup({ show: false, episode: null })
     }
   }
 
   const handleDirectDownload = () => {
     if (episodePopup.episode?.googleDriveDownloadUrl) {
-      const fileIdMatch = episodePopup.episode.googleDriveDownloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/)
-      if (fileIdMatch && fileIdMatch[1]) {
-        const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileIdMatch[1]}`
-        window.open(downloadUrl, "_blank")
-      }
+      window.open(episodePopup.episode.googleDriveDownloadUrl, "_blank")
     }
   }
 
   const handleOnlinePlay = () => {
     if (episodePopup.episode) {
       setShowDrivePlayer({ show: true, episode: episodePopup.episode })
+      setEpisodePopup({ show: false, episode: null })
+    }
+  }
+
+  const handlePlayTrailer = () => {
+    if (episodePopup.episode) {
+      setShowTrailerPlayer({ show: true, episode: episodePopup.episode })
       setEpisodePopup({ show: false, episode: null })
     }
   }
@@ -211,6 +220,16 @@ export function SeriesSection() {
         driveUrl={showDrivePlayer.episode.googleDrivePlayUrl}
         title={`${selectedSeries?.title} - Episode ${showDrivePlayer.episode.episode}`}
         onClose={() => setShowDrivePlayer({ show: false, episode: null })}
+      />
+    )
+  }
+
+  if (showTrailerPlayer.show && showTrailerPlayer.episode?.trailerUrl) {
+    return (
+      <YouTubePlayer
+        youtubeUrl={showTrailerPlayer.episode.trailerUrl}
+        title={`${selectedSeries?.title} - Episode ${showTrailerPlayer.episode.episode}`}
+        onClose={() => setShowTrailerPlayer({ show: false, episode: null })}
       />
     )
   }
@@ -385,6 +404,16 @@ export function SeriesSection() {
                   >
                     <Download className="w-5 h-5 mr-2" />
                     Direct Download
+                  </Button>
+                )}
+
+                {episodePopup.episode.trailerUrl && (
+                  <Button
+                    onClick={handlePlayTrailer}
+                    className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-orange-500/50 transition-all duration-300"
+                  >
+                    <Film className="w-5 h-5 mr-2" />
+                    Trailer
                   </Button>
                 )}
               </div>
