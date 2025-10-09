@@ -31,10 +31,10 @@ const movies = [
       "/dramatic-courtroom-scene-in-bengali-movie.jpg",
       "/emotional-family-moment-in-bengali-drama.jpg",
     ],
-    telegramLink: "https://t.me/your_channel/123?embed=1",
+    telegramLink: "https://t.me/flixoryproxy/3490",
     trailerLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-    googleDrivePlayUrl: "https://drive.google.com/file/d/1ABC123xyz/view?usp=sharing",
-    googleDriveDownloadUrl: "https://drive.google.com/file/d/1ABC123xyz/view?usp=sharing",
+    googleDrivePlayUrl: "https://drive.google.com/file/d/1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W/preview",
+    googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W",
   },
   {
     id: 2,
