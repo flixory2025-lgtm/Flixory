@@ -60,7 +60,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/3490",
             thumbnail: "/byomkesh-episode-1-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W/preview",
-            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=1DxYZ9cpWRuEBCqhtcmpd8IEHWbZy4f2W",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -71,7 +71,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-episode-2-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
-            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -82,7 +82,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-episode-3-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
-            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -99,7 +99,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/byomkesh-s2-episode-1-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
-            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -127,7 +127,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/your_channel/message_id",
             thumbnail: "/tansen-episode-1-thumbnail.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4/preview",
-            googleDriveDownloadUrl: "https://drive.google.com/uc?export=download&id=19gueMTIe2PL9e7WDUZbUUro6fRIWjaX4",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -155,7 +155,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1oWO9G3vIz6dxnD_qtP4A_96Rbj_zvt9o/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -166,7 +166,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1x-pYs71Jtz0Dh4mFkQ8VXNd_Ig4qs5wS/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -177,7 +177,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1ooNSFt7hHokwnw51Ds3I4qCi-wsrPPC6/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -188,7 +188,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1IIXok69pHus6-q_UBXzQCvxMTmvJdRMq/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep5",
@@ -199,7 +199,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19B11QAFr9y84gW8QNR4cYDqdT-7aTr1Y/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -210,7 +210,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1nYMhdHT-m8njJjv8qWLz5Iig3jONWbzU/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -221,7 +221,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1rZTDRtE57ZZxnBD5yDxAmIhg_47AIs6b/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -232,7 +232,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/479",
             thumbnail: "/s3id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1RVP3o3UshZsKmNRehdAXh-CPLSri-iae/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -260,7 +260,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1282",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1uKHHZILIWFQPmVOlLI2mUE0veqYwBKCq/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep10",
@@ -271,7 +271,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1284",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1tn1NS-q31B0VLZuWTUPshWMlfncahsWh/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep11",
@@ -282,7 +282,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1286",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1p2qiwa81q_rbpvE7NvMCrohWCcZTanNU/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep12",
@@ -293,7 +293,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1288",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1e1QsQi2UK8bTA9Mg8EKAaNOVOjlPRo0j/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep13",
@@ -304,7 +304,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1290",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1eWNkvZJ-qYQq6SHb3_WRfpUZl4HhvdQr/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep14",
@@ -315,7 +315,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1292",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Hxq0uJ3wj_NVZxCfw7jcE21GR26uYMuA/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep15",
@@ -326,7 +326,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1294",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1YemIYsoxpsq9WI9utI3keO7z8eim5N5x/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep16",
@@ -337,7 +337,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/1296",
             thumbnail: "/s4id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1NXhqaiREg_JHyW6hDpApDu2ou4VabmOS/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -365,7 +365,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/661",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1WuAG09TPHShursOcHKhZmnyHFF4PF6wI/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep18",
@@ -376,7 +376,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/663",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1CBRv8WBicgNazrcYtLRhEcICpsuVwELy/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep19",
@@ -387,7 +387,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/665",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1KUVMJjlG8Tr-KNcb_lgHdoSY56YCv7fw/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep20",
@@ -398,7 +398,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/667",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/18LbURSMKaBlamje8nNUV830dAffvxgDl/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep21",
@@ -409,7 +409,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/669",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1jeDE8L2FFMMuCmKwXiD_EBV7C-v-S8N-/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep22",
@@ -420,7 +420,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/671",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1o1LQ2LR3oIO4B5C-6DluB4_L6OZyBuNh/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep23",
@@ -431,7 +431,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/673",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1RQrCs5XE4GaKVL6GGbLGmqQoe8eQag7A/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep24",
@@ -442,7 +442,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/675",
             thumbnail: "/s5id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1x6_n9g_fETi-pO7FrH8Qj-dckOnus4MZ/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -470,7 +470,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2190",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1ZG6dYqVUtjdZXsW5UDH8D1GUFRyUJPGw/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep26",
@@ -481,7 +481,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2192",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1_3gdMzpz-w-e4WvzFHyL3rVG_SvYStVw/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep27",
@@ -492,7 +492,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2194",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1hO_mTPj0raWXndFPRJtFTxz8q1lbhFzN/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep28",
@@ -503,7 +503,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2196",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1HfMEnnyHMY4WIyjrQbVd_7A2WNuqq_Yx/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep29",
@@ -514,7 +514,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2198",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1A9wap6T7sOzstrMFA6MLU4oAlc6vq3MG/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep30",
@@ -525,7 +525,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2200",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1yAv78fW45UihaTYSFChTQlXK6SC_0XPV/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep31",
@@ -536,7 +536,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2202",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1-knL7j3-kGvoDSRKIE0RHt6lVPc7fxLY/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep32",
@@ -547,7 +547,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/2204",
             thumbnail: "/s6id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1ekUj9Z5ju23g-mQsUWq2cj15DZTfgzVX/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -575,7 +575,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3628",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Xetq4u90xDyFj7T3WA-Ko0IMXurUAdjX/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep34",
@@ -586,7 +586,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3630",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1EQUa2F9Fv4suauzKPnRMvS24L7ZDNwim/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep35",
@@ -597,7 +597,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3633",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1NKn_R8KrHpD9DHCJJMMqnn6BdmOiHb_Z/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep36",
@@ -608,7 +608,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3635",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1xZXzl6FGUFR1dJGgdA1dPjmzwazopnCQ/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep37",
@@ -619,7 +619,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3637",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1eKH-GSHLyDqf3xUGoDEdMuM-jdilQ7GD/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep38",
@@ -630,7 +630,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3639",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1F5khWaPWj7062OIJwofT_qIlA88W6J7B/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep39",
@@ -641,7 +641,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3641",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1eXzFM3ynUZOsRGmGZ9TPs_XK6dC6rYSB/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep40",
@@ -652,7 +652,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/MVPMCC/3643",
             thumbnail: "/s7id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/172FRjBJRQ5UQ2FnSMkpgcRP7MR3GL0RU/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -680,7 +680,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/25",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1WUNIBqwOTQcio4bsWgSMFGinJBAyW4BS/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -691,7 +691,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/27",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/19c15EUyuIqNgps7Axu0qHwrBsP4yQBJL/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -702,7 +702,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/29",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/14LaGUMYutxHzB82QNnbJy2cqfZ7wGVza/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -713,7 +713,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/31",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1kCNXRm1acREvjk8FWf5RdBnX0xoMv227/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep5",
@@ -724,7 +724,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/33",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1idjcO3xRDGaRnM3wuy1eOedvQ2NkQ7Tx/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -735,7 +735,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/35",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1eCjHOeUt91ZnIydKciDAXfQYJgglomVU/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -746,7 +746,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/37",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1XWkhUSc9_-GUcjtUpVYmyYUYNfVx4tTm/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -757,7 +757,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/39",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Xbxxdp5T5LYLUaEVB0FgIbBTxYlx0Zvk/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep9",
@@ -768,7 +768,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/41",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1u2E7bnqKInuWGrG2x4JthTjFv83zI1PI/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep10",
@@ -779,7 +779,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/43",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1CWtAaAZg0CMKGNYNkaf2JsWVA6AwWToS/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep11",
@@ -790,7 +790,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/45",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1oCDQQljekX4UKQV5U56ngtJnBzFcSu9c/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep12",
@@ -801,7 +801,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/47",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Y4mmdT0k3pRi8EQNj9_RT6YhY0tipgfx/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep13",
@@ -812,7 +812,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/49",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/18Dhx7vtu1CnVKl11nEWadJzdryXx1RcL/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep14",
@@ -823,7 +823,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/51",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1UecyxggRMLPLtfClJ3cMbPo7i9NcSKgv/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep15",
@@ -834,7 +834,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/53",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1wanBJKYPt9Ck6SbsC9w5qpXmmE-zXyCq/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep16",
@@ -845,7 +845,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/55",
             thumbnail: "/s8id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1MaUszvyBgi1aCste66wz_r95pkg6_PmA/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -873,7 +873,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/172",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Kp_yPbGUBk10nvaqWl-_EJCEtprrXREt/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -884,7 +884,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/174",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1mnJkTZey0MXnwDXX6tzI6tICKPqFn7DL/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -895,7 +895,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/176",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1yW3QHKuy0dCXtgAMR1X0epKwxQmGLhrG/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -906,7 +906,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/178",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1biOaQCzHYtE1oVjcwxueMIYp7DBK1Q95/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep5",
@@ -917,7 +917,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/180",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1bDCZhZKrHNcG33W9wAM_mQDOmsnzAOHG/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -928,7 +928,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/182",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/12NV6v-cDSmkl1cMbXD4tt16lIsCc2xn5/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -939,7 +939,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/184",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1HXlHtT44_N3CIRaSx_jp8X0xNdmQvDsb/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -950,7 +950,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/186",
             thumbnail: "/s9id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1yGgkVH94bb_9nH2uqlUcnZy0PP8ZcQlr/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -978,7 +978,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/253",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1mt_XZBS_Jj_YqH16XoYZ2VNWDdLwyabb/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -989,7 +989,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/255",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/132JYfaD1rmEwwF2qAZsEek3C8zMTjqan/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -1000,7 +1000,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/257",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1cVaMiqeMW7ke6ptJIllzwIinPulkRhoW/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -1011,7 +1011,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/259",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1FOQxQQfoK0FVroCu8OUdeGRqv74haEx0/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep5",
@@ -1022,7 +1022,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/261",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1qqhjDY2CBR0h95CW3JpOAz2DpGpJj1AK/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -1033,7 +1033,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/263",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1mTKzxzFJzGk3o2AFeJ_udgQVPedGciYd/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -1044,7 +1044,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/265",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/15_VeYczELgiQMfb9GoKMmZyNnF01PhG4/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -1055,7 +1055,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/267",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1oH8h-fdwvmb5b7XuWQVG6-kqLqccgukM/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep9",
@@ -1066,7 +1066,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/269",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1DiX4v51XxNQ2wvAk4OREpWhU7Zyignz7/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep10",
@@ -1077,7 +1077,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/271",
             thumbnail: "/s10id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1N_P5VnCGnTNKoIqDbZ3y3szshXrEVIS3/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -1105,7 +1105,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1294",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1qoH9s2UtKg5_NyQhGD28yT0peVzS8BKr/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -1116,7 +1116,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1296",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1wtK-Hb81DEzm5NcAeqBlg4xa5rWhL721/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -1127,7 +1127,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1298",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/16uoQK0IKx_wCelwZIQ4AaBicaC3z6jxy/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -1138,7 +1138,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1300",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1BD1wpgn1Hbuhf09sdth2f7ZXWBFdw-7r/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep5",
@@ -1149,7 +1149,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1302",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1QVdJimpSt0NnrAXqK8RTcmtwwZUB3Y5O/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -1160,7 +1160,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1304",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1IlW7ZLVPxizvEj40-FScViuIqM5EgvhV/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -1171,7 +1171,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1306",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1x62Vtk0EY2j6gY-Z7qX19emzCMT4JQgx/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -1182,7 +1182,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/1308",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/15CLbsTEqjM5v1LVd6md85EWsAMrZrLeC/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -1199,7 +1199,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/281",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1QpPGhHh87BzMKYwrGcGdKF_ZmpztajRY/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep2",
@@ -1210,7 +1210,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/283",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1K0HTlMZo89qcU2ih7MqBTqWxY1YdHUZ0/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep3",
@@ -1221,7 +1221,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/285",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Ab2lC4JCle9VAuJzBRFEOwYuS3KKqxjq/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep4",
@@ -1232,7 +1232,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/287",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1x_0Gn1UfdmbANNypuCKfLjbLlEUNOAuB/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
@@ -1249,7 +1249,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/281",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1bvZkefQtrvO69rgUI5t8GhqtY7bipLbu/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep6",
@@ -1260,7 +1260,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/283",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Z2ggbSZBZeRZU6kSN603VhOi4HEI08-o/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep7",
@@ -1271,7 +1271,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/285",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1nY33ZQQJzgdzRW6aUGNGg15qnD3QlNGs/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
           {
             id: "ep8",
@@ -1282,7 +1282,7 @@ const seriesData: Series[] = [
             telegramUrl: "https://t.me/flixoryproxy/287",
             thumbnail: "/s11id.jpg",
             googleDrivePlayUrl: "https://drive.google.com/file/d/1Mch0xz8Bc5h8kB-xO2icg5ZmdwMxyqX_/preview",
-            googleDriveDownloadUrl: "https://t.me/flixoryproxy/479",
+            googleDriveDownloadUrl: "",
           },
         ],
       },
