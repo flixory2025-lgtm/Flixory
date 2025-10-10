@@ -1568,17 +1568,26 @@ export function SeriesSection() {
             </button>
 
             <div className="text-center space-y-6">
-              <div className="text-5xl mb-4">📺</div>
+              <div className="text-5xl mb-4">🎬</div>
 
               <h3 className="text-xl font-bold text-white mb-2">Episode {episodePopup.episode.episode}</h3>
 
-              <div className="space-y-3 text-gray-300 leading-relaxed">
+              <div className="space-y-4 text-gray-300 leading-relaxed bg-gray-800/50 p-4 rounded-xl">
                 <p className="text-base">
-                  🎬 আপনি এই episode টি{" "}
-                  <span className="text-red-500 font-semibold">Telegram Flixory Proxy Channel</span> থেকে দেখতে হবে।
+                  📺 এই এপিসোডটি আপনি চাইলে টেলিগ্রাম চ্যানেল থেকে দেখতে পারেন। টেলিগ্রাম থেকে দেখতে{" "}
+                  <span className="text-blue-400 font-semibold">'Watch on Telegram'</span> এ ক্লিক করুন।
                 </p>
                 <p className="text-base">
-                  👇 দেখতে নিচে <span className="text-blue-400 font-semibold">Watch on Telegram</span> বাটনে ক্লিক করুন।
+                  💻 আর সরাসরি এখানেই দেখতে চাইলে <span className="text-green-400 font-semibold">'Online Watch'</span> এ
+                  ক্লিক করুন।
+                </p>
+                <p className="text-base">
+                  🎥 আর এই সিরিজের ট্রেইলার দেখতে <span className="text-orange-400 font-semibold">'Trailer'</span> বাটনে
+                  ক্লিক করুন।
+                </p>
+                <p className="text-base">
+                  ⬇️ আর যদি আপনি ডাইরেক্ট ডাউনলোড করতে চান, ওইটা আপাতত বন্ধ রেখেছি। আমরা কাজ চলমান, অতি শীঘ্রই ওই সিস্টেমও দেওয়া হবে।
+                  🔧
                 </p>
               </div>
 
@@ -1591,37 +1600,34 @@ export function SeriesSection() {
                   Watch on Telegram
                 </Button>
 
-                {episodePopup.episode.googleDrivePlayUrl && (
-                  <Button
-                    onClick={handleOnlinePlay}
-                    className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-green-500/50 transition-all duration-300"
-                  >
-                    <Play className="w-5 h-5 mr-2" />
-                    Online Play
-                  </Button>
-                )}
+                <Button
+                  onClick={handleOnlinePlay}
+                  disabled={!episodePopup.episode.googleDrivePlayUrl}
+                  className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-green-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Online Watch
+                </Button>
 
-                {episodePopup.episode.googleDriveDownloadUrl && (
-                  <Button
-                    onClick={handleDirectDownload}
-                    className="w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-700 hover:to-purple-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
-                  >
-                    <Download className="w-5 h-5 mr-2" />
-                    Direct Download
-                  </Button>
-                )}
+                <Button
+                  onClick={handlePlayTrailer}
+                  disabled={!episodePopup.episode.trailerUrl}
+                  className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-orange-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Film className="w-5 h-5 mr-2" />
+                  Trailer
+                </Button>
 
-                {episodePopup.episode.trailerUrl && (
-                  <Button
-                    onClick={handlePlayTrailer}
-                    className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-700 hover:to-orange-600 text-white font-semibold py-6 rounded-xl shadow-lg hover:shadow-orange-500/50 transition-all duration-300"
-                  >
-                    <Film className="w-5 h-5 mr-2" />
-                    Trailer
-                  </Button>
-                )}
+                <Button
+                  disabled
+                  className="w-full bg-gradient-to-r from-gray-700 to-gray-600 text-gray-400 font-semibold py-6 rounded-xl shadow-lg cursor-not-allowed opacity-60"
+                >
+                  <Download className="w-5 h-5 mr-2" />
+                  Direct Download (Coming Soon)
+                </Button>
               </div>
             </div>
+            {/* </CHANGE> */}
           </div>
         </div>
       )}
