@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
-import { Heart, MessageCircle, Share2, Volume2, VolumeX, ChevronUp, ChevronDown, Play } from "lucide-react"
-import { TelegramPopup } from "./telegram-popup"
+import { Heart, MessageCircle, Share2, Volume2, VolumeX, ChevronUp, ChevronDown, Play, X } from "lucide-react"
+import { ShortsPopup } from "./shorts-popup"
 
 interface Short {
   id: string
@@ -180,9 +180,18 @@ export function ShortsSection() {
     return Math.floor(Math.random() * shortsData.length)
   })
   const [isMuted, setIsMuted] = useState(false)
-  const [showTelegramPopup, setShowTelegramPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState(false)
   const [selectedTelegramLink, setSelectedTelegramLink] = useState("")
   const [selectedMovieTitle, setSelectedMovieTitle] = useState("")
+  const [likedShorts, setLikedShorts] = useState<Set<string>>(new Set())
+  const [shortLikes, setShortLikes] = useState<Record<string, number>>(() => {
+    const initialLikes: Record<string, number> = {}
+    shortsData.forEach((short) => {
+      initialLikes[short.id] = short.likes
+    })
+    return initialLikes
+  })
+  const [showComments, setShowComments] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleScroll = () => {
@@ -221,7 +230,48 @@ export function ShortsSection() {
   const handleWatchMovie = (telegramLink: string, title: string) => {
     setSelectedTelegramLink(telegramLink)
     setSelectedMovieTitle(title)
-    setShowTelegramPopup(true)
+    setShowPopup(true)
+  }
+
+  const handleLike = (shortId: string) => {
+    setLikedShorts((prev) => {
+      const newLiked = new Set(prev)
+      if (newLiked.has(shortId)) {
+        newLiked.delete(shortId)
+        setShortLikes((prevLikes) => ({
+          ...prevLikes,
+          [shortId]: prevLikes[shortId] - 1,
+        }))
+      } else {
+        newLiked.add(shortId)
+        setShortLikes((prevLikes) => ({
+          ...prevLikes,
+          [shortId]: prevLikes[shortId] + 1,
+        }))
+      }
+      return newLiked
+    })
+  }
+
+  const handleComment = () => {
+    setShowComments(true)
+  }
+
+  const handleShare = async (short: Short) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: short.title,
+          text: `Check out this short: ${short.title}`,
+          url: window.location.href,
+        })
+      } catch (err) {
+        console.log("Share cancelled")
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href)
+      alert("Link copied to clipboard!")
+    }
   }
 
   useEffect(() => {
@@ -271,13 +321,15 @@ export function ShortsSection() {
           >
             <div className="relative w-full h-full max-w-[500px] mx-auto">
               <iframe
-                src={`https://www.youtube.com/embed/${short.youtubeId}?autoplay=${index === currentIndex ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${short.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1`}
+                src={`https://www.youtube.com/embed/${short.youtubeId}?autoplay=${index === currentIndex ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${short.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&showinfo=0&enablejsapi=1`}
                 className="w-full h-full"
                 frameBorder="0"
                 allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
+                allowFullScreen
                 style={{
                   border: "none",
                   outline: "none",
+                  pointerEvents: "none",
                 }}
               />
 
@@ -285,21 +337,31 @@ export function ShortsSection() {
                 <>
                   {/* Right side action buttons */}
                   <div className="absolute right-4 bottom-24 z-20 flex flex-col space-y-6">
-                    <button className="flex flex-col items-center space-y-1 text-white">
-                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                        <Heart className="w-6 h-6" />
+                    <button
+                      onClick={() => handleLike(short.id)}
+                      className="flex flex-col items-center space-y-1 text-white"
+                    >
+                      <div
+                        className={`w-12 h-12 rounded-full backdrop-blur-sm flex items-center justify-center transition-all ${
+                          likedShorts.has(short.id) ? "bg-red-500/80 scale-110" : "bg-white/20 hover:bg-white/30"
+                        }`}
+                      >
+                        <Heart className={`w-6 h-6 ${likedShorts.has(short.id) ? "fill-white" : ""}`} />
                       </div>
-                      <span className="text-xs">{short.likes}</span>
+                      <span className="text-xs font-semibold">{shortLikes[short.id]}</span>
                     </button>
 
-                    <button className="flex flex-col items-center space-y-1 text-white">
+                    <button onClick={handleComment} className="flex flex-col items-center space-y-1 text-white">
                       <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
                         <MessageCircle className="w-6 h-6" />
                       </div>
                       <span className="text-xs">{short.comments}</span>
                     </button>
 
-                    <button className="flex flex-col items-center space-y-1 text-white">
+                    <button
+                      onClick={() => handleShare(short)}
+                      className="flex flex-col items-center space-y-1 text-white"
+                    >
                       <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
                         <Share2 className="w-6 h-6" />
                       </div>
@@ -366,13 +428,38 @@ export function ShortsSection() {
       </div>
 
       {/* Telegram popup */}
-      {showTelegramPopup && (
-        <TelegramPopup
+      {showPopup && (
+        <ShortsPopup
           telegramLink={selectedTelegramLink}
           movieTitle={selectedMovieTitle}
-          onClose={() => setShowTelegramPopup(false)}
-          isShort={true}
+          onClose={() => setShowPopup(false)}
         />
+      )}
+
+      {/* Comments modal */}
+      {showComments && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-gray-900 rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-white font-semibold text-lg">Comments</h3>
+              <button
+                onClick={() => setShowComments(false)}
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-gray-800 rounded-lg p-4">
+                <p className="text-white/80 text-sm text-center">
+                  কমেন্ট ফিচার শীঘ্রই আসছে! 🎉
+                  <br />
+                  <span className="text-xs text-white/60">Comments feature coming soon!</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
