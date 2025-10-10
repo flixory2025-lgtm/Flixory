@@ -1,9 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Play, Folder, X, Download, Film } from "lucide-react"
+import { ArrowLeft, Play, Folder, X, Download, Film, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { VideoPlayer } from "./video-player"
 import { GoogleDrivePlayer } from "./google-drive-player"
 import { YouTubePlayer } from "./youtube-player"
@@ -1307,11 +1308,23 @@ export function SeriesSection() {
     show: false,
     episode: null,
   })
+  const [searchQuery, setSearchQuery] = useState("")
 
   const sortedSeries = [...seriesData].sort((a, b) => {
     const idA = Number.parseInt(a.id.split("-").pop() || "0")
     const idB = Number.parseInt(b.id.split("-").pop() || "0")
     return idB - idA
+  })
+
+  const filteredSeries = sortedSeries.filter((series) => {
+    if (!searchQuery) return true
+    const query = searchQuery.toLowerCase()
+    return (
+      series.title.toLowerCase().includes(query) ||
+      series.genre.toLowerCase().includes(query) ||
+      series.description.toLowerCase().includes(query) ||
+      series.year.includes(query)
+    )
   })
 
   const handleSeriesClick = (series: Series) => {
@@ -1406,29 +1419,65 @@ export function SeriesSection() {
         <div className="w-10" />
       </div>
 
+      {currentView === "list" && (
+        <div className="p-4 border-b border-gray-800">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="সিরিজ খুঁজুন..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-gray-900 border-gray-700 text-white placeholder:text-gray-500"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Series List View */}
       {currentView === "list" && (
         <div className="p-4">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {sortedSeries.map((series) => (
-              <div key={series.id} className="cursor-pointer group" onClick={() => handleSeriesClick(series)}>
-                <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-2">
-                  <img
-                    src={series.poster || "/placeholder.svg"}
-                    alt={series.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-                </div>
-                <h3 className="font-semibold text-sm mb-1">{series.title}</h3>
-                <div className="flex items-center space-x-2 text-xs text-gray-400">
-                  <span>{series.year}</span>
-                  <span>•</span>
-                  <span>⭐ {series.rating}</span>
+          {filteredSeries.length === 0 ? (
+            <div className="text-center py-16 px-4">
+              <div className="mb-6">
+                <Search className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-4 text-white">কোনো সিরিজ পাওয়া যায়নি</h3>
+                <div className="max-w-md mx-auto space-y-3 text-gray-300 leading-relaxed">
+                  <p className="text-base">
+                    আপনার সার্চ করা নামে কোনো সিরিজ নেই। গুগলে গিয়ে মুভির পোস্টার দেখে সঠিক বানান দিয়ে সার্চ করুন।
+                  </p>
+                  <p className="text-base">এরপরও না পেলে এটা আমাদের এখানে নেই, দুঃখিত।</p>
                 </div>
               </div>
-            ))}
-          </div>
+              <Button
+                variant="outline"
+                onClick={() => setSearchQuery("")}
+                className="mt-4 bg-gray-900 border-gray-700 text-white hover:bg-gray-800"
+              >
+                সব সিরিজ দেখুন
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredSeries.map((series) => (
+                <div key={series.id} className="cursor-pointer group" onClick={() => handleSeriesClick(series)}>
+                  <div className="relative aspect-[2/3] rounded-lg overflow-hidden mb-2">
+                    <img
+                      src={series.poster || "/placeholder.svg"}
+                      alt={series.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                  </div>
+                  <h3 className="font-semibold text-sm mb-1">{series.title}</h3>
+                  <div className="flex items-center space-x-2 text-xs text-gray-400">
+                    <span>{series.year}</span>
+                    <span>•</span>
+                    <span>⭐ {series.rating}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
