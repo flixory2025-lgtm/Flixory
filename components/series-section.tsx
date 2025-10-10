@@ -670,7 +670,7 @@ const seriesData: Series[] = [
     seasons: [
       {
         id: "season-1",
-        title: "school (2017)",
+        title: "season-1",
         episodes: [
           {
             id: "ep1",
@@ -863,7 +863,7 @@ const seriesData: Series[] = [
     seasons: [
       {
         id: "season-1",
-        title: "My Name (2021)",
+        title: "season-1",
         episodes: [
           {
             id: "ep1",
@@ -1204,7 +1204,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep2",
-            title: "wednesday season 1 part 1",
+            title: "wednesday season 2 part 1",
             episode: 2,
             duration: "1:01:11",
             trailerUrl: "https://www.youtube.com/watch?v=51HkogV-W7c",
@@ -1215,7 +1215,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep3",
-            title: "wednesday season 1 part 1",
+            title: "wednesday season 2 part 1",
             episode: 3,
             duration: "59:47",
             trailerUrl: "https://www.youtube.com/watch?v=51HkogV-W7c",
@@ -1226,7 +1226,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep4",
-            title: "wednesday season 1 part 1",
+            title: "wednesday season 2 part 1",
             episode: 4,
             duration: "1:00:19",
             trailerUrl: "https://www.youtube.com/watch?v=51HkogV-W7c",
@@ -1239,7 +1239,7 @@ const seriesData: Series[] = [
       },
       {
         id: "season-2 part 2",
-        title: "Season 2 part 1",
+        title: "Season 2 part 2",
         episodes: [
           {
             id: "ep5",
@@ -1254,7 +1254,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep6",
-            title: "wednesday season 1 part 2",
+            title: "wednesday season 2 part 2",
             episode: 6,
             duration: "1:01:11",
             trailerUrl: "https://www.youtube.com/watch?v=LyJyCG_COis",
@@ -1265,7 +1265,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep7",
-            title: "wednesday season 1 part 2",
+            title: "wednesday season 2 part 2",
             episode: 7,
             duration: "59:47",
             trailerUrl: "https://www.youtube.com/watch?v=LyJyCG_COis",
@@ -1276,7 +1276,7 @@ const seriesData: Series[] = [
           },
           {
             id: "ep8",
-            title: "wednesday season 1 part 2",
+            title: "wednesday season 2 part 2",
             episode: 8,
             duration: "1:00:19",
             trailerUrl: "https://www.youtube.com/watch?v=LyJyCG_COis",
