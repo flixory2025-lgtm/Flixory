@@ -404,6 +404,7 @@ export function ShortsSection() {
           >
             <div className="relative w-full h-full">
               <iframe
+                key={`${short.id}-${index === currentIndex}`}
                 ref={(el) => {
                   iframeRefs.current[short.id] = el
                 }}
@@ -481,13 +482,7 @@ export function ShortsSection() {
                     </button>
                   </div>
 
-                  <div className="absolute bottom-16 left-4 z-20">
-                    <h3 className="text-white font-bold text-xl drop-shadow-lg text-balance leading-tight">
-                      {short.title}
-                    </h3>
-                  </div>
-
-                  <div className="absolute bottom-4 right-3 z-20">
+                  <div className="absolute bottom-4 left-4 z-20 space-y-3">
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -498,6 +493,10 @@ export function ShortsSection() {
                       <Play className="w-5 h-5" />
                       <span>Watch Full Movie</span>
                     </button>
+
+                    <h3 className="text-white font-bold text-xl drop-shadow-lg text-balance leading-tight">
+                      {short.title}
+                    </h3>
                   </div>
                 </>
               )}
