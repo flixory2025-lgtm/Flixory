@@ -1,6 +1,19 @@
 "use client"
 import { useState, useRef, useEffect } from "react"
-import { Heart, MessageCircle, Share2, Volume2, VolumeX, ChevronUp, ChevronDown, Play, X } from "lucide-react"
+import {
+  Heart,
+  MessageCircle,
+  Share2,
+  Volume2,
+  VolumeX,
+  ChevronUp,
+  ChevronDown,
+  Play,
+  X,
+  Send,
+  Copy,
+  Check,
+} from "lucide-react"
 import { ShortsPopup } from "./shorts-popup"
 
 interface Short {
@@ -176,9 +189,7 @@ const shortsData: Short[] = [
 ]
 
 export function ShortsSection() {
-  const [currentIndex, setCurrentIndex] = useState(() => {
-    return Math.floor(Math.random() * shortsData.length)
-  })
+  const [currentIndex, setCurrentIndex] = useState(0)
   const [isMuted, setIsMuted] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [selectedTelegramLink, setSelectedTelegramLink] = useState("")
@@ -192,7 +203,30 @@ export function ShortsSection() {
     return initialLikes
   })
   const [showComments, setShowComments] = useState(false)
+  const [showSharePopup, setShowSharePopup] = useState(false)
+  const [shareLink, setShareLink] = useState("")
+  const [linkCopied, setLinkCopied] = useState(false)
+  const [commentText, setCommentText] = useState("")
+  const [comments, setComments] = useState<
+    Record<string, Array<{ id: string; text: string; user: string; timestamp: Date }>>
+  >({})
+  const [isPlaying, setIsPlaying] = useState(true)
+  const [players, setPlayers] = useState<Record<string, any>>({})
+
   const containerRef = useRef<HTMLDivElement>(null)
+  const iframeRefs = useRef<Record<string, HTMLIFrameElement | null>>({})
+
+  useEffect(() => {
+    const tag = document.createElement("script")
+    tag.src = "https://www.youtube.com/iframe_api"
+    const firstScriptTag = document.getElementsByTagName("script")[0]
+    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+
+    // @ts-ignore
+    window.onYouTubeIframeAPIReady = () => {
+      console.log("[v0] YouTube IFrame API ready")
+    }
+  }, [])
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -201,6 +235,7 @@ export function ShortsSection() {
       const newIndex = Math.round(scrollTop / itemHeight)
       if (newIndex !== currentIndex && newIndex >= 0 && newIndex < shortsData.length) {
         setCurrentIndex(newIndex)
+        setIsPlaying(true)
       }
     }
   }
@@ -257,21 +292,53 @@ export function ShortsSection() {
     setShowComments(true)
   }
 
+  const handlePostComment = (shortId: string) => {
+    if (commentText.trim()) {
+      const newComment = {
+        id: Date.now().toString(),
+        text: commentText,
+        user: "আপনি", // "You" in Bengali
+        timestamp: new Date(),
+      }
+
+      setComments((prev) => ({
+        ...prev,
+        [shortId]: [...(prev[shortId] || []), newComment],
+      }))
+
+      setCommentText("")
+    }
+  }
+
   const handleShare = async (short: Short) => {
+    const link = `${window.location.origin}?short=${short.id}`
+    setShareLink(link)
+    setShowSharePopup(true)
+    setLinkCopied(false)
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareLink)
+    setLinkCopied(true)
+    setTimeout(() => setLinkCopied(false), 2000)
+  }
+
+  const handleNativeShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: short.title,
-          text: `Check out this short: ${short.title}`,
-          url: window.location.href,
+          title: "Flixory Shorts",
+          text: "Check out this short on Flixory!",
+          url: shareLink,
         })
       } catch (err) {
         console.log("Share cancelled")
       }
-    } else {
-      navigator.clipboard.writeText(window.location.href)
-      alert("Link copied to clipboard!")
     }
+  }
+
+  const handleVideoClick = () => {
+    setIsPlaying(!isPlaying)
   }
 
   useEffect(() => {
@@ -292,18 +359,17 @@ export function ShortsSection() {
     }
   }, [currentIndex])
 
+  const currentShort = shortsData[currentIndex]
+
   return (
     <div className="fixed inset-0 bg-black">
-      <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/90 to-transparent p-4">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-xl font-bold text-white">Shorts</h1>
-          <span className="text-white/60 text-sm">
+      <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent p-4 pb-20">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-white">Shorts</h1>
+          <span className="text-white/80 text-sm font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full">
             {currentIndex + 1} / {shortsData.length}
           </span>
         </div>
-        <p className="text-white/80 text-xs text-center">
-          এখানের সব short movie clips video এর full movie দেখতে Watch Movie বাটনে ক্লিক করুন
-        </p>
       </div>
 
       <div
@@ -317,77 +383,103 @@ export function ShortsSection() {
         {shortsData.map((short, index) => (
           <div
             key={short.id}
-            className="relative w-full h-full snap-start snap-always flex items-center justify-center"
+            className="relative w-full h-full snap-start snap-always flex items-center justify-center bg-black"
           >
-            <div className="relative w-full h-full max-w-[500px] mx-auto">
+            <div className="relative w-full h-full">
               <iframe
-                src={`https://www.youtube.com/embed/${short.youtubeId}?autoplay=${index === currentIndex ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${short.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&showinfo=0&enablejsapi=1`}
-                className="w-full h-full"
+                ref={(el) => {
+                  iframeRefs.current[short.id] = el
+                }}
+                src={`https://www.youtube.com/embed/${short.youtubeId}?autoplay=${index === currentIndex && isPlaying ? 1 : 0}&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${short.youtubeId}&modestbranding=1&rel=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&showinfo=0&enablejsapi=1`}
+                className="w-full h-full object-cover"
                 frameBorder="0"
                 allow="autoplay; encrypted-media; accelerometer; gyroscope; picture-in-picture"
                 allowFullScreen
                 style={{
                   border: "none",
                   outline: "none",
-                  pointerEvents: "none",
                 }}
               />
 
               {index === currentIndex && (
                 <>
-                  {/* Right side action buttons */}
-                  <div className="absolute right-4 bottom-24 z-20 flex flex-col space-y-6">
+                  <div className="absolute right-3 bottom-20 z-20 flex flex-col space-y-5">
                     <button
-                      onClick={() => handleLike(short.id)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleLike(short.id)
+                      }}
                       className="flex flex-col items-center space-y-1 text-white"
                     >
                       <div
-                        className={`w-12 h-12 rounded-full backdrop-blur-sm flex items-center justify-center transition-all ${
-                          likedShorts.has(short.id) ? "bg-red-500/80 scale-110" : "bg-white/20 hover:bg-white/30"
+                        className={`w-14 h-14 rounded-full backdrop-blur-md flex items-center justify-center transition-all ${
+                          likedShorts.has(short.id)
+                            ? "bg-red-500/90 scale-110 shadow-lg shadow-red-500/50"
+                            : "bg-black/40 hover:bg-black/60 border border-white/20"
                         }`}
                       >
-                        <Heart className={`w-6 h-6 ${likedShorts.has(short.id) ? "fill-white" : ""}`} />
+                        <Heart className={`w-7 h-7 ${likedShorts.has(short.id) ? "fill-white" : ""}`} />
                       </div>
-                      <span className="text-xs font-semibold">{shortLikes[short.id]}</span>
-                    </button>
-
-                    <button onClick={handleComment} className="flex flex-col items-center space-y-1 text-white">
-                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                        <MessageCircle className="w-6 h-6" />
-                      </div>
-                      <span className="text-xs">{short.comments}</span>
+                      <span className="text-sm font-bold drop-shadow-lg">{shortLikes[short.id]}</span>
                     </button>
 
                     <button
-                      onClick={() => handleShare(short)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleComment()
+                      }}
                       className="flex flex-col items-center space-y-1 text-white"
                     >
-                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                        <Share2 className="w-6 h-6" />
+                      <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/60 transition-colors">
+                        <MessageCircle className="w-7 h-7" />
                       </div>
-                      <span className="text-xs">Share</span>
+                      <span className="text-sm font-bold drop-shadow-lg">
+                        {comments[short.id]?.length || short.comments}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleShare(short)
+                      }}
+                      className="flex flex-col items-center space-y-1 text-white"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/60 transition-colors">
+                        <Share2 className="w-7 h-7" />
+                      </div>
+                      <span className="text-xs font-bold drop-shadow-lg">Share</span>
                     </button>
 
                     <button
                       className="flex flex-col items-center space-y-1 text-white"
-                      onClick={() => setIsMuted(!isMuted)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setIsMuted(!isMuted)
+                      }}
                     >
-                      <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors">
-                        {isMuted ? <VolumeX className="w-6 h-6" /> : <Volume2 className="w-6 h-6" />}
+                      <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/60 transition-colors">
+                        {isMuted ? <VolumeX className="w-7 h-7" /> : <Volume2 className="w-7 h-7" />}
                       </div>
                     </button>
                   </div>
 
-                  {/* Video title and Watch Movie button */}
-                  <div className="absolute bottom-24 left-4 right-20 z-20">
-                    <h3 className="text-white font-semibold text-lg mb-3 text-balance">{short.title}</h3>
-                    {/* Watch Movie button */}
+                  <div className="absolute bottom-16 left-4 z-20">
+                    <h3 className="text-white font-bold text-xl drop-shadow-lg text-balance leading-tight">
+                      {short.title}
+                    </h3>
+                  </div>
+
+                  <div className="absolute bottom-4 right-3 z-20">
                     <button
-                      onClick={() => handleWatchMovie(short.telegramLink, short.title)}
-                      className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-full font-semibold transition-all shadow-lg"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleWatchMovie(short.telegramLink, short.title)
+                      }}
+                      className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-5 py-2.5 rounded-full font-bold transition-all shadow-lg hover:shadow-xl"
                     >
                       <Play className="w-5 h-5" />
-                      <span>Watch Movie</span>
+                      <span>Watch Full Movie</span>
                     </button>
                   </div>
                 </>
@@ -400,7 +492,7 @@ export function ShortsSection() {
       {currentIndex > 0 && (
         <button
           onClick={handlePrevShort}
-          className="absolute top-1/2 left-4 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors text-white"
+          className="absolute top-1/3 left-4 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/60 transition-colors text-white"
           aria-label="Previous short"
         >
           <ChevronUp className="w-8 h-8" />
@@ -410,24 +502,29 @@ export function ShortsSection() {
       {currentIndex < shortsData.length - 1 && (
         <button
           onClick={handleNextShort}
-          className="absolute bottom-32 left-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-colors text-white"
+          className="absolute bottom-36 left-4 z-30 w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-black/60 transition-colors text-white"
           aria-label="Next short"
         >
           <ChevronDown className="w-8 h-8" />
         </button>
       )}
 
-      {/* Progress Indicator */}
-      <div className="absolute top-24 left-1/2 transform -translate-x-1/2 z-30 flex space-x-1">
-        {shortsData.map((_, index) => (
-          <div
-            key={index}
-            className={`h-1 rounded-full transition-all ${index === currentIndex ? "w-8 bg-white" : "w-1 bg-white/40"}`}
-          />
-        ))}
+      <div className="absolute top-20 left-1/2 transform -translate-x-1/2 z-30 flex space-x-1.5">
+        {shortsData
+          .slice(Math.max(0, currentIndex - 2), Math.min(shortsData.length, currentIndex + 3))
+          .map((_, idx) => {
+            const actualIndex = Math.max(0, currentIndex - 2) + idx
+            return (
+              <div
+                key={actualIndex}
+                className={`h-1 rounded-full transition-all ${
+                  actualIndex === currentIndex ? "w-8 bg-white" : "w-1.5 bg-white/40"
+                }`}
+              />
+            )
+          })}
       </div>
 
-      {/* Telegram popup */}
       {showPopup && (
         <ShortsPopup
           telegramLink={selectedTelegramLink}
@@ -436,12 +533,11 @@ export function ShortsSection() {
         />
       )}
 
-      {/* Comments modal */}
       {showComments && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-gray-900 rounded-t-3xl p-6 max-h-[70vh] overflow-y-auto">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-semibold text-lg">Comments</h3>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-gradient-to-b from-gray-900 to-black rounded-t-3xl shadow-2xl max-h-[75vh] flex flex-col">
+            <div className="flex items-center justify-between p-5 border-b border-white/10">
+              <h3 className="text-white font-bold text-xl">Comments ({comments[currentShort.id]?.length || 0})</h3>
               <button
                 onClick={() => setShowComments(false)}
                 className="text-white/60 hover:text-white transition-colors"
@@ -449,13 +545,107 @@ export function ShortsSection() {
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <div className="space-y-4">
-              <div className="bg-gray-800 rounded-lg p-4">
-                <p className="text-white/80 text-sm text-center">
-                  কমেন্ট ফিচার শীঘ্রই আসছে! 🎉
-                  <br />
-                  <span className="text-xs text-white/60">Comments feature coming soon!</span>
-                </p>
+
+            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+              {comments[currentShort.id]?.length > 0 ? (
+                comments[currentShort.id].map((comment) => (
+                  <div key={comment.id} className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-white font-semibold text-sm">{comment.user}</span>
+                      <span className="text-white/40 text-xs">
+                        {comment.timestamp.toLocaleTimeString("bn-BD", { hour: "2-digit", minute: "2-digit" })}
+                      </span>
+                    </div>
+                    <p className="text-white/90 text-sm leading-relaxed">{comment.text}</p>
+                  </div>
+                ))
+              ) : (
+                <div className="bg-white/5 rounded-xl p-6 text-center">
+                  <MessageCircle className="w-12 h-12 text-white/40 mx-auto mb-3" />
+                  <p className="text-white/60 text-sm">এখনো কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন! 💬</p>
+                </div>
+              )}
+
+              <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3">
+                <p className="text-blue-300 text-xs text-center">💡 সবার কমেন্ট দেখতে ডাটাবেস ইন্টিগ্রেশন প্রয়োজন</p>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-white/10 bg-black/50">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      handlePostComment(currentShort.id)
+                    }
+                  }}
+                  placeholder="একটি কমেন্ট লিখুন..."
+                  className="flex-1 bg-white/10 border border-white/20 rounded-full px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent"
+                />
+                <button
+                  onClick={() => handlePostComment(currentShort.id)}
+                  disabled={!commentText.trim()}
+                  className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:opacity-50 flex items-center justify-center text-white transition-all shadow-lg"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSharePopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="w-full max-w-md bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+            <button
+              onClick={() => setShowSharePopup(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-center">
+              <div className="text-6xl mb-3">🔗</div>
+              <h2 className="text-2xl font-bold text-white">শেয়ার করুন</h2>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                <p className="text-white/60 text-xs mb-2">লিংক</p>
+                <p className="text-white text-sm break-all font-mono">{shareLink}</p>
+              </div>
+
+              <div className="space-y-3">
+                <button
+                  onClick={handleCopyLink}
+                  className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-3.5 rounded-xl font-semibold transition-all shadow-lg"
+                >
+                  {linkCopied ? (
+                    <>
+                      <Check className="w-5 h-5" />
+                      <span>কপি হয়েছে!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-5 h-5" />
+                      <span>লিংক কপি করুন</span>
+                    </>
+                  )}
+                </button>
+
+                {navigator.share && (
+                  <button
+                    onClick={handleNativeShare}
+                    className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3.5 rounded-xl font-semibold transition-all shadow-lg"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span>অন্যত্র শেয়ার করুন</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
