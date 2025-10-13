@@ -13,6 +13,7 @@ import {
   Send,
   Copy,
   Check,
+  RefreshCw,
 } from "lucide-react"
 import { ShortsPopup } from "./shorts-popup"
 
@@ -189,7 +190,7 @@ const shortsData: Short[] = [
 ]
 
 export function ShortsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * shortsData.length))
   const [isMuted, setIsMuted] = useState(false)
   const [showPopup, setShowPopup] = useState(false)
   const [selectedTelegramLink, setSelectedTelegramLink] = useState("")
@@ -361,11 +362,27 @@ export function ShortsSection() {
 
   const currentShort = shortsData[currentIndex]
 
+  const handleRefresh = () => {
+    const randomIndex = Math.floor(Math.random() * shortsData.length)
+    setCurrentIndex(randomIndex)
+    scrollToIndex(randomIndex)
+    setIsPlaying(true)
+  }
+
   return (
     <div className="fixed inset-0 bg-black">
       <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent p-4 pb-20">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">Shorts</h1>
+          <div className="flex flex-col space-y-2">
+            <h1 className="text-2xl font-bold text-white">Shorts</h1>
+            <button
+              onClick={handleRefresh}
+              className="flex items-center space-x-1.5 text-white/70 hover:text-white transition-colors group"
+            >
+              <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
+              <span className="text-xs font-medium">Refresh</span>
+            </button>
+          </div>
           <span className="text-white/80 text-sm font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full">
             {currentIndex + 1} / {shortsData.length}
           </span>
