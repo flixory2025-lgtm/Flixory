@@ -160,11 +160,11 @@ const shortsData: Short[] = [
   },
   {
     id: "19",
-    title: "wednesday season 2 part 2",
-    youtubeId: "7JGd2kfvDks",
+    title: "my name season 1",
+    youtubeId: "pnyzOEJ5WCc",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/1200",
   },
   {
     id: "20",
@@ -180,7 +180,7 @@ const shortsData: Short[] = [
     youtubeId: "xye4cNRfKh0",
     likes: 1200,
     comments: 45,
-    telegramLink: "https://t.me/flixoryproxy/344",
+    telegramLink: "https://t.me/flixoryproxy",
   },
   {
     id: "22",
@@ -188,7 +188,7 @@ const shortsData: Short[] = [
     youtubeId: "Pxc1uhffX_c",
     likes: 890,
     comments: 32,
-    telegramLink: "https://t.me/flixoryproxy/344",
+    telegramLink: "https://t.me/flixoryproxy",
   },
   {
     id: "23",
@@ -196,7 +196,7 @@ const shortsData: Short[] = [
     youtubeId: "nSa5VggXFTE",
     likes: 1500,
     comments: 67,
-    telegramLink: "https://t.me/flixoryproxy/363",
+    telegramLink: "https://t.me/flixoryproxy/1200",
   },
   {
     id: "24",
@@ -204,7 +204,7 @@ const shortsData: Short[] = [
     youtubeId: "s-nIQWGkh10",
     likes: 2100,
     comments: 89,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/3371",
   },
   {
     id: "25",
@@ -212,7 +212,7 @@ const shortsData: Short[] = [
     youtubeId: "IpOJACj-K6Q",
     likes: 950,
     comments: 41,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/937",
   },
   {
     id: "26",
@@ -220,15 +220,15 @@ const shortsData: Short[] = [
     youtubeId: "n4TtXgfqk8c",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy",
   },
   {
     id: "27",
-    title: "chitti",
-    youtubeId: "Q5S9QDWLb9o",
+    title: "sonic",
+    youtubeId: "a-EsWk7xJDE",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/471",
   },
   {
     id: "28",
@@ -236,7 +236,7 @@ const shortsData: Short[] = [
     youtubeId: "kG4bEbzS8jo",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/919",
   },
   {
     id: "29",
@@ -244,7 +244,7 @@ const shortsData: Short[] = [
     youtubeId: "MRzSeLeYojE",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/1200",
   },
   {
     id: "30",
@@ -252,7 +252,7 @@ const shortsData: Short[] = [
     youtubeId: "LIYrZQCpSno",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/344",
   },
   {
     id: "31",
@@ -260,15 +260,15 @@ const shortsData: Short[] = [
     youtubeId: "0pNhLrj57Ew",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/3371",
   },
   {
     id: "32",
-    title: "chitti",
-    youtubeId: "qShPLjlWbd4",
+    title: "weak hero class 2",
+    youtubeId: "HH61mdFq1pc",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/937",
   },
   {
     id: "33",
@@ -276,7 +276,7 @@ const shortsData: Short[] = [
     youtubeId: "BaQSjZfLwC4",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/385",
+    telegramLink: "https://t.me/flixoryproxy/2546",
   },
   {
     id: "34",
@@ -284,7 +284,7 @@ const shortsData: Short[] = [
     youtubeId: "KZfk6Xpi7WA",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/385",
+    telegramLink: "https://t.me/flixoryproxy/344",
   },
   {
     id: "35",
@@ -292,7 +292,7 @@ const shortsData: Short[] = [
     youtubeId: "Vkl5U6myFuc",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/385",
+    telegramLink: "https://t.me/flixoryproxy/1235",
   },
   {
     id: "36",
@@ -300,7 +300,7 @@ const shortsData: Short[] = [
     youtubeId: "CCnL-V7JLf8",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1525",
+    telegramLink: "https://t.me/flixoryproxy",
   },
   {
     id: "37",
@@ -308,7 +308,7 @@ const shortsData: Short[] = [
     youtubeId: "gSdsflCHFHw",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1525",
+    telegramLink: "https://t.me/flixoryproxy/3371",
   },
   {
     id: "38",
@@ -316,7 +316,7 @@ const shortsData: Short[] = [
     youtubeId: "bKepLS96j_g",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/471",
   },
   {
     id: "39",
@@ -324,7 +324,7 @@ const shortsData: Short[] = [
     youtubeId: "9h9KvS4QRNM",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/866",
   },
   {
     id: "40",
@@ -332,7 +332,7 @@ const shortsData: Short[] = [
     youtubeId: "uOWZT07ylV0",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/3371",
   },
   {
     id: "41",
@@ -340,7 +340,7 @@ const shortsData: Short[] = [
     youtubeId: "pHcOrZeAmUk",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/919",
   },
   {
     id: "42",
@@ -348,15 +348,15 @@ const shortsData: Short[] = [
     youtubeId: "iS_RIOylEcI",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/471",
   },
   {
     id: "43",
-    title: "backbancher",
-    youtubeId: "iYDAWtb8aAw",
+    title: "weak hero",
+    youtubeId: "md-qMjakthI",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/2916",
+    telegramLink: "https://t.me/flixoryproxy/919",
   },
   {
     id: "44",
@@ -372,7 +372,7 @@ const shortsData: Short[] = [
     youtubeId: "51QBGINHliw",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/385",
+    telegramLink: "https://t.me/flixoryproxy/344",
   },
   {
     id: "46",
@@ -380,7 +380,7 @@ const shortsData: Short[] = [
     youtubeId: "U-_M7ccaYjE",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/385",
+    telegramLink: "https://t.me/flixoryproxy/919",
   },
   {
     id: "47",
@@ -388,7 +388,7 @@ const shortsData: Short[] = [
     youtubeId: "JhxYjaLdoZU",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1525",
+    telegramLink: "https://t.me/flixoryproxy/937",
   },
   {
     id: "48",
@@ -404,7 +404,7 @@ const shortsData: Short[] = [
     youtubeId: "PgJH3PKFQ4Y",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/919",
   },
   {
     id: "50",
@@ -412,12 +412,12 @@ const shortsData: Short[] = [
     youtubeId: "qY2XYCnPC7Y",
     likes: 3200,
     comments: 156,
-    telegramLink: "https://t.me/flixoryproxy/1291",
+    telegramLink: "https://t.me/flixoryproxy/344",
   },
   {
     id: "51",
-    title: "chitti",
-    youtubeId: "KeyOKSbFIFQ",
+    title: "wednesday season 2",
+    youtubeId: "WVjLNjEY34Q",
     likes: 3200,
     comments: 156,
     telegramLink: "https://t.me/flixoryproxy/1291",
