@@ -424,7 +424,6 @@ const movies = [
     duration: "1h 58m",
     genre: ["Science", "Drama", "Thriller"],
     description: "a tv show Rakshasa (2025)",
-      "A hindi tv show",
     screenshots: [
       "/Rakshasa1.jpg",
       "/Rakshasa2.jpg",
