@@ -106,8 +106,7 @@ const movies = [
     year: 2023,
     duration: "2h 15m",
     genre: ["Romantic", "Drama", "Thriller"],
-    description:
-      "A bongo tv show",
+    description: "A bongo tv show",
     screenshots: [
       "/Priyotoma1.jpg",
       "/Priyotoma2.jpg",
@@ -129,14 +128,16 @@ const movies = [
     year: 2021,
     duration: "2h 30m",
     genre: ["History", "Drama", "Family"],
-    description: "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
+    description:
+      "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: [
-           "/ekannoborti1.jpg", 
-           "/ekannoborti2.jpg",
-           "/ekannoborti3.jpg",
-           "/ekannoborti4.jpg", 
-           "/ekannoborti5.jpg",
-           "/ekannoborti6.jpg"],
+      "/ekannoborti1.jpg",
+      "/ekannoborti2.jpg",
+      "/ekannoborti3.jpg",
+      "/ekannoborti4.jpg",
+      "/ekannoborti5.jpg",
+      "/ekannoborti6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/17",
     trailerLink: "https://www.youtube.com/embed/P61w1qJG21M?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1ePbdQQ4sPuPPi8VXcQ6PiOxAiSHG2OgM/preview",
@@ -152,12 +153,13 @@ const movies = [
     genre: ["Drama", "Family", "Emotional"],
     description: "পুরনো ভিলেনের ছায়ায় নতুন প্রেম, নতুন প্রতিশোধ আর খুনের রহস্য—হিরো নয়, এখানে গল্প বলে শুধু ভিলেনরা।",
     screenshots: [
-            "/annapurna1.jpg", 
-            "/annapurna2.jpg", 
-            "/annapurna3.jpg", 
-            "/annapurna4.jpg", 
-            "/annapurna5.jpg", 
-            "/annapurna6.jpg"],
+      "/annapurna1.jpg",
+      "/annapurna2.jpg",
+      "/annapurna3.jpg",
+      "/annapurna4.jpg",
+      "/annapurna5.jpg",
+      "/annapurna6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/19",
     trailerLink: "https://www.youtube.com/embed/gG__pFybD1o?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1f3piglNVdUX-rMz0mbYG_zc-Z-fRQ1Me/preview",
@@ -173,13 +175,14 @@ const movies = [
     genre: ["Crime", "Mystery", "Thriller"],
     description:
       "এক ভয়ংকর বন্য প্রাণীর আক্রমণে আটকে পড়া মানুষদের টিকে থাকার সংগ্রাম। প্রতিটি মুহূর্তেই জীবন-মৃত্যুর লড়াই, আর প্রকৃতির ভয়ংকর শক্তির সামনে মানুষ কতটা অসহায়—সেই কাহিনি।",
-    screenshots: [ 
-           "/Despatch1.jpg",
-           "/Despatch2.jpg", 
-           "/Despatch3.jpg", 
-           "/Despatch4.jpg", 
-           "/Despatch5.jpg", 
-           "/Despatch6.jpg"],
+    screenshots: [
+      "/Despatch1.jpg",
+      "/Despatch2.jpg",
+      "/Despatch3.jpg",
+      "/Despatch4.jpg",
+      "/Despatch5.jpg",
+      "/Despatch6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/21",
     trailerLink: "https://www.youtube.com/embed/BHPMcOqa3H4?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/15AgAtpDyxLnz5tpsmcmusoMZVat_96Ag/preview",
@@ -194,13 +197,7 @@ const movies = [
     duration: "3h 38m",
     genre: ["Action", "Drama", "Thriller"],
     description: "এক নারী সাপ আত্মার প্রতিশোধের গল্প — ভালোবাসা, বিশ্বাসঘাতকতা আর অলৌকিক রহস্যে ভরা এই সিরিজ মুগ্ধ করবে তোমাকে।",
-    screenshots: [
-         "/Nandini1.jpg",
-         "/Nandini2.jpg", 
-         "/Nandini3.jpg", 
-         "/Nandini4.jpg", 
-         "/Nandini5.jpg", 
-         "/Nandini6.jpg"],
+    screenshots: ["/Nandini1.jpg", "/Nandini2.jpg", "/Nandini3.jpg", "/Nandini4.jpg", "/Nandini5.jpg", "/Nandini6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/3418",
     trailerLink: "https://www.youtube.com/embed/b52Bjl5TeZ4?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/109jQPBJ3z6cDg1OeoMmg7LZvMwwvSD_3/preview",
@@ -343,7 +340,31 @@ export function HomePage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 md:space-x-8">
-              <h1 className="text-xl md:text-2xl font-bold text-primary">FLIXORY</h1>
+              {/* TV icon with MV text next to FLIXORY */}
+              <div className="flex items-center space-x-2">
+                <div className="relative w-8 h-8 md:w-10 md:h-10">
+                  {/* TV Screen */}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-full h-full text-primary"
+                  >
+                    <rect x="2" y="7" width="20" height="13" rx="2" stroke="currentColor" strokeWidth="2" fill="none" />
+                    {/* TV Stand */}
+                    <path d="M8 20 L16 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M12 20 L12 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    {/* Antenna */}
+                    <path d="M7 7 L9 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M17 7 L15 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  {/* MV Text inside TV */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-[8px] md:text-[10px] font-bold text-primary mt-1">MV</span>
+                  </div>
+                </div>
+                <h1 className="text-xl md:text-2xl font-bold text-primary">FLIXORY</h1>
+              </div>
               <nav className="hidden md:flex space-x-6">
                 <Button variant="ghost" className="text-foreground hover:text-primary">
                   All
