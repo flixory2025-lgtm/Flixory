@@ -423,7 +423,7 @@ const movies = [
     year: 2025,
     duration: "1h 58m",
     genre: ["Science", "Drama", "Thriller"],
-    description: "bhairathi rangal (2024)bhairathi rangal (2024)
+    description: "a tv show Rakshasa (2025)",
       "A hindi tv show",
     screenshots: [
       "/Rakshasa1.jpg",
@@ -445,7 +445,7 @@ const movies = [
     year: 2024,
     duration: "2h 09m",
     genre: ["Science", "Drama", "Family"],
-    description: "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে 'রঘু ডাকাত' বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
+    description: "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে রঘু ডাকাত বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: [
            "/bhairathi1.jpg", 
            "/bhairathi2.jpg",
