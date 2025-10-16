@@ -24,6 +24,7 @@ export function BottomNavigation({ activeTab, onTabChange }: BottomNavigationPro
           return (
             <Button
               key={tab.id}
+              data-tutorial={`${tab.id}-tab`}
               variant="ghost"
               className={`flex flex-col items-center space-y-1 py-2 px-4 ${
                 activeTab === tab.id ? "text-primary" : "text-muted-foreground"
