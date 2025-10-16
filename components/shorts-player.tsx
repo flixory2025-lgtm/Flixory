@@ -14,6 +14,7 @@ import {
   Send,
   Copy,
   Check,
+  Film,
 } from "lucide-react"
 import { ShortsPopup } from "./shorts-popup"
 
@@ -62,8 +63,17 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
   const [isPlaying, setIsPlaying] = useState(true)
   const [players, setPlayers] = useState<Record<string, any>>({})
   const [apiReady, setApiReady] = useState(false)
+  const [showScrollInstruction, setShowScrollInstruction] = useState(true)
 
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowScrollInstruction(false)
+    }, 4000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (window.YT && window.YT.Player) {
@@ -185,6 +195,7 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
       if (newIndex !== currentIndex && newIndex >= 0 && newIndex < shorts.length) {
         setCurrentIndex(newIndex)
         setIsPlaying(true)
+        setShowScrollInstruction(false)
       }
     }
   }
@@ -368,8 +379,20 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
 
               {index === currentIndex && (
                 <>
-                  {/* Right Side Actions */}
-                  <div className="absolute right-3 bottom-32 z-20 flex flex-col space-y-5">
+                  <div className="absolute right-3 bottom-32 z-20 flex flex-col space-y-4">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleWatchMovie()
+                      }}
+                      className="flex flex-col items-center space-y-1 text-white"
+                    >
+                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 backdrop-blur-md flex items-center justify-center hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl border-2 border-white/30">
+                        <Film className="w-7 h-7" />
+                      </div>
+                      <span className="text-xs font-bold drop-shadow-lg">Watch</span>
+                    </button>
+
                     <button
                       onClick={(e) => {
                         e.stopPropagation()
@@ -430,19 +453,7 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
                     </button>
                   </div>
 
-                  {/* Bottom Info */}
-                  <div className="absolute bottom-4 left-4 right-20 z-20 space-y-3">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleWatchMovie()
-                      }}
-                      className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-5 py-2.5 rounded-full font-bold transition-all shadow-lg hover:shadow-xl"
-                    >
-                      <Play className="w-5 h-5" />
-                      <span>Watch Full Movie</span>
-                    </button>
-
+                  <div className="absolute bottom-4 left-4 right-20 z-20">
                     <h3 className="text-white font-bold text-xl drop-shadow-lg text-balance leading-tight">
                       {short.title}
                     </h3>
@@ -490,6 +501,16 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
         })}
       </div>
 
+      {showScrollInstruction && (
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
+          <div className="bg-black/60 backdrop-blur-md border border-white/20 rounded-full px-6 py-3 flex items-center space-x-2">
+            <ChevronDown className="w-5 h-5 text-white animate-pulse" />
+            <span className="text-white text-sm font-medium">Scroll for more</span>
+            <ChevronDown className="w-5 h-5 text-white animate-pulse" />
+          </div>
+        </div>
+      )}
+
       {/* Popups */}
       {showPopup && (
         <ShortsPopup
@@ -528,7 +549,7 @@ export function ShortsPlayer({ shorts, initialIndex, onClose }: ShortsPlayerProp
               ) : (
                 <div className="bg-white/5 rounded-xl p-6 text-center">
                   <MessageCircle className="w-12 h-12 text-white/40 mx-auto mb-3" />
-                  <p className="text-white/60 text-sm">এখনো কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন! 💬</p>
+                  <p className="text-white/60 text-sm">এখনো কোনো কমেন্ট নেই। প্রথম কমেন্ট করুন!</p>
                 </div>
               )}
             </div>
