@@ -11,6 +11,7 @@ import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
 
 const TRENDING_MOVIE_IDS = [12, 14, 18, 23, 27, 28, 29]
+const MOVIES_PER_PAGE = 20
 
 const movies = [
   {
@@ -211,15 +212,9 @@ const movies = [
     year: 2013,
     duration: "2h 21m",
     genre: ["Romantic", "Drama", "Comedy"],
-    description: "রাহুলের এক অদ্ভুত ট্রেন যাত্রা—যেখানে দুর্ঘটনাবশত দক্ষিণ ভারতের গ্রামে গিয়ে জড়িয়ে পড়ে প্রেম, পরিবার আর মাফিয়া গ্যাংয়ের ঝঞ্ঝাটে! ",
-    screenshots: [
-      "/Chennai1.jpg",
-      "/Chennai2.jpg",
-      "/Chennai3.jpg",
-      "/Chennai4.jpg",
-      "/Chennai5.jpg",
-      "/Chennai6.jpg",
-    ],
+    description:
+      "রাহুলের এক অদ্ভুত ট্রেন যাত্রা—যেখানে দুর্ঘটনাবশত দক্ষিণ ভারতের গ্রামে গিয়ে জড়িয়ে পড়ে প্রেম, পরিবার আর মাফিয়া গ্যাংয়ের ঝঞ্ঝাটে! ",
+    screenshots: ["/Chennai1.jpg", "/Chennai2.jpg", "/Chennai3.jpg", "/Chennai4.jpg", "/Chennai5.jpg", "/Chennai6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1805",
     trailerLink: "https://www.youtube.com/embed/hZGR5Sj1Bfo?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1e0IsQySdsMrcHwjj0rKuR3W5PDwgjBet/preview",
@@ -233,14 +228,9 @@ const movies = [
     year: 2025,
     duration: "2h 52m",
     genre: ["History", "Drama", "Family"],
-    description: "আফরান নিশো একজন রহস্যময় চরিত্র আকা—1998-99 সালে অপরাধীদের ধাওয়া করে, একদিন আচমকা অদৃশ্য হয়ে যায়। পুলিশ স্টেশনের অন্ধকার থেকে উথ্থান আর প্রতিশোধের ছায়ায় তৈরি হয় এক ভীতিকর থ্রিলার।",
-    screenshots: [
-           "/AKA1.jpg", 
-           "/AKA2.jpg",
-           "/AKA3.jpg",
-           "/AKA4.jpg",
-           "/AKA5.jpg",
-           "/AKA6.jpg"],
+    description:
+      "আফরান নিশো একজন রহস্যময় চরিত্র আকা—1998-99 সালে অপরাধীদের ধাওয়া করে, একদিন আচমকা অদৃশ্য হয়ে যায়। পুলিশ স্টেশনের অন্ধকার থেকে উথ্থান আর প্রতিশোধের ছায়ায় তৈরি হয় এক ভীতিকর থ্রিলার।",
+    screenshots: ["/AKA1.jpg", "/AKA2.jpg", "/AKA3.jpg", "/AKA4.jpg", "/AKA5.jpg", "/AKA6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1807",
     trailerLink: "https://www.youtube.com/embed/PMbogoDYDps?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1sDAlX-IOoHB6PirLSsdP1yTU7orzXih6/preview",
@@ -255,13 +245,7 @@ const movies = [
     duration: "1h 51m",
     genre: ["Horror", "Family", "Emotional"],
     description: "এক অপরিচিতের অদ্ভুত শয়তানি শক্তি—এক পরিবার যেন নিমিষে মরার ছায়ায় ফেঁসে যায়, যখন তাঁদের কন্যা হয়ে ওঠে দানবের মুগ্ধ!",
-    screenshots: [
-            "/Vash1.jpg", 
-            "/Vash2.jpg", 
-            "/Vash3.jpg", 
-            "/Vash4.jpg",
-            "/Vash5.jpg", 
-            "/Vash6.jpg"],
+    screenshots: ["/Vash1.jpg", "/Vash2.jpg", "/Vash3.jpg", "/Vash4.jpg", "/Vash5.jpg", "/Vash6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1809",
     trailerLink: "https://www.youtube.com/embed/DuWOpHkG49s?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1MyedLgVUPMvxVugc_l0e2uhgM56lbe0d/preview",
@@ -275,14 +259,16 @@ const movies = [
     year: 2025,
     duration: "1h 39m",
     genre: ["Crime", "Mystery", "Thriller"],
-    description:"যেখানে সত্যের সন্ধানে আসে ভাবনার আঁধার—ভাইয়ের রহস্যময় মৃত্যু আর একটা বিখ্যাত উপন্যাসের অদ্ভুত ভবিষ্যদ্বাণী চায় তার বিরুদ্ধে যুদ্ধ করতে",
-    screenshots: [ 
-           "/Nocturnal1.jpg",
-           "/Nocturnal2.jpg", 
-           "/Nocturnal3.jpg", 
-           "/Nocturnal4.jpg",
-           "/Nocturnal5.jpg", 
-           "/Nocturnal6.jpg"],
+    description:
+      "যেখানে সত্যের সন্ধানে আসে ভাবনার আঁধার—ভাইয়ের রহস্যময় মৃত্যু আর একটা বিখ্যাত উপন্যাসের অদ্ভুত ভবিষ্যদ্বাণী চায় তার বিরুদ্ধে যুদ্ধ করতে",
+    screenshots: [
+      "/Nocturnal1.jpg",
+      "/Nocturnal2.jpg",
+      "/Nocturnal3.jpg",
+      "/Nocturnal4.jpg",
+      "/Nocturnal5.jpg",
+      "/Nocturnal6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1811",
     trailerLink: "https://www.youtube.com/embed/GVqXPERk4e8?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1lgL7p8JbD-I41ZfwHM090zuwnhscxo9x/preview",
@@ -296,14 +282,8 @@ const movies = [
     year: 2021,
     duration: "2h 29m",
     genre: ["Action", "Drama", "Thriller"],
-    description: "মুখ্যমন্ত্রী কাদাক্কল চন্দ্রদাস—জনগণের জন্য লড়াই করা এক নেতা, যার জীবনের গল্প উঠে আসে আদর্শ আর বাস্তব রাজনীতির দ্বন্দ্বে।",
-    screenshots: [
-         "/One1.jpg",
-         "/One2.jpg",
-         "/One3.jpg", 
-         "/One4.jpg",
-         "/One5.jpg", 
-         "/One6.jpg"],
+    description: "মুখ্যমন্ত্রী কাদাক্কল চন্দ্রদাস—জনগণের জন্য লড়াই করা এক নেতা, যার জীবনের গল্প উঠে আসে আদর্শ আর বাস্তব রাজনীতির দ্বন্দ্বে।",
+    screenshots: ["/One1.jpg", "/One2.jpg", "/One3.jpg", "/One4.jpg", "/One5.jpg", "/One6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1813",
     trailerLink: "https://www.youtube.com/embed/Gwbb4yxRhEo?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1ApuZwNZob9LrJZqjssQ853N-hYEaIGfJ/preview",
@@ -317,15 +297,8 @@ const movies = [
     year: 2023,
     duration: "2h 26m",
     genre: ["Romantic", "Drama", "Action"],
-    description:"শাকিব খান ও নবাগত পূজা চেরী—তাদের ভালোবাসার গল্পে অ্যাকশন, আবেগ আর পারিবারিক টানাপোড়েনের রঙিন মিশেল।",
-    screenshots: [
-      "/Fidaa1.jpg",
-      "/Fidaa2.jpg",
-      "/Fidaa3.jpg",
-      "/Fidaa4.jpg",
-      "/Fidaa5.jpg",
-      "/Fidaa6.jpg",
-    ],
+    description: "শাকিব খান ও নবাগত পূজা চেরী—তাদের ভালোবাসার গল্পে অ্যাকশন, আবেগ আর পারিবারিক টানাপোড়েনের রঙিন মিশেল।",
+    screenshots: ["/Fidaa1.jpg", "/Fidaa2.jpg", "/Fidaa3.jpg", "/Fidaa4.jpg", "/Fidaa5.jpg", "/Fidaa6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1815",
     trailerLink: "https://www.youtube.com/embed/9hbVVnzN_7Y?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1vNomIdVw7VpplzWmTn2lQFtf15UGIoW3/preview",
@@ -339,14 +312,9 @@ const movies = [
     year: 2017,
     duration: "2h 21m",
     genre: ["Action", "Drama", "Thriller"],
-    description: "একজন প্রশিক্ষণপ্রাপ্ত পুলিশ অফিসার সন্দেহ পায় এক প্রতিভাবান বিজ্ঞানীর অপরাধজগতের সঙ্গে জড়িত থাকার প্রমাণে। যতক্ষণ না তিনি সবুজ সংকেত পেয়ে তদন্ত করেন, ততক্ষণ পর্যন্ত চায়েন সত্য — কিন্তু বিজ্ঞানীর ধরা-ঢোকার কৌশল যে বিশাল, তা ওই পুলিশ অফিসারই বুঝতে পারে। এই সংঘর্ষে জন্ম নেয় এক দমবন্ধ এক অ্যাকশন থ্রিলার!",
-    screenshots: [
-           "/Onee1.jpg", 
-           "/Onee2.jpg",
-           "/Onee3.jpg",
-           "/Onee4.jpg",
-           "/Onee5.jpg",
-           "/Onee6.jpg"],
+    description:
+      "একজন প্রশিক্ষণপ্রাপ্ত পুলিশ অফিসার সন্দেহ পায় এক প্রতিভাবান বিজ্ঞানীর অপরাধজগতের সঙ্গে জড়িত থাকার প্রমাণে। যতক্ষণ না তিনি সবুজ সংকেত পেয়ে তদন্ত করেন, ততক্ষণ পর্যন্ত চায়েন সত্য — কিন্তু বিজ্ঞানীর ধরা-ঢোকার কৌশল যে বিশাল, তা ওই পুলিশ অফিসারই বুঝতে পারে। এই সংঘর্ষে জন্ম নেয় এক দমবন্ধ এক অ্যাকশন থ্রিলার!",
+    screenshots: ["/Onee1.jpg", "/Onee2.jpg", "/Onee3.jpg", "/Onee4.jpg", "/Onee5.jpg", "/Onee6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1817",
     trailerLink: "https://www.youtube.com/embed/_gaobCu3LEw?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1BgVWO6-lQuqG8VToQp9Ag8Gdu6u9iO_z/preview",
@@ -360,14 +328,9 @@ const movies = [
     year: 2024,
     duration: "2h 52m",
     genre: ["Action", "Thriller", "Drama"],
-    description: "তেলেগু এক চিফেনের ছায়াযুদ্ধ—অস্ত্রচুরি ও নিজ গাঁয়ের সুরক্ষার গল্পে জড়িয়ে পড়ে প্রতিশোধ ও জটিল পরিবারের নাটক। সামগ্রিক ভিজ্যুয়াল ও স্কেলে তৈরি হয় নতুন মহাকাব্য।",
-    screenshots: [
-            "/Devara1.jpg", 
-            "/Devara2.jpg", 
-            "/Devara3.jpg", 
-            "/Devara4.jpg",
-            "/Devara5.jpg", 
-            "/Devara6.jpg"],
+    description:
+      "তেলেগু এক চিফেনের ছায়াযুদ্ধ—অস্ত্রচুরি ও নিজ গাঁয়ের সুরক্ষার গল্পে জড়িয়ে পড়ে প্রতিশোধ ও জটিল পরিবারের নাটক। সামগ্রিক ভিজ্যুয়াল ও স্কেলে তৈরি হয় নতুন মহাকাব্য।",
+    screenshots: ["/Devara1.jpg", "/Devara2.jpg", "/Devara3.jpg", "/Devara4.jpg", "/Devara5.jpg", "/Devara6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1819",
     trailerLink: "https://www.youtube.com/embed/NcCYq3bvlJM?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1kdf00I0pIRbUxVCXLHAigiwIzU2kNPgT/preview",
@@ -381,14 +344,9 @@ const movies = [
     year: 2022,
     duration: "1h 38m",
     genre: ["Romantic", "Action", "Thriller"],
-    description:"একজন নায়কের তিন আলাদা জীবন—তার প্রতিটি রূপই লুকিয়ে বিশেষ গল্প আর রোম্যান্সের সম্ভার। তিন চরিত্রে ভিন্ন আবেগের বহুমুখী আকর্ষণ।",
-    screenshots: [ 
-           "/Abbara1.jpg",
-           "/Abbara2.jpg", 
-           "/Abbara3.jpg", 
-           "/Abbara4.jpg",
-           "/Abbara5.jpg", 
-           "/Abbara6.jpg"],
+    description:
+      "একজন নায়কের তিন আলাদা জীবন—তার প্রতিটি রূপই লুকিয়ে বিশেষ গল্প আর রোম্যান্সের সম্ভার। তিন চরিত্রে ভিন্ন আবেগের বহুমুখী আকর্ষণ।",
+    screenshots: ["/Abbara1.jpg", "/Abbara2.jpg", "/Abbara3.jpg", "/Abbara4.jpg", "/Abbara5.jpg", "/Abbara6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1821",
     trailerLink: "https://www.youtube.com/embed/gxitx6SuIFI?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1pRdxd5IJ-BTCGjk1m2NEjBqeyT1O1KAY/preview",
@@ -402,14 +360,9 @@ const movies = [
     year: 2025,
     duration: "2h 18m",
     genre: ["Science", "Drama", "Thriller"],
-    description: "একটা জাদুকরী কলিং ফোন যা ১৯৯৩ সালের সাথে যোগায়—বর্তমানের জার্নালিস্ট আর অতীতের এক নারীর রহস্যময় কানেকশন ছড়িয়ে দেয় ফিউচারিস্টিক থ্রিল।",
-    screenshots: [
-         "/Gana1.jpg",
-         "/Gana2.jpg",
-         "/Gana3.jpg", 
-         "/Gana4.jpg",
-         "/Gana5.jpg", 
-         "/Gana6.jpg"],
+    description:
+      "একটা জাদুকরী কলিং ফোন যা ১৯৯৩ সালের সাথে যোগায়—বর্তমানের জার্নালিস্ট আর অতীতের এক নারীর রহস্যময় কানেকশন ছড়িয়ে দেয় ফিউচারিস্টিক থ্রিল।",
+    screenshots: ["/Gana1.jpg", "/Gana2.jpg", "/Gana3.jpg", "/Gana4.jpg", "/Gana5.jpg", "/Gana6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1823",
     trailerLink: "https://www.youtube.com/embed/rHcalVK-ock?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1VMZqMa1tyvFiGIh1DNOPSQDEnS2tnUOs/preview",
@@ -430,7 +383,8 @@ const movies = [
       "/Rakshasa3.jpg",
       "/Rakshasa4.jpg",
       "/Rakshasa5.jpg",
-      "/Rakshasa6.jpg"],
+      "/Rakshasa6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1825",
     trailerLink: "https://www.youtube.com/embed/L5A3GrRMypA?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1OLNwZjtc5_oQc4GhNrg7Mou45NQuphOC/preview",
@@ -444,14 +398,16 @@ const movies = [
     year: 2024,
     duration: "2h 09m",
     genre: ["Science", "Drama", "Family"],
-    description: "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে রঘু ডাকাত বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
+    description:
+      "১৮শ শতাব্দীর বাঙালির ইতিহাসের পরশে রচিত এক period action-অ্যাডভেঞ্চার—যেখানে রঘু ডাকাত বন্ধুর সঙ্গে জন-জনের চোখে নায়ক হয়ে ওঠে, সাধারণ মানুষের নির্যাতন ও অবিচারের বিরুদ্ধে লড়ায়।",
     screenshots: [
-           "/bhairathi1.jpg", 
-           "/bhairathi2.jpg",
-           "/bhairathi3.jpg",
-           "/bhairathi4.jpg",
-           "/bhairathi5.jpg",
-           "/bhairathi6.jpg"],
+      "/bhairathi1.jpg",
+      "/bhairathi2.jpg",
+      "/bhairathi3.jpg",
+      "/bhairathi4.jpg",
+      "/bhairathi5.jpg",
+      "/bhairathi6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1827",
     trailerLink: "https://www.youtube.com/embed/FPcYWcASe5U?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1ozgAslhUAnmsz3f2d72Bq1VGok_pCtmq/preview",
@@ -465,14 +421,9 @@ const movies = [
     year: 2023,
     duration: "2h 54m",
     genre: ["Action", "Crime", "Drama"],
-    description: "প্রভাসের দাপট!—শৈশবের বন্ধুত্ব, প্রতিশোধ আর মাফিয়া রাজত্বের মহাযুদ্ধ—যেখানে এক বন্ধু আরেকজনের জন্য পুরো সাম্রাজ্যের বিরুদ্ধে দাঁড়ায়।",
-    screenshots: [
-            "/Salaar1.jpg", 
-            "/Salaar2.jpg", 
-            "/Salaar3.jpg", 
-            "/Salaar4.jpg",
-            "/Salaar5.jpg", 
-            "/Salaar6.jpg"],
+    description:
+      "প্রভাসের দাপট!—শৈশবের বন্ধুত্ব, প্রতিশোধ আর মাফিয়া রাজত্বের মহাযুদ্ধ—যেখানে এক বন্ধু আরেকজনের জন্য পুরো সাম্রাজ্যের বিরুদ্ধে দাঁড়ায়।",
+    screenshots: ["/Salaar1.jpg", "/Salaar2.jpg", "/Salaar3.jpg", "/Salaar4.jpg", "/Salaar5.jpg", "/Salaar6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1829",
     trailerLink: "https://www.youtube.com/embed/HihakYi5M2I?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1NLGRHEE2jFMKgc2o5z9waeYn4XdFB6QH/preview",
@@ -486,14 +437,15 @@ const movies = [
     year: 2013,
     duration: "2h 10m",
     genre: ["Action", "Adventure", "Fantasy"],
-    description: "থরকে এবার লড়তে হয় এক প্রাচীন অন্ধকার শক্তির বিরুদ্ধে—ডার্ক এলভদের সাথে পৃথিবী ও আসগার্ড বাঁচানোর মহাযুদ্ধ!",
-    screenshots: [ 
-           "/ThorDark1.jpg",
-           "/ThorDark2.jpg", 
-           "/ThorDark3.jpg", 
-           "/ThorDark4.jpg",
-           "/ThorDark5.jpg", 
-           "/ThorDark6.jpg"],
+    description: "থরকে এবার লড়তে হয় এক প্রাচীন অন্ধকার শক্তির বিরুদ্ধে—ডার্ক এলভদের সাথে পৃথিবী ও আসগার্ড বাঁচানোর মহাযুদ্ধ!",
+    screenshots: [
+      "/ThorDark1.jpg",
+      "/ThorDark2.jpg",
+      "/ThorDark3.jpg",
+      "/ThorDark4.jpg",
+      "/ThorDark5.jpg",
+      "/ThorDark6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1831",
     trailerLink: "https://www.youtube.com/embed/biq0XGdmULc?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1Bq3QzAnZI2MhhUUG-D_FaKlCJC88LKo4/preview",
@@ -507,14 +459,16 @@ const movies = [
     year: 2017,
     duration: "1h 52m",
     genre: ["Action", "Comedy", "Fantasy"],
-    description: "আসগার্ডের ধ্বংস (Ragnarok) ঠেকাতে থরকে একেবারে গ্ল্যাডিয়েটর এরেনায় হাল্কের সাথে যুদ্ধ করতে হয়—হাসি, অ্যাকশন আর কালারফুল ভিজ্যুয়ালের মেলবন্ধন।",
+    description:
+      "আসগার্ডের ধ্বংস (Ragnarok) ঠেকাতে থরকে একেবারে গ্ল্যাডিয়েটর এরেনায় হাল্কের সাথে যুদ্ধ করতে হয়—হাসি, অ্যাকশন আর কালারফুল ভিজ্যুয়ালের মেলবন্ধন।",
     screenshots: [
-         "/ThorRagnarok1.jpg",
-         "/ThorRagnarok2.jpg",
-         "/ThorRagnarok3.jpg", 
-         "/ThorRagnarok4.jpg",
-         "/ThorRagnarok5.jpg", 
-         "/ThorRagnarok6.jpg"],
+      "/ThorRagnarok1.jpg",
+      "/ThorRagnarok2.jpg",
+      "/ThorRagnarok3.jpg",
+      "/ThorRagnarok4.jpg",
+      "/ThorRagnarok5.jpg",
+      "/ThorRagnarok6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1833",
     trailerLink: "https://www.youtube.com/embed/NNvt4OS7mhA?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/10FjfLIbecSg1rVmEnXOdjNL_dbRrbefD/preview",
@@ -528,14 +482,15 @@ const movies = [
     year: 2022,
     duration: "1h 58m",
     genre: ["Action", "Fantasy", "Romance"],
-    description: "এবার থর পায় মাইটি থর জেন ফস্টারকে—ভালোবাসা, বজ্র আর দেবতা-শিকারি গর দ্য গড বুচারের বিরুদ্ধে লড়াই। ",
+    description: "এবার থর পায় মাইটি থর জেন ফস্টারকে—ভালোবাসা, বজ্র আর দেবতা-শিকারি গর দ্য গড বুচারের বিরুদ্ধে লড়াই। ",
     screenshots: [
       "/ThorLove1.jpg",
       "/ThorLove2.jpg",
       "/ThorLove3.jpg",
       "/ThorLove4.jpg",
       "/ThorLove5.jpg",
-      "/ThorLove6.jpg",],
+      "/ThorLove6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1835",
     trailerLink: "https://www.youtube.com/embed/sFTD5vBfRGY?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1ZOmghRYfX3wvsOvpZEYcg3XvcdpS3z7L/preview",
@@ -549,14 +504,9 @@ const movies = [
     year: 2025,
     duration: "2h 34m",
     genre: ["Action", "Drama", "Thriller"],
-    description: "Tiger Shroff রায়দর্শী থ্রিলার-অ্যাকশনের পরবর্তী অধ্যায়—Ronnie ফেরার এই অংশে রয়েছে দমবন্ধ করা যুদ্ধ, অতীতের দগ্ধ ছায়া আর এক অন্ধকারে ভরা প্রতিশোধের গল্প।",
-    screenshots: [
-           "/Baaghi41.jpg", 
-           "/Baaghi42.jpg",
-           "/Baaghi43.jpg",
-           "/Baaghi44.jpg",
-           "/Baaghi45.jpg",
-           "/Baaghi46.jpg"],
+    description:
+      "Tiger Shroff রায়দর্শী থ্রিলার-অ্যাকশনের পরবর্তী অধ্যায়—Ronnie ফেরার এই অংশে রয়েছে দমবন্ধ করা যুদ্ধ, অতীতের দগ্ধ ছায়া আর এক অন্ধকারে ভরা প্রতিশোধের গল্প।",
+    screenshots: ["/Baaghi41.jpg", "/Baaghi42.jpg", "/Baaghi43.jpg", "/Baaghi44.jpg", "/Baaghi45.jpg", "/Baaghi46.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1837",
     trailerLink: "https://www.youtube.com/embed/rbYNMvTkp8U?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1YgWR1wJaV3r_YKmr_n_uCP-PrICNwz9l/preview",
@@ -570,14 +520,16 @@ const movies = [
     year: 2005,
     duration: "2h 54m",
     genre: ["Action", "Adventure", "Fantasy"],
-    description: "একদল অভিযাত্রী রহস্যময় Skull Island-এ গিয়ে আবিষ্কার করে এক দৈত্যাকার গরিলা—King Kong। কিন্তু মানব লোভ ও শোষণের কারণে দানব আর মানুষের মাঝে শুরু হয় এক করুণ যুদ্ধ, যার সমাপ্তি হয় নিউইয়র্ক সিটির আকাশচুম্বী টাওয়ারে।",
+    description:
+      "একদল অভিযাত্রী রহস্যময় Skull Island-এ গিয়ে আবিষ্কার করে এক দৈত্যাকার গরিলা—King Kong। কিন্তু মানব লোভ ও শোষণের কারণে দানব আর মানুষের মাঝে শুরু হয় এক করুণ যুদ্ধ, যার সমাপ্তি হয় নিউইয়র্ক সিটির আকাশচুম্বী টাওয়ারে।",
     screenshots: [
-            "/KingKong1.jpg", 
-            "/KingKong2.jpg", 
-            "/KingKong3.jpg", 
-            "/KingKong4.jpg",
-            "/KingKong5.jpg", 
-            "/KingKong6.jpg"],
+      "/KingKong1.jpg",
+      "/KingKong2.jpg",
+      "/KingKong3.jpg",
+      "/KingKong4.jpg",
+      "/KingKong5.jpg",
+      "/KingKong6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1839",
     trailerLink: "https://www.youtube.com/embed/t4-UjZccU_A?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1BdWPo_9-C9sFedA01t2dVJwUg0X7Chr_/preview",
@@ -591,14 +543,16 @@ const movies = [
     year: 2025,
     duration: "2h 10m",
     genre: ["Horror", "Mystery", "Supernatural"],
-    description: "এড ও লরেইন ওয়্যারেনের দীর্ঘ চলমান যাত্রার আবেগঘন শেষ অধ্যায়—এক ধ্বংসাত্মক কেস, স্মার্ক পরিবারের ভয়াবহ তত্ত্বাবধান এবং যুগান্তরিত আদর্শের নেশায় বয়ে যাওয়া এক চরম থ্রিলার ছন্দে মোড়া!",
-    screenshots: [ 
-           "/ConjuringLast1.jpg",
-           "/ConjuringLast2.jpg", 
-           "/ConjuringLast3.jpg", 
-           "/ConjuringLast4.jpg",
-           "/ConjuringLast5.jpg", 
-           "/ConjuringLast6.jpg"],
+    description:
+      "এড ও লরেইন ওয়্যারেনের দীর্ঘ চলমান যাত্রার আবেগঘন শেষ অধ্যায়—এক ধ্বংসাত্মক কেস, স্মার্ক পরিবারের ভয়াবহ তত্ত্বাবধান এবং যুগান্তরিত আদর্শের নেশায় বয়ে যাওয়া এক চরম থ্রিলার ছন্দে মোড়া!",
+    screenshots: [
+      "/ConjuringLast1.jpg",
+      "/ConjuringLast2.jpg",
+      "/ConjuringLast3.jpg",
+      "/ConjuringLast4.jpg",
+      "/ConjuringLast5.jpg",
+      "/ConjuringLast6.jpg",
+    ],
     telegramLink: "https://t.me/flixoryproxy/1841",
     trailerLink: "https://www.youtube.com/embed/iJn5buVemKQ?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1dkoKIwb62Fli7Tnlzg7k05kWeq03ej3t/preview",
@@ -612,14 +566,9 @@ const movies = [
     year: 2022,
     duration: "1h 52m",
     genre: ["Action", "Drama", "Fantasy"],
-    description: "এস.এস. রাজামৌলি পরিচালিত এক মহাকাব্যিক ভিজ্যুয়াল—১৯২০ সালের ব্রিটিশ শাসনের প্রেক্ষাপটে দুই বিপ্লবী অল্লুরি সীতারামা রাজু (Ram Charan) ও কোমারাম ভীম (Jr. NTR)-এর বন্ধুত্ব, সংগ্রাম ও প্রতিশোধের গল্প।",
-    screenshots: [
-         "/RRR1.jpg",
-         "/RRR2.jpg",
-         "/RRR3.jpg", 
-         "/RRR4.jpg",
-         "/RRR5.jpg", 
-         "/RRR6.jpg"],
+    description:
+      "এস.এস. রাজামৌলি পরিচালিত এক মহাকাব্যিক ভিজ্যুয়াল—১৯২০ সালের ব্রিটিশ শাসনের প্রেক্ষাপটে দুই বিপ্লবী অল্লুরি সীতারামা রাজু (Ram Charan) ও কোমারাম ভীম (Jr. NTR)-এর বন্ধুত্ব, সংগ্রাম ও প্রতিশোধের গল্প।",
+    screenshots: ["/RRR1.jpg", "/RRR2.jpg", "/RRR3.jpg", "/RRR4.jpg", "/RRR5.jpg", "/RRR6.jpg"],
     telegramLink: "https://t.me/flixoryproxy/1843",
     trailerLink: "https://www.youtube.com/embed/GY4BgdUSpbE?si",
     googleDrivePlayUrl: "https://drive.google.com/file/d/1oWQaLM32o4I5XXeyYzs2AgSwOMqDZedK/preview",
@@ -639,6 +588,7 @@ export function HomePage() {
   const [showTelegramPopup, setShowTelegramPopup] = useState(false)
   const [currentTelegramLink, setCurrentTelegramLink] = useState("")
   const [currentMovieTitle, setCurrentMovieTitle] = useState("")
+  const [currentPage, setCurrentPage] = useState(1)
 
   const sortedMovies = [...movies].sort((a, b) => b.id - a.id)
 
@@ -701,6 +651,50 @@ export function HomePage() {
         ),
   )
 
+  const totalPages = Math.ceil(filteredMovies.length / MOVIES_PER_PAGE)
+  const startIndex = (currentPage - 1) * MOVIES_PER_PAGE
+  const endIndex = startIndex + MOVIES_PER_PAGE
+  const currentMovies = filteredMovies.slice(startIndex, endIndex)
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
+
+  const getPageNumbers = () => {
+    const pages = []
+    const maxVisiblePages = 5
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i)
+        }
+        pages.push("...")
+        pages.push(totalPages)
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1)
+        pages.push("...")
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i)
+        }
+      } else {
+        pages.push(1)
+        pages.push("...")
+        pages.push(currentPage - 1)
+        pages.push(currentPage)
+        pages.push(currentPage + 1)
+        pages.push("...")
+        pages.push(totalPages)
+      }
+    }
+
+    return pages
+  }
+
   const featuredMovie = slideshowMovies[currentSlide]
 
   const handlePrevSlide = () => {
@@ -744,6 +738,11 @@ export function HomePage() {
     localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
 
     setAuthenticatedUser(null)
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   return (
@@ -923,13 +922,23 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Search Results */}
-      {searchQuery && (
-        <section className="search-results container mx-auto px-4 py-8 md:py-12">
-          <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">Search Results for "{searchQuery}"</h3>
-          {filteredMovies.length > 0 ? (
+      {/* Search Results or Movies Grid */}
+      <section className="movies-grid container mx-auto px-4 py-8 md:py-12">
+        <div className="flex items-center justify-between mb-6 md:mb-8">
+          <h3 className="text-xl md:text-2xl font-bold">
+            {searchQuery ? `Search Results for "${searchQuery}"` : "Hot and Fresh"}
+          </h3>
+          {filteredMovies.length > 0 && (
+            <div className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages} ({filteredMovies.length} movies)
+            </div>
+          )}
+        </div>
+
+        {filteredMovies.length > 0 ? (
+          <>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
-              {filteredMovies.map((movie) => (
+              {currentMovies.map((movie) => (
                 <div key={movie.id} className="movie-card cursor-pointer group" onClick={() => setSelectedMovie(movie)}>
                   <div className="relative overflow-hidden rounded-lg bg-card">
                     <img
@@ -954,58 +963,71 @@ export function HomePage() {
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="text-center py-12 md:py-16 max-w-2xl mx-auto">
-              <div className="mb-6">
-                <Search className="w-12 md:w-16 h-12 md:h-16 text-muted-foreground mx-auto mb-4" />
-                <h4 className="text-lg md:text-xl font-semibold mb-3">কোনো মুভি পাওয়া যায়নি</h4>
-                <p className="text-muted-foreground text-sm md:text-lg leading-relaxed px-4">
-                  আপনার দেওয়া নামে কোনো মুভি এখানে নেই অথবা আপনার নামে ভুল আছে। গুগল থেকে IMDB তে গিয়ে সঠিক নাম দিয়ে এখানে সার্চ করুন।
-                </p>
-              </div>
-              <Button variant="outline" onClick={() => setSearchQuery("")} className="mt-4">
-                সব মুভি দেখুন
-              </Button>
-            </div>
-          )}
-        </section>
-      )}
 
-      {/* Movies Grid */}
-      <section className="movies-grid container mx-auto px-4 py-8 md:py-12">
-        <div className="flex items-center justify-between mb-6 md:mb-8">
-          <h3 className="text-xl md:text-2xl font-bold">Hot and Fresh</h3>
-          <Button variant="ghost" className="text-primary hover:text-primary/80 text-sm md:text-base">
-            View More
-          </Button>
-        </div>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-8 md:mt-12">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-3 py-2"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline ml-1">Previous</span>
+                </Button>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-6">
-          {sortedMovies.map((movie) => (
-            <div key={movie.id} className="movie-card cursor-pointer group" onClick={() => setSelectedMovie(movie)}>
-              <div className="relative overflow-hidden rounded-lg bg-card">
-                <img
-                  src={movie.poster || "/placeholder.svg"}
-                  alt={movie.title}
-                  className="w-full h-[200px] md:h-[300px] object-cover"
-                />
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <Play className="w-8 md:w-12 h-8 md:h-12 text-white" />
+                <div className="flex items-center gap-1 md:gap-2">
+                  {getPageNumbers().map((page, index) =>
+                    page === "..." ? (
+                      <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
+                        ...
+                      </span>
+                    ) : (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handlePageChange(page as number)}
+                        className={`w-8 h-8 md:w-10 md:h-10 p-0 ${
+                          currentPage === page
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "hover:bg-accent"
+                        }`}
+                      >
+                        {page}
+                      </Button>
+                    ),
+                  )}
                 </div>
-                <div className="absolute top-2 right-2">
-                  <Badge className="bg-primary/90 text-primary-foreground text-xs">
-                    <Star className="w-2 md:w-3 h-2 md:h-3 mr-1 fill-current" />
-                    {movie.rating}
-                  </Badge>
-                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-2"
+                >
+                  <span className="hidden sm:inline mr-1">Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
-              <div className="mt-2 md:mt-3">
-                <h4 className="font-semibold text-xs md:text-sm line-clamp-2 text-balance">{movie.title}</h4>
-                <p className="text-xs text-muted-foreground mt-1">{movie.year}</p>
-              </div>
+            )}
+          </>
+        ) : (
+          <div className="text-center py-12 md:py-16 max-w-2xl mx-auto">
+            <div className="mb-6">
+              <Search className="w-12 md:w-16 h-12 md:h-16 text-muted-foreground mx-auto mb-4" />
+              <h4 className="text-lg md:text-xl font-semibold mb-3">কোনো মুভি পাওয়া যায়নি</h4>
+              <p className="text-muted-foreground text-sm md:text-lg leading-relaxed px-4">
+                আপনার দেওয়া নামে কোনো মুভি এখানে নেই অথবা আপনার নামে ভুল আছে। গুগল থেকে IMDB তে গিয়ে সঠিক নাম দিয়ে এখানে সার্চ করুন।
+              </p>
             </div>
-          ))}
-        </div>
+            <Button variant="outline" onClick={() => setSearchQuery("")} className="mt-4">
+              সব মুভি দেখুন
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* Movie Modal */}
