@@ -9,8 +9,9 @@ import { MovieModal } from "@/components/movie-modal"
 import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
+import { YouTubeStylePlayer } from "@/components/youtube-style-player"
 
-const TRENDING_MOVIE_IDS = [12, 14, 18, 23, 27, 28, 29]
+const TRENDING_MOVIE_IDS = [2, 4, 6, 5]
 
 const movies = [
   {
@@ -639,6 +640,10 @@ export function HomePage() {
   const [showTelegramPopup, setShowTelegramPopup] = useState(false)
   const [currentTelegramLink, setCurrentTelegramLink] = useState("")
   const [currentMovieTitle, setCurrentMovieTitle] = useState("")
+  const [showYouTubePlayer, setShowYouTubePlayer] = useState(false)
+  const [playerVideoUrl, setPlayerVideoUrl] = useState("")
+  const [playerMovie, setPlayerMovie] = useState<any>(null)
+  const [isPlayingTrailer, setIsPlayingTrailer] = useState(false)
 
   const sortedMovies = [...movies].sort((a, b) => b.id - a.id)
 
@@ -719,31 +724,42 @@ export function HomePage() {
     setSelectedMovie(null)
   }
 
-  const handlePlayTrailer = (trailerLink: string) => {
+  const handlePlayTrailer = (trailerLink: string, movie: any) => {
     const videoUrl = convertYouTubeLink(trailerLink)
-    setCurrentVideoUrl(videoUrl)
-    setIsPlaying(true)
+    setPlayerVideoUrl(videoUrl)
+    setPlayerMovie(movie)
+    setIsPlayingTrailer(true)
+    setShowYouTubePlayer(true)
     setSelectedMovie(null)
+  }
+
+  const handleOnlinePlay = (driveUrl: string, movie: any) => {
+    setPlayerVideoUrl(driveUrl)
+    setPlayerMovie(movie)
+    setIsPlayingTrailer(false)
+    setShowYouTubePlayer(true)
+    setSelectedMovie(null)
+  }
+
+  const handleRelatedMovieSelect = (movie: any) => {
+    setPlayerMovie(movie)
+    // Keep the same player type (trailer or online play)
+    if (isPlayingTrailer && movie.trailerLink) {
+      const videoUrl = convertYouTubeLink(movie.trailerLink)
+      setPlayerVideoUrl(videoUrl)
+    } else if (movie.googleDrivePlayUrl) {
+      setPlayerVideoUrl(movie.googleDrivePlayUrl)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem("flixory_user_auth")
+    setAuthenticatedUser(null)
   }
 
   const handleUserAuth = (username: string) => {
     setAuthenticatedUser(username)
     setShowAuthModal(false)
-    setSessionExpired(false)
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem("flixory_user_auth")
-
-    const approvedUsers = JSON.parse(localStorage.getItem("flixory_approved_users") || "[]")
-    const updatedUsers = approvedUsers.map((u: any) =>
-      u.username.toLowerCase() === authenticatedUser?.toLowerCase()
-        ? { ...u, deviceId: null, deviceFingerprint: null, lastLoginTime: null }
-        : u,
-    )
-    localStorage.setItem("flixory_approved_users", JSON.stringify(updatedUsers))
-
-    setAuthenticatedUser(null)
   }
 
   return (
@@ -1014,7 +1030,27 @@ export function HomePage() {
           movie={selectedMovie}
           onClose={() => setSelectedMovie(null)}
           onOpenTelegram={handleOpenTelegram}
-          onPlayTrailer={handlePlayTrailer}
+          onPlayTrailer={(trailerLink) => handlePlayTrailer(trailerLink, selectedMovie)}
+          onOnlinePlay={(driveUrl) => handleOnlinePlay(driveUrl, selectedMovie)}
+        />
+      )}
+
+      {/* YouTube-Style Player */}
+      {showYouTubePlayer && playerMovie && (
+        <YouTubeStylePlayer
+          videoUrl={playerVideoUrl}
+          title={playerMovie.title}
+          description={playerMovie.description}
+          genre={playerMovie.genre}
+          allMovies={sortedMovies}
+          currentMovie={playerMovie}
+          onClose={() => {
+            setShowYouTubePlayer(false)
+            setPlayerVideoUrl("")
+            setPlayerMovie(null)
+          }}
+          onMovieSelect={handleRelatedMovieSelect}
+          isTrailer={isPlayingTrailer}
         />
       )}
 
