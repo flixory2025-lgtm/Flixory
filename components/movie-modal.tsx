@@ -5,7 +5,8 @@ import type React from "react"
 import { X, Send, Eraser as Trailer, Star, Clock, Calendar, ArrowLeft, Play, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { GoogleDrivePlayer } from "./google-drive-player"
 
 interface Movie {
   id: number
@@ -27,20 +28,23 @@ interface MovieModalProps {
   movie: Movie
   onClose: () => void
   onOpenTelegram: (telegramLink: string, movieTitle: string) => void
-  onPlayTrailer: () => void
-  onPlayOnline: () => void
+  onPlayTrailer: (trailerLink: string) => void
 }
 
-export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer, onPlayOnline }: MovieModalProps) {
+export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: MovieModalProps) {
+  const [showDrivePlayer, setShowDrivePlayer] = useState(false)
+
   const handleDirectDownload = () => {
     if (movie.googleDriveDownloadUrl) {
       let downloadUrl = movie.googleDriveDownloadUrl
 
+      // If URL already contains download link format, use it directly
       if (downloadUrl.includes("uc?export=download")) {
         window.open(downloadUrl, "_blank")
         return
       }
 
+      // Otherwise, extract file ID and create download URL
       const fileIdMatch = downloadUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || downloadUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/)
 
       if (fileIdMatch && fileIdMatch[1]) {
@@ -82,6 +86,16 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer, onPl
     const cleanLink = movie.telegramLink.replace("?embed=1", "")
     window.open(cleanLink, "_blank")
     onClose()
+  }
+
+  if (showDrivePlayer && movie.googleDrivePlayUrl) {
+    return (
+      <GoogleDrivePlayer
+        driveUrl={movie.googleDrivePlayUrl}
+        title={movie.title}
+        onClose={() => setShowDrivePlayer(false)}
+      />
+    )
   }
 
   return (
@@ -162,7 +176,10 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer, onPl
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {movie.googleDrivePlayUrl && (
-                <Button className="bg-green-600 hover:bg-green-700 text-sm md:text-base" onClick={onPlayOnline}>
+                <Button
+                  className="bg-green-600 hover:bg-green-700 text-sm md:text-base"
+                  onClick={() => setShowDrivePlayer(true)}
+                >
                   <Play className="w-4 md:w-5 h-4 md:h-5 mr-2" />
                   Online Play
                 </Button>
@@ -179,7 +196,11 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer, onPl
               )}
             </div>
 
-            <Button variant="outline" className="w-full bg-transparent text-sm md:text-base" onClick={onPlayTrailer}>
+            <Button
+              variant="outline"
+              className="w-full bg-transparent text-sm md:text-base"
+              onClick={() => onPlayTrailer(movie.trailerLink)}
+            >
               <Trailer className="w-4 md:w-5 h-4 md:h-5 mr-2" />
               Watch Trailer
             </Button>
