@@ -252,8 +252,28 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen()
-      setIsFullscreen(true)
+      // Try to fullscreen the iframe first if it exists, otherwise the container
+      const elementToFullscreen =
+        useIframe && iframeRef.current
+          ? iframeRef.current
+          : !useIframe && videoRef.current
+            ? videoRef.current
+            : containerRef.current
+
+      if (elementToFullscreen) {
+        elementToFullscreen
+          .requestFullscreen()
+          .then(() => {
+            setIsFullscreen(true)
+          })
+          .catch((err) => {
+            console.log("[v0] Fullscreen request failed:", err)
+            // Fallback to container if iframe/video fullscreen fails
+            containerRef.current?.requestFullscreen().then(() => {
+              setIsFullscreen(true)
+            })
+          })
+      }
     } else {
       document.exitFullscreen()
       setIsFullscreen(false)
@@ -266,6 +286,17 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
       setIsFullscreen(false)
     }
   }
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
+    }
+  }, [])
 
   const toggleLock = () => {
     setIsLocked(!isLocked)
@@ -573,13 +604,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                     variant="ghost"
                     size="icon"
                     className="text-white hover:bg-white/20"
-                    onClick={
-                      useIframe
-                        ? handleIframeClick
-                        : isPlaying
-                          ? () => videoRef.current?.pause()
-                          : () => videoRef.current?.play()
-                    }
+                    onClick={useIframe ? handleIframeClick : togglePlayPause}
                   >
                     {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
                   </Button>
