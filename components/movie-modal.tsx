@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import type { MovieModalProps } from "@/types/movie-modal"
 import YouTubeStylePlayer from "@/components/youtube-style-player"
-import { Send, Play, Download, Trailer } from "@/components/icons"
+import { Send, Play, Download, Video } from "lucide-react"
 
 export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: MovieModalProps) {
   const [showDrivePlayer, setShowDrivePlayer] = useState(false)
@@ -109,7 +109,7 @@ export function MovieModal({ movie, onClose, onOpenTelegram, onPlayTrailer }: Mo
               className="w-full bg-transparent text-sm md:text-base"
               onClick={handleWatchTrailer}
             >
-              <Trailer className="w-4 md:w-5 h-4 md:h-5 mr-2" />
+              <Video className="w-4 md:w-5 h-4 md:h-5 mr-2" />
               Watch Trailer
             </Button>
           </div>
