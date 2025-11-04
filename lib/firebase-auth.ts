@@ -1,12 +1,34 @@
-import { auth, db } from "./firebase"
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-  type User,
-} from "firebase/auth"
-import { doc, setDoc, getDoc, collection, query, where, getDocs } from "firebase/firestore"
+let auth: any = null
+let db: any = null
+
+// Initialize Firebase modules dynamically
+const initializeFirebaseModules = async () => {
+  if (!auth) {
+    try {
+      const firebaseModule = await import("firebase/app")
+      const authModule = await import("firebase/auth")
+      const firestoreModule = await import("firebase/firestore")
+
+      // Get the Firebase app instance
+      const app = firebaseModule.initializeApp({
+        apiKey: "AIzaSyAQB61QWus2fMNS5FNU4nLZCKnU5qONBY4",
+        authDomain: "flixory-74271.firebaseapp.com",
+        databaseURL: "https://flixory-74271-default-rtdb.firebaseio.com",
+        projectId: "flixory-74271",
+        storageBucket: "flixory-74271.firebasestorage.app",
+        messagingSenderId: "292608615173",
+        appId: "1:292608615173:web:30a2988703b506e4424d6c",
+        measurementId: "G-8ZF9KF2BG3",
+      })
+
+      auth = authModule.getAuth(app)
+      db = firestoreModule.getFirestore(app)
+    } catch (error) {
+      console.error("[v0] Firebase initialization error:", error)
+    }
+  }
+  return { auth, db }
+}
 
 export interface UserProfile {
   uid: string
@@ -28,7 +50,11 @@ export const signUpUser = async (
   name: string,
 ): Promise<UserProfile> => {
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    const { auth: authInstance, db: dbInstance } = await initializeFirebaseModules()
+    const { createUserWithEmailAndPassword } = await import("firebase/auth")
+    const { doc, setDoc } = await import("firebase/firestore")
+
+    const userCredential = await createUserWithEmailAndPassword(authInstance, email, password)
     const user = userCredential.user
 
     const userProfile: UserProfile = {
@@ -42,7 +68,7 @@ export const signUpUser = async (
       createdAt: new Date().toISOString(),
     }
 
-    await setDoc(doc(db, "users", user.uid), userProfile)
+    await setDoc(doc(dbInstance, "users", user.uid), userProfile)
     return userProfile
   } catch (error) {
     console.error("[v0] Sign up error:", error)
@@ -51,9 +77,12 @@ export const signUpUser = async (
 }
 
 // Sign in user
-export const signInUser = async (email: string, password: string): Promise<User> => {
+export const signInUser = async (email: string, password: string) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
+    const { auth: authInstance } = await initializeFirebaseModules()
+    const { signInWithEmailAndPassword } = await import("firebase/auth")
+
+    const userCredential = await signInWithEmailAndPassword(authInstance, email, password)
     return userCredential.user
   } catch (error) {
     console.error("[v0] Sign in error:", error)
@@ -64,7 +93,10 @@ export const signInUser = async (email: string, password: string): Promise<User>
 // Get user profile from Firestore
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
   try {
-    const docRef = doc(db, "users", uid)
+    const { db: dbInstance } = await initializeFirebaseModules()
+    const { doc, getDoc } = await import("firebase/firestore")
+
+    const docRef = doc(dbInstance, "users", uid)
     const docSnap = await getDoc(docRef)
 
     if (docSnap.exists()) {
@@ -80,7 +112,10 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
 // Update user profile
 export const updateUserProfile = async (uid: string, updates: Partial<UserProfile>): Promise<void> => {
   try {
-    const docRef = doc(db, "users", uid)
+    const { db: dbInstance } = await initializeFirebaseModules()
+    const { doc, setDoc } = await import("firebase/firestore")
+
+    const docRef = doc(dbInstance, "users", uid)
     await setDoc(docRef, updates, { merge: true })
   } catch (error) {
     console.error("[v0] Update user profile error:", error)
@@ -91,7 +126,10 @@ export const updateUserProfile = async (uid: string, updates: Partial<UserProfil
 // Get all approved users
 export const getApprovedUsers = async (): Promise<UserProfile[]> => {
   try {
-    const q = query(collection(db, "users"), where("isActive", "==", true))
+    const { db: dbInstance } = await initializeFirebaseModules()
+    const { collection, query, where, getDocs } = await import("firebase/firestore")
+
+    const q = query(collection(dbInstance, "users"), where("isActive", "==", true))
     const querySnapshot = await getDocs(q)
 
     return querySnapshot.docs.map((doc) => doc.data() as UserProfile)
@@ -104,7 +142,10 @@ export const getApprovedUsers = async (): Promise<UserProfile[]> => {
 // Sign out user
 export const signOutUser = async (): Promise<void> => {
   try {
-    await signOut(auth)
+    const { auth: authInstance } = await initializeFirebaseModules()
+    const { signOut } = await import("firebase/auth")
+
+    await signOut(authInstance)
   } catch (error) {
     console.error("[v0] Sign out error:", error)
     throw error
@@ -112,6 +153,14 @@ export const signOutUser = async (): Promise<void> => {
 }
 
 // Set up auth state listener
-export const setupAuthListener = (callback: (user: User | null) => void) => {
-  return onAuthStateChanged(auth, callback)
+export const setupAuthListener = (callback: (user: any) => void) => {
+  initializeFirebaseModules().then(({ auth: authInstance }) => {
+    if (authInstance) {
+      import("firebase/auth").then(({ onAuthStateChanged }) => {
+        onAuthStateChanged(authInstance, callback)
+      })
+    }
+  })
+
+  return () => {} // Return cleanup function
 }
