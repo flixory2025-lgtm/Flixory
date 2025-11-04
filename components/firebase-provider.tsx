@@ -2,11 +2,9 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
-import type { User } from "firebase/auth"
-import { setupAuthListener } from "@/lib/firebase-auth"
 
 interface FirebaseContextType {
-  user: User | null
+  user: any | null
   loading: boolean
 }
 
@@ -16,16 +14,26 @@ const FirebaseContext = createContext<FirebaseContextType>({
 })
 
 export function FirebaseProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = setupAuthListener((firebaseUser) => {
-      setUser(firebaseUser)
-      setLoading(false)
-    })
+    const setupListener = async () => {
+      try {
+        const { setupAuthListener } = await import("@/lib/firebase-auth")
+        const unsubscribe = setupAuthListener((firebaseUser) => {
+          setUser(firebaseUser)
+          setLoading(false)
+        })
 
-    return () => unsubscribe()
+        return unsubscribe
+      } catch (error) {
+        console.error("[v0] Firebase provider error:", error)
+        setLoading(false)
+      }
+    }
+
+    setupListener()
   }, [])
 
   return <FirebaseContext.Provider value={{ user, loading }}>{children}</FirebaseContext.Provider>
