@@ -9,12 +9,13 @@ import { MovieModal } from "@/components/movie-modal"
 import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
+import { WelcomePopup } from "@/components/welcome-popup"
 
 const TRENDING_MOVIE_IDS = [1, 3, 4, 14, 21, 22, 23, 27, 28, 30,]
 const MOVIES_PER_PAGE = 20
 
 const movies = [
-   {
+{
     id: 1,
     title: "INSAAF - Tale of Legends",
     poster: "/1id.jpg",
@@ -483,6 +484,7 @@ export function HomePage() {
   const [currentTelegramLink, setCurrentTelegramLink] = useState("")
   const [currentMovieTitle, setCurrentMovieTitle] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
+  const [showWelcomePopup, setShowWelcomePopup] = useState(false)
 
   const sortedMovies = [...movies].sort((a, b) => b.id - a.id)
 
@@ -531,6 +533,14 @@ export function HomePage() {
     const authCheckInterval = setInterval(checkAuthStatus, 60000)
 
     return () => clearInterval(authCheckInterval)
+  }, [])
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem("flixory_has_visited")
+    if (!hasVisited) {
+      setShowWelcomePopup(true)
+      localStorage.setItem("flixory_has_visited", "true")
+    }
   }, [])
 
   const filteredMovies = sortedMovies.filter((movie) =>
@@ -630,6 +640,10 @@ export function HomePage() {
 
   return (
     <div className={`min-h-screen bg-background touch-manipulation pb-20 ${searchQuery ? "search-active" : ""}`}>
+      {showWelcomePopup && (
+        <WelcomePopup onClose={() => setShowWelcomePopup(false)} />
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-4">
