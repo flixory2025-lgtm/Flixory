@@ -2074,6 +2074,34 @@ const seriesData: Series[] = [
       },
     ],
   },
+  {
+    id: "bongo-original-17",
+    title: "Bachelor Point – Season 5 (Episodes 41-48) combined",
+    poster: "/s17id.jpg",
+    description: "চার বন্ধু এক বাড়িতে বাস করে—হাসি, ভুলভাল ও প্রেমাসঙ্কটে ভরা প্রতিদিনের গল্প। এখন ৫ম সিজনের ৪১-৪৮ পর্বে তাদের বেঁচে থাকার নতুন রোমাঞ্চ শুরু হয়েছে!",
+    genre: "Comedy | Drama | Family",
+    year: "2025",
+    rating: "8.1",
+    seasons: [
+      {
+        id: "season-1",
+        title: "season-5 chapter-6",
+        episodes: [
+          {
+            id: "ep 41-48",
+            title: "Episodes 41-48",
+            episode: 1,
+            duration: "2:48:49",
+            trailerUrl: "https://www.youtube.com/watch?v=zh8pKmKJRww",
+            telegramUrl: "https://t.me/c/3117912335/4946",
+            thumbnail: "/s17id.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/1Z6A_ib8_KGiBCMFcoNNfQe0cFsEp6Nuw/preview",
+            googleDriveDownloadUrl: "",
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 export function SeriesSection() {
