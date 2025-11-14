@@ -10,7 +10,7 @@ import { VideoPlayer } from "@/components/video-player"
 import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
 
-const TRENDING_MOVIE_IDS = [12, 14, 18, 23, 27, 28, 29]
+const TRENDING_MOVIE_IDS = [1, 3, 4, 14, 21, 22, 23, 27, 28, 30,]
 const MOVIES_PER_PAGE = 20
 
 const movies = [
