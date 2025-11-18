@@ -11,7 +11,7 @@ import { UserAuthModal } from "@/components/user-auth-modal"
 import { TelegramPopup } from "@/components/telegram-popup"
 import { WelcomePopup } from "@/components/welcome-popup"
 
-const TRENDING_MOVIE_IDS = [31, 32, 33, 34, 21, 22, 23, 27, 28, 30,]
+const TRENDING_MOVIE_IDS = [35, 36, 37, 38, 39, 22, 23, 27, 28, 30,]
 const MOVIES_PER_PAGE = 20
 
 const movies = [
