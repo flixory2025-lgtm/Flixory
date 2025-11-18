@@ -2102,6 +2102,45 @@ const seriesData: Series[] = [
       },
     ],
   },
+  {
+    id: "toffy-original-18",
+    title: "Kurulus Osman – Season 2 (2020)",
+    poster: "/s18id.jpg",
+    description: "অটোমান সাম্রাজ্য গঠনের পথে ওসমান বেইয়ের সামনে নতুন শত্রু, বিশ্বাসঘাতকতা ও রক্তক্ষয়ী লড়াই। পরিবার, রাষ্ট্র ও তূর্কি জাতির ভবিষ্যৎ রক্ষার জন্য সে শুরু করে তার শক্ততম অভিযান।",
+    genre: "History | Action | Drama",
+    year: "2025",
+    rating: "7.5",
+    seasons: [
+      {
+        id: "season-2",
+        title: "season-2",
+        episodes: [
+          {
+            id: "ep 01-05",
+            title: "Episodes 01-05☑️",
+            episode: 1,
+            duration: "3:17:13",
+            trailerUrl: "https://www.youtube.com/watch?v=c6ztNdsZZrc",
+            telegramUrl: "https://t.me/c/3117912335",
+            thumbnail: "/s18id.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/1gIHXZ6gqCzPLkOUYktbIRY4Z022CwvNb/preview",
+            googleDriveDownloadUrl: "",
+          },
+           {
+            id: "ep 06-10",
+            title: "Episodes 06-10☑️",
+            episode: 1,
+            duration: "3:16:40",
+            trailerUrl: "https://www.youtube.com/watch?v=c6ztNdsZZrc",
+            telegramUrl: "https://t.me/c/3117912335",
+            thumbnail: "/s18id.jpg",
+            googleDrivePlayUrl: "https://drive.google.com/file/d/1izmDYReUDMLDLj1IiGyuu_aY2QwvPTO_/preview",
+            googleDriveDownloadUrl: "",
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 export function SeriesSection() {
