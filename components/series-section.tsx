@@ -2118,7 +2118,7 @@ const seriesData: Series[] = [
           {
             id: "ep 01-05",
             title: "Episodes 01-05☑️",
-            episode: 01-05,
+            episode: 1-5,
             duration: "3:17:13",
             trailerUrl: "https://www.youtube.com/watch?v=c6ztNdsZZrc",
             telegramUrl: "https://t.me/c/3117912335",
@@ -2129,7 +2129,7 @@ const seriesData: Series[] = [
           {
             id: "ep 06-10",
             title: "Episodes 06-10☑️",
-            episode: 06-10,
+            episode: 6-10,
             duration: "3:16:40",
             trailerUrl: "https://www.youtube.com/watch?v=c6ztNdsZZrc",
             telegramUrl: "https://t.me/c/3117912335",
