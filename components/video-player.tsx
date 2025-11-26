@@ -1,9 +1,10 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useRef, useEffect } from "react"
 import {
   X,
-  ArrowLeft,
   Maximize,
   Minimize,
   Lock,
@@ -27,6 +28,14 @@ interface VideoPlayerProps {
   videoUrl: string
   onClose: () => void
 }
+
+interface DoubleTapState {
+  lastTapTime: number
+  tapX: number
+}
+
+const DOUBLE_TAP_DELAY = 300
+const SKIP_DURATION = 10
 
 export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
@@ -52,6 +61,12 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [playbackRate, setPlaybackRate] = useState(1)
   const [showSettings, setShowSettings] = useState(false)
   const [videoQuality, setVideoQuality] = useState("HD")
+
+  const doubleTapStateRef = useRef<DoubleTapState>({ lastTapTime: 0, tapX: 0 })
+  const [skipFeedback, setSkipFeedback] = useState<{ type: "forward" | "backward" | null; timestamp: number }>({
+    type: null,
+    timestamp: 0,
+  })
 
   useEffect(() => {
     const processVideoUrl = async () => {
@@ -250,6 +265,43 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
     }
   }, [embedUrl, useIframe])
 
+  const handleContainerClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isLocked) return
+
+    const now = Date.now()
+    const containerRect = containerRef.current?.getBoundingClientRect()
+
+    if (!containerRect) {
+      setShowControls(!showControls)
+      return
+    }
+
+    const clickX = e.clientX - containerRect.left
+    const isRightSide = clickX > containerRect.width / 2
+
+    // Check if it's a double-tap
+    if (now - doubleTapStateRef.current.lastTapTime < DOUBLE_TAP_DELAY) {
+      e.preventDefault()
+
+      if (isRightSide) {
+        // Right side double-tap: skip forward
+        skipForward()
+        setSkipFeedback({ type: "forward", timestamp: now })
+      } else {
+        // Left side double-tap: skip backward
+        skipBackward()
+        setSkipFeedback({ type: "backward", timestamp: now })
+      }
+
+      // Reset tap state
+      doubleTapStateRef.current = { lastTapTime: 0, tapX: 0 }
+    } else {
+      // Single tap or first tap of potential double-tap
+      doubleTapStateRef.current = { lastTapTime: now, tapX: clickX }
+      setShowControls(!showControls)
+    }
+  }
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       // Try to fullscreen the iframe first if it exists, otherwise the container
@@ -345,13 +397,13 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   const skipBackward = () => {
     if (videoRef.current && !useIframe) {
-      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
+      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - SKIP_DURATION)
     }
   }
 
   const skipForward = () => {
     if (videoRef.current && !useIframe) {
-      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10)
+      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + SKIP_DURATION)
     }
   }
 
@@ -429,7 +481,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
     <div
       ref={containerRef}
       className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-all duration-300 ${isFullscreen ? "fullscreen-video" : ""}`}
-      onClick={() => !isLocked && setShowControls(!showControls)}
+      onClick={handleContainerClick}
     >
       <div className="relative w-full h-full">
         {embedUrl && !hasError ? (
@@ -463,6 +515,27 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
             )}
           </>
         ) : null}
+
+        {skipFeedback.type && Date.now() - skipFeedback.timestamp < 500 && (
+          <>
+            {skipFeedback.type === "backward" && (
+              <div className="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 pointer-events-none">
+                <div className="flex flex-col items-center gap-2 animate-pulse">
+                  <SkipBack className="w-12 h-12 text-white drop-shadow-lg" />
+                  <span className="text-white text-sm font-semibold drop-shadow-lg">{SKIP_DURATION}s</span>
+                </div>
+              </div>
+            )}
+            {skipFeedback.type === "forward" && (
+              <div className="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 pointer-events-none">
+                <div className="flex flex-col items-center gap-2 animate-pulse">
+                  <SkipForward className="w-12 h-12 text-white drop-shadow-lg" />
+                  <span className="text-white text-sm font-semibold drop-shadow-lg">{SKIP_DURATION}s</span>
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Connection Status */}
         {connectionStatus === "offline" && (
@@ -549,7 +622,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
             <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4 pointer-events-auto">
               <div className="flex justify-between items-center">
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
-                  <ArrowLeft className="w-6 h-6" />
+                  <X className="w-6 h-6" />
                 </Button>
                 <div className="flex space-x-2">
                   <Button
