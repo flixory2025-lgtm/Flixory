@@ -1,19 +1,59 @@
 "use client"
 
-import { X, Maximize, Minimize, SkipBack, SkipForward } from "lucide-react"
+import { useState, useRef, useEffect } from "react"
+import {
+  X,
+  ArrowLeft,
+  Maximize,
+  Minimize,
+  Lock,
+  Unlock,
+  RotateCcw,
+  WifiOff,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX,
+  Settings,
+  Maximize2,
+  SkipBack,
+  SkipForward,
+  Subtitles,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useEffect, useState, useRef } from "react"
+import { Slider } from "@/components/ui/slider"
 
-interface GoogleDrivePlayerProps {
-  driveUrl: string
-  title: string
+interface VideoPlayerProps {
+  videoUrl: string
   onClose: () => void
 }
 
-export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlayerProps) {
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+  const [embedUrl, setEmbedUrl] = useState<string | null>(null)
+  const [useIframe, setUseIframe] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isLocked, setIsLocked] = useState(false)
+  const [showControls, setShowControls] = useState(true)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const [volume, setVolume] = useState([100])
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  const [progress, setProgress] = useState([0])
+  const [controlsTimeout, setControlsTimeout] = useState<NodeJS.Timeout | null>(null)
+  const [showSubtitles, setShowSubtitles] = useState(false)
+  const [isBuffering, setIsBuffering] = useState(false)
+  const [connectionStatus, setConnectionStatus] = useState<"online" | "offline">("online")
+  const [playbackRate, setPlaybackRate] = useState(1)
+  const [showSettings, setShowSettings] = useState(false)
+  const [videoQuality, setVideoQuality] = useState("HD")
+  
+  // Double tap state
   const [lastTap, setLastTap] = useState(0)
   const [tapPosition, setTapPosition] = useState({ x: 0, y: 0 })
   const [skipIndicator, setSkipIndicator] = useState<{ show: boolean; type: 'forward' | 'backward' }>({ 
@@ -21,83 +61,207 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
     type: 'forward' 
   })
 
-  const getPreviewUrl = (url: string) => {
-    const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/)
-    if (fileIdMatch && fileIdMatch[1]) {
-      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`
+  useEffect(() => {
+    const processVideoUrl = async () => {
+      console.log("[v0] Processing universal video URL:", videoUrl)
+      setIsLoading(true)
+      setHasError(false)
+
+      if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+        // YouTube videos
+        const youtubeUrl = convertYouTubeLink(videoUrl)
+        setEmbedUrl(youtubeUrl)
+        setUseIframe(true)
+        setIsLoading(false)
+      } else if (videoUrl.includes("drive.google.com")) {
+        const fileId = extractFileId(videoUrl)
+        if (fileId) {
+          // Use enhanced Google Drive embed URL with autoplay and controls
+          setEmbedUrl(`https://drive.google.com/file/d/${fileId}/preview?usp=sharing&autoplay=1`)
+          setUseIframe(true)
+          setIsLoading(false)
+        } else {
+          setHasError(true)
+          setIsLoading(false)
+        }
+      } else if (
+        videoUrl.includes("pcloud.com") ||
+        videoUrl.includes("my.pcloud.com") ||
+        videoUrl.includes("u.pcloud.link")
+      ) {
+        const pcloudEmbedUrl = convertPCloudLink(videoUrl)
+        console.log("[v0] pCloud embed URL:", pcloudEmbedUrl)
+        setEmbedUrl(pcloudEmbedUrl)
+        setUseIframe(true)
+        setIsLoading(false)
+      } else if (videoUrl.includes("dropbox.com")) {
+        // Dropbox videos
+        const dropboxEmbedUrl = convertDropboxLink(videoUrl)
+        setEmbedUrl(dropboxEmbedUrl)
+        setUseIframe(true)
+        setIsLoading(false)
+      } else if (videoUrl.includes("onedrive.live.com") || videoUrl.includes("1drv.ms")) {
+        // OneDrive videos
+        const onedriveEmbedUrl = convertOneDriveLink(videoUrl)
+        setEmbedUrl(onedriveEmbedUrl)
+        setUseIframe(true)
+        setIsLoading(false)
+      } else if (videoUrl.includes("mega.nz")) {
+        // Mega.nz videos
+        const megaEmbedUrl = convertMegaLink(videoUrl)
+        setEmbedUrl(megaEmbedUrl)
+        setUseIframe(true)
+        setIsLoading(false)
+      } else {
+        // Direct video URLs or other cloud services
+        setEmbedUrl(videoUrl)
+        setUseIframe(false)
+        setIsLoading(false)
+      }
     }
-    return url
-  }
+
+    processVideoUrl()
+  }, [videoUrl])
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (isFullscreen) {
-          exitFullscreen()
-        } else {
-          onClose()
-        }
-      }
-      if (event.key === "f" || event.key === "F") {
-        toggleFullscreen()
-      }
-      // Keyboard shortcuts for skipping
-      if (event.key === "ArrowLeft") {
-        skipBackward()
-      }
-      if (event.key === "ArrowRight") {
-        skipForward()
+      if (isLocked) return
+
+      switch (event.key) {
+        case "Escape":
+          if (isFullscreen) {
+            exitFullscreen()
+          } else {
+            onClose()
+          }
+          break
+        case "f":
+        case "F":
+          toggleFullscreen()
+          break
+        case " ":
+          event.preventDefault()
+          togglePlayPause()
+          break
+        case "m":
+        case "M":
+          toggleMute()
+          break
+        case "l":
+        case "L":
+          toggleLock()
+          break
+        case "ArrowLeft":
+          skipBackward()
+          break
+        case "ArrowRight":
+          skipForward()
+          break
+        case "ArrowUp":
+          event.preventDefault()
+          adjustVolume(10)
+          break
+        case "ArrowDown":
+          event.preventDefault()
+          adjustVolume(-10)
+          break
+        case "s":
+        case "S":
+          toggleSubtitles()
+          break
       }
     }
+
+    const handleMouseMove = () => {
+      if (!isLocked) {
+        setShowControls(true)
+        if (controlsTimeout) {
+          clearTimeout(controlsTimeout)
+        }
+        const timeout = setTimeout(() => {
+          setShowControls(false)
+        }, 3000)
+        setControlsTimeout(timeout)
+      }
+    }
+
+    const handleOnline = () => setConnectionStatus("online")
+    const handleOffline = () => setConnectionStatus("offline")
+
+    const handlePopState = () => {
+      onClose()
+    }
+
+    window.history.pushState({ modal: "video" }, "", window.location.href)
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
-  }, [onClose, isFullscreen])
+    document.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("online", handleOnline)
+    window.addEventListener("offline", handleOffline)
+    window.addEventListener("popstate", handlePopState)
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown)
+      document.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("online", handleOnline)
+      window.removeEventListener("offline", handleOffline)
+      window.removeEventListener("popstate", handlePopState)
+      if (controlsTimeout) {
+        clearTimeout(controlsTimeout)
+      }
+    }
+  }, [onClose, isFullscreen, isLocked, controlsTimeout])
 
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement)
-    }
+    if (videoRef.current && !useIframe) {
+      const video = videoRef.current
 
-    document.addEventListener("fullscreenchange", handleFullscreenChange)
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullscreenChange)
-    }
-  }, [])
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      // Try iframe first, fallback to container
-      const elementToFullscreen = iframeRef.current || containerRef.current
-
-      if (elementToFullscreen) {
-        elementToFullscreen
-          .requestFullscreen()
-          .then(() => {
-            setIsFullscreen(true)
-          })
-          .catch((err) => {
-            console.log("[v0] Fullscreen request failed:", err)
-            // Fallback to container if iframe fullscreen fails
-            containerRef.current?.requestFullscreen().then(() => {
-              setIsFullscreen(true)
-            })
-          })
+      const updateTime = () => {
+        setCurrentTime(video.currentTime)
+        setProgress([video.currentTime])
       }
-    } else {
-      document.exitFullscreen()
-      setIsFullscreen(false)
-    }
-  }
 
-  const exitFullscreen = () => {
-    if (document.fullscreenElement) {
-      document.exitFullscreen()
-      setIsFullscreen(false)
-    }
-  }
+      const updateDuration = () => {
+        setDuration(video.duration)
+      }
 
+      const handlePlay = () => {
+        setIsPlaying(true)
+        setIsBuffering(false)
+      }
+
+      const handlePause = () => setIsPlaying(false)
+      const handleWaiting = () => setIsBuffering(true)
+      const handleCanPlay = () => setIsBuffering(false)
+      const handleLoadStart = () => setIsLoading(true)
+      const handleLoadedData = () => setIsLoading(false)
+
+      video.addEventListener("timeupdate", updateTime)
+      video.addEventListener("loadedmetadata", updateDuration)
+      video.addEventListener("play", handlePlay)
+      video.addEventListener("pause", handlePause)
+      video.addEventListener("waiting", handleWaiting)
+      video.addEventListener("canplay", handleCanPlay)
+      video.addEventListener("loadstart", handleLoadStart)
+      video.addEventListener("loadeddata", handleLoadedData)
+
+      return () => {
+        video.removeEventListener("timeupdate", updateTime)
+        video.removeEventListener("loadedmetadata", updateDuration)
+        video.removeEventListener("play", handlePlay)
+        video.removeEventListener("pause", handlePause)
+        video.removeEventListener("waiting", handleWaiting)
+        video.removeEventListener("canplay", handleCanPlay)
+        video.removeEventListener("loadstart", handleLoadStart)
+        video.removeEventListener("loadeddata", handleLoadedData)
+      }
+    }
+  }, [embedUrl, useIframe])
+
+  // Double tap handler
   const handleDoubleTap = (event: React.MouseEvent) => {
+    if (isLocked) return
+
     const currentTime = new Date().getTime()
     const tapLength = currentTime - lastTap
     const tapX = event.clientX
@@ -138,107 +302,245 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
     }, 1000)
   }
 
-  const skipBackward = () => {
-    // Google Drive iframe e seek korar try kori
-    try {
-      const iframe = iframeRef.current
-      if (iframe && iframe.contentWindow) {
-        // Google Drive player e seek command pathai
-        iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[0,true]}', "*")
-        
-        // Alternative: Keyboard event simulate kore seek kora
-        const seekBackEvent = new KeyboardEvent('keydown', {
-          key: 'ArrowLeft',
-          code: 'ArrowLeft',
-          keyCode: 37,
-          which: 37,
-          bubbles: true
-        })
-        iframe.contentWindow.document.dispatchEvent(seekBackEvent)
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      // Try to fullscreen the iframe first if it exists, otherwise the container
+      const elementToFullscreen =
+        useIframe && iframeRef.current
+          ? iframeRef.current
+          : !useIframe && videoRef.current
+            ? videoRef.current
+            : containerRef.current
+
+      if (elementToFullscreen) {
+        elementToFullscreen
+          .requestFullscreen()
+          .then(() => {
+            setIsFullscreen(true)
+          })
+          .catch((err) => {
+            console.log("[v0] Fullscreen request failed:", err)
+            // Fallback to container if iframe/video fullscreen fails
+            containerRef.current?.requestFullscreen().then(() => {
+              setIsFullscreen(true)
+            })
+          })
       }
-    } catch (error) {
-      console.log("[v0] Could not send seek command to Google Drive iframe")
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  const exitFullscreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange)
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange)
+    }
+  }, [])
+
+  const toggleLock = () => {
+    setIsLocked(!isLocked)
+    if (!isLocked) {
+      setShowControls(false)
+    } else {
+      setShowControls(true)
+    }
+  }
+
+  const togglePlayPause = () => {
+    if (videoRef.current && !useIframe) {
+      if (isPlaying) {
+        videoRef.current.pause()
+      } else {
+        videoRef.current.play()
+      }
+    }
+  }
+
+  const toggleMute = () => {
+    if (videoRef.current && !useIframe) {
+      videoRef.current.muted = !isMuted
+      setIsMuted(!isMuted)
+    }
+  }
+
+  const handleVolumeChange = (value: number[]) => {
+    setVolume(value)
+    if (videoRef.current && !useIframe) {
+      videoRef.current.volume = value[0] / 100
+    }
+  }
+
+  const adjustVolume = (delta: number) => {
+    const newVolume = Math.max(0, Math.min(100, volume[0] + delta))
+    handleVolumeChange([newVolume])
+  }
+
+  const handleProgressChange = (value: number[]) => {
+    setProgress(value)
+    if (videoRef.current && !useIframe) {
+      videoRef.current.currentTime = value[0]
+    }
+  }
+
+  const skipBackward = () => {
+    if (videoRef.current && !useIframe) {
+      videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
+    } else if (useIframe && iframeRef.current) {
+      // For iframe videos, try to seek backward
+      try {
+        const iframe = iframeRef.current
+        if (iframe.contentWindow) {
+          // YouTube API use kore seek kora
+          iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[' + (currentTime - 10) + ',true]}', "*")
+        }
+      } catch (error) {
+        console.log("[v0] Could not send seek command to iframe")
+      }
     }
   }
 
   const skipForward = () => {
-    // Google Drive iframe e seek korar try kori
-    try {
-      const iframe = iframeRef.current
-      if (iframe && iframe.contentWindow) {
-        // Google Drive player e seek command pathai
-        iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[0,true]}', "*")
-        
-        // Alternative: Keyboard event simulate kore seek kora
-        const seekForwardEvent = new KeyboardEvent('keydown', {
-          key: 'ArrowRight',
-          code: 'ArrowRight',
-          keyCode: 39,
-          which: 39,
-          bubbles: true
-        })
-        iframe.contentWindow.document.dispatchEvent(seekForwardEvent)
+    if (videoRef.current && !useIframe) {
+      videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10)
+    } else if (useIframe && iframeRef.current) {
+      // For iframe videos, try to seek forward
+      try {
+        const iframe = iframeRef.current
+        if (iframe.contentWindow) {
+          // YouTube API use kore seek kora
+          iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[' + (currentTime + 10) + ',true]}', "*")
+        }
+      } catch (error) {
+        console.log("[v0] Could not send seek command to iframe")
       }
-    } catch (error) {
-      console.log("[v0] Could not send seek command to Google Drive iframe")
     }
   }
 
-  // Google Drive iframe load hoye gele event listener add kori
-  useEffect(() => {
-    const iframe = iframeRef.current
-    if (iframe) {
-      const handleIframeLoad = () => {
-        try {
-          // Iframe fully load hoye gele seek functionality enable kori
-          console.log("[v0] Google Drive iframe loaded successfully")
-        } catch (error) {
-          console.log("[v0] Could not access Google Drive iframe content")
-        }
-      }
-
-      iframe.addEventListener('load', handleIframeLoad)
-      return () => iframe.removeEventListener('load', handleIframeLoad)
+  const changePlaybackRate = (rate: number) => {
+    if (videoRef.current && !useIframe) {
+      videoRef.current.playbackRate = rate
+      setPlaybackRate(rate)
     }
-  }, [])
+    setShowSettings(false)
+  }
+
+  const toggleSubtitles = () => {
+    setShowSubtitles(!showSubtitles)
+  }
+
+  const formatTime = (time: number) => {
+    const hours = Math.floor(time / 3600)
+    const minutes = Math.floor((time % 3600) / 60)
+    const seconds = Math.floor(time % 60)
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`
+    }
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+  }
+
+  const handleRetry = () => {
+    console.log("[v0] Retrying video load")
+    setIsLoading(true)
+    setHasError(false)
+
+    if (iframeRef.current) {
+      iframeRef.current.src = iframeRef.current.src
+    } else if (videoRef.current) {
+      videoRef.current.load()
+    }
+  }
+
+  const handleIframeLoad = () => {
+    console.log("[v0] Iframe loaded successfully")
+    setIsLoading(false)
+    setHasError(false)
+    if (useIframe) {
+      setIsPlaying(true)
+    }
+  }
+
+  const handleIframeError = () => {
+    console.log("[v0] Iframe failed to load")
+    setHasError(true)
+    setIsLoading(false)
+  }
+
+  const handleVideoError = () => {
+    console.log("[v0] Video element failed to load")
+    setHasError(true)
+    setIsLoading(false)
+  }
+
+  const handleIframeClick = () => {
+    if (useIframe && iframeRef.current) {
+      // Try to trigger play by sending a message to the iframe
+      try {
+        const iframe = iframeRef.current
+        if (iframe.contentWindow) {
+          iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*")
+        }
+      } catch (error) {
+        console.log("[v0] Could not send play command to iframe")
+      }
+    }
+  }
 
   return (
-    <div 
-      ref={containerRef} 
-      className="fixed inset-0 bg-black z-50 flex flex-col"
+    <div
+      ref={containerRef}
+      className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-all duration-300 ${isFullscreen ? "fullscreen-video" : ""}`}
+      onClick={() => !isLocked && setShowControls(!showControls)}
       onDoubleClick={handleDoubleTap}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-black/90 backdrop-blur-sm">
-        <h2 className="text-white font-semibold text-lg truncate flex-1">{title}</h2>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleFullscreen}
-            className="text-white hover:bg-white/20 flex-shrink-0"
-            title={isFullscreen ? "Exit Fullscreen (F)" : "Fullscreen (F)"}
-          >
-            {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
-          </Button>
-          <Button variant="ghost" size="icon" onClick={onClose} className="text-white hover:bg-white/20 flex-shrink-0">
-            <X className="w-6 h-6" />
-          </Button>
-        </div>
-      </div>
+      <div className="relative w-full h-full">
+        {embedUrl && !hasError ? (
+          <>
+            {useIframe ? (
+              <iframe
+                ref={iframeRef}
+                src={embedUrl}
+                className="w-full h-full"
+                frameBorder="0"
+                allowFullScreen
+                allow="autoplay; encrypted-media; fullscreen; accelerometer; gyroscope; picture-in-picture; web-share"
+                onLoad={handleIframeLoad}
+                onError={handleIframeError}
+                onClick={handleIframeClick}
+                onDoubleClick={handleDoubleTap}
+                style={{
+                  border: "none",
+                  outline: "none",
+                }}
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                src={embedUrl}
+                className="w-full h-full object-contain"
+                controls={false}
+                autoPlay
+                onLoadedData={() => setIsLoading(false)}
+                onError={handleVideoError}
+                onDoubleClick={handleDoubleTap}
+              />
+            )}
+          </>
+        ) : null}
 
-      {/* Video Player */}
-      <div className="flex-1 relative hide-drive-controls">
-        <iframe
-          ref={iframeRef}
-          src={getPreviewUrl(driveUrl)}
-          className="w-full h-full"
-          allow="autoplay; encrypted-media; fullscreen"
-          allowFullScreen
-          title={title}
-          onDoubleClick={handleDoubleTap}
-        />
-        
         {/* Double Tap Skip Indicators */}
         {skipIndicator.show && (
           <div className={`absolute top-1/2 ${skipIndicator.type === 'forward' ? 'right-8' : 'left-8'} transform -translate-y-1/2 z-30`}>
@@ -253,16 +555,324 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
           </div>
         )}
 
-        {/* Flixory Branding */}
-        <div className="absolute top-2 right-2 bg-black/80 px-3 py-1.5 rounded-md pointer-events-none z-10">
-          <span className="text-red-600 font-bold text-sm tracking-wider">FLIXORY</span>
+        {/* Connection Status */}
+        {connectionStatus === "offline" && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
+            <div className="bg-red-600 text-white px-4 py-2 rounded-full flex items-center space-x-2 animate-pulse">
+              <WifiOff className="w-4 h-4" />
+              <span className="text-sm">No Internet Connection</span>
+            </div>
+          </div>
+        )}
+
+        {/* Buffering Indicator */}
+        {isBuffering && !isLoading && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="bg-black/80 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
+              <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
+              <span className="text-sm">Buffering...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Quality Badge */}
+        <div className="absolute top-4 right-4 z-20">
+          <div className="bg-black/60 text-white px-2 py-1 rounded text-xs backdrop-blur-sm">{videoQuality}</div>
         </div>
 
-        {/* Double Tap Instructions (Temporary) */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-lg text-sm pointer-events-none z-10">
-          Double tap left/right to skip 10 seconds
-        </div>
+        {/* Subtitles */}
+        {showSubtitles && (
+          <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
+            <div className="bg-black/80 text-white px-4 py-2 rounded text-center max-w-md backdrop-blur-sm">
+              <p className="text-sm md:text-base">Subtitles will appear here when available</p>
+            </div>
+          </div>
+        )}
+
+        {/* Loading Screen */}
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <div className="text-white text-center">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-12 md:h-16 w-12 md:w-16 border-4 border-red-500 border-t-transparent mx-auto mb-4"></div>
+                <div className="absolute inset-0 animate-pulse">
+                  <div className="rounded-full h-12 md:h-16 w-12 md:w-16 border-2 border-red-500/30 mx-auto"></div>
+                </div>
+              </div>
+              <p className="text-sm md:text-base animate-pulse">Loading video...</p>
+              <div className="mt-2 flex justify-center space-x-1">
+                <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce"></div>
+                <div
+                  className="w-2 h-2 bg-red-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.1s" }}
+                ></div>
+                <div
+                  className="w-2 h-2 bg-red-500 rounded-full animate-bounce"
+                  style={{ animationDelay: "0.2s" }}
+                ></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Error Screen */}
+        {hasError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black">
+            <div className="text-white text-center max-w-md px-4">
+              <p className="text-lg md:text-xl mb-4">Video could not be loaded</p>
+              <p className="text-sm text-gray-300 mb-4">Please check your internet connection and try again.</p>
+              <div className="space-x-2">
+                <Button onClick={handleRetry} variant="outline" className="bg-transparent">
+                  <RotateCcw className="w-4 h-4 mr-2" />
+                  Try Again
+                </Button>
+                <Button onClick={onClose} variant="ghost">
+                  Close
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showControls && !isLocked && (
+          <div className="absolute inset-0 z-10 pointer-events-none">
+            {/* Top Controls */}
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4 pointer-events-auto">
+              <div className="flex justify-between items-center">
+                <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+                  <ArrowLeft className="w-6 h-6" />
+                </Button>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={toggleFullscreen}
+                  >
+                    {isFullscreen ? <Minimize className="w-6 h-6" /> : <Maximize className="w-6 h-6" />}
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
+                    <X className="w-6 h-6" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/20 bg-black/50 backdrop-blur-sm w-16 h-16 rounded-full"
+                onClick={useIframe ? handleIframeClick : togglePlayPause}
+              >
+                {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8" />}
+              </Button>
+            </div>
+
+            {/* Bottom Controls */}
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 pointer-events-auto">
+              {/* Progress Bar - only for non-iframe videos */}
+              {!useIframe && (
+                <div className="mb-4">
+                  <Slider
+                    value={progress}
+                    onValueChange={handleProgressChange}
+                    max={duration}
+                    step={1}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-xs text-white/70 mt-1">
+                    <span>{formatTime(currentTime)}</span>
+                    <span>{formatTime(duration)}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Control Buttons */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={useIframe ? handleIframeClick : togglePlayPause}
+                  >
+                    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  </Button>
+
+                  {!useIframe && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-white/20"
+                        onClick={skipBackward}
+                      >
+                        <SkipBack className="w-5 h-5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-white hover:bg-white/20"
+                        onClick={skipForward}
+                      >
+                        <SkipForward className="w-5 h-5" />
+                      </Button>
+                    </>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  {!useIframe && (
+                    <>
+                      {/* Volume Control */}
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-white hover:bg-white/20"
+                          onClick={toggleMute}
+                        >
+                          {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
+                        </Button>
+                        <div className="w-20">
+                          <Slider value={volume} onValueChange={handleVolumeChange} max={100} step={1} />
+                        </div>
+                      </div>
+
+                      {/* Subtitles */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={`text-white hover:bg-white/20 ${showSubtitles ? "bg-white/20" : ""}`}
+                        onClick={toggleSubtitles}
+                      >
+                        <Subtitles className="w-5 h-5" />
+                      </Button>
+
+                      {/* Settings */}
+                      <div className="relative">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-white hover:bg-white/20"
+                          onClick={() => setShowSettings(!showSettings)}
+                        >
+                          <Settings className="w-5 h-5" />
+                        </Button>
+                        {showSettings && (
+                          <div className="absolute bottom-full right-0 mb-2 bg-black/90 backdrop-blur-sm rounded-lg p-2 min-w-[120px]">
+                            <div className="text-white text-sm mb-2">Playback Speed</div>
+                            {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                              <button
+                                key={rate}
+                                className={`block w-full text-left px-2 py-1 text-sm text-white hover:bg-white/20 rounded ${playbackRate === rate ? "bg-white/20" : ""}`}
+                                onClick={() => changePlaybackRate(rate)}
+                              >
+                                {rate}x
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
+
+                  {/* Lock Button */}
+                  <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleLock}>
+                    <Lock className="w-5 h-5" />
+                  </Button>
+
+                  {/* Fullscreen */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={toggleFullscreen}
+                  >
+                    <Maximize2 className="w-5 h-5" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Lock Screen */}
+        {isLocked && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-white hover:bg-white/20 bg-black/50 backdrop-blur-sm w-16 h-16 rounded-full animate-pulse"
+              onClick={toggleLock}
+            >
+              <Unlock className="w-8 h-8" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )
+}
+
+function convertYouTubeLink(youtubeUrl: string): string {
+  let videoId = ""
+
+  if (youtubeUrl.includes("youtube.com/watch?v=")) {
+    videoId = youtubeUrl.split("v=")[1].split("&")[0]
+  } else if (youtubeUrl.includes("youtu.be/")) {
+    videoId = youtubeUrl.split("youtu.be/")[1].split("?")[0]
+  } else if (youtubeUrl.includes("youtube.com/embed/")) {
+    videoId = youtubeUrl.split("embed/")[1].split("?")[0]
+  }
+
+  if (videoId) {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1`
+  }
+
+  return youtubeUrl
+}
+
+function extractFileId(driveUrl: string): string | null {
+  const match = driveUrl.match(/\/d\/([a-zA-Z0-9-_]+)/)
+  return match ? match[1] : null
+}
+
+function convertPCloudLink(pcloudUrl: string): string {
+  console.log("[v0] Converting pCloud URL:", pcloudUrl)
+
+  if (pcloudUrl.includes("u.pcloud.link/publink/show")) {
+    const codeMatch = pcloudUrl.match(/code=([^&]+)/)
+    if (codeMatch) {
+      const code = codeMatch[1]
+      const streamUrl = `https://u.pcloud.link/publink/download?code=${code}&forcedownload=0`
+      console.log("[v0] pCloud stream URL generated:", streamUrl)
+      return streamUrl
+    }
+  } else if (pcloudUrl.includes("/publink/show")) {
+    // Convert to direct download format for video streaming
+    const directUrl = pcloudUrl.replace("/publink/show", "/publink/download").replace("?", "?forcedownload=0&")
+    return directUrl
+  }
+
+  return pcloudUrl
+}
+
+function convertDropboxLink(dropboxUrl: string): string {
+  // Convert Dropbox share links to embed format
+  return dropboxUrl.replace("dropbox.com", "dropbox.com/embed")
+}
+
+function convertOneDriveLink(onedriveUrl: string): string {
+  // Convert OneDrive share links to embed format
+  if (onedriveUrl.includes("1drv.ms")) {
+    return onedriveUrl + "&embed=1"
+  }
+  return onedriveUrl.replace("/view", "/embed")
+}
+
+function convertMegaLink(megaUrl: string): string {
+  // Mega.nz links - return as is for iframe embedding
+  return megaUrl
 }
