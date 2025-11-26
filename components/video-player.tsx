@@ -60,7 +60,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   const [connectionStatus, setConnectionStatus] = useState<"online" | "offline">("online")
   const [playbackRate, setPlaybackRate] = useState(1)
   const [showSettings, setShowSettings] = useState(false)
-  const [videoQuality, setVideoQuality] = useState("HD")
+  const [videoQuality] = useState("HD")
 
   const doubleTapStateRef = useRef<DoubleTapState>({ lastTapTime: 0, tapX: 0 })
   const [skipFeedback, setSkipFeedback] = useState<{ type: "forward" | "backward" | null; timestamp: number }>({
@@ -70,12 +70,10 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   useEffect(() => {
     const processVideoUrl = async () => {
-      console.log("[v0] Processing universal video URL:", videoUrl)
       setIsLoading(true)
       setHasError(false)
 
       if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
-        // YouTube videos
         const youtubeUrl = convertYouTubeLink(videoUrl)
         setEmbedUrl(youtubeUrl)
         setUseIframe(true)
@@ -83,7 +81,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
       } else if (videoUrl.includes("drive.google.com")) {
         const fileId = extractFileId(videoUrl)
         if (fileId) {
-          // Use enhanced Google Drive embed URL with autoplay and controls
           setEmbedUrl(`https://drive.google.com/file/d/${fileId}/preview?usp=sharing&autoplay=1`)
           setUseIframe(true)
           setIsLoading(false)
@@ -97,30 +94,25 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
         videoUrl.includes("u.pcloud.link")
       ) {
         const pcloudEmbedUrl = convertPCloudLink(videoUrl)
-        console.log("[v0] pCloud embed URL:", pcloudEmbedUrl)
         setEmbedUrl(pcloudEmbedUrl)
         setUseIframe(true)
         setIsLoading(false)
       } else if (videoUrl.includes("dropbox.com")) {
-        // Dropbox videos
         const dropboxEmbedUrl = convertDropboxLink(videoUrl)
         setEmbedUrl(dropboxEmbedUrl)
         setUseIframe(true)
         setIsLoading(false)
       } else if (videoUrl.includes("onedrive.live.com") || videoUrl.includes("1drv.ms")) {
-        // OneDrive videos
         const onedriveEmbedUrl = convertOneDriveLink(videoUrl)
         setEmbedUrl(onedriveEmbedUrl)
         setUseIframe(true)
         setIsLoading(false)
       } else if (videoUrl.includes("mega.nz")) {
-        // Mega.nz videos
         const megaEmbedUrl = convertMegaLink(videoUrl)
         setEmbedUrl(megaEmbedUrl)
         setUseIframe(true)
         setIsLoading(false)
       } else {
-        // Direct video URLs or other cloud services
         setEmbedUrl(videoUrl)
         setUseIframe(false)
         setIsLoading(false)
@@ -279,24 +271,20 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
     const clickX = e.clientX - containerRect.left
     const isRightSide = clickX > containerRect.width / 2
 
-    // Check if it's a double-tap
+    // Check if it's a double-tap within the threshold
     if (now - doubleTapStateRef.current.lastTapTime < DOUBLE_TAP_DELAY) {
       e.preventDefault()
 
       if (isRightSide) {
-        // Right side double-tap: skip forward
         skipForward()
         setSkipFeedback({ type: "forward", timestamp: now })
       } else {
-        // Left side double-tap: skip backward
         skipBackward()
         setSkipFeedback({ type: "backward", timestamp: now })
       }
 
-      // Reset tap state
       doubleTapStateRef.current = { lastTapTime: 0, tapX: 0 }
     } else {
-      // Single tap or first tap of potential double-tap
       doubleTapStateRef.current = { lastTapTime: now, tapX: clickX }
       setShowControls(!showControls)
     }
@@ -304,7 +292,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
-      // Try to fullscreen the iframe first if it exists, otherwise the container
       const elementToFullscreen =
         useIframe && iframeRef.current
           ? iframeRef.current
@@ -318,9 +305,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           .then(() => {
             setIsFullscreen(true)
           })
-          .catch((err) => {
-            console.log("[v0] Fullscreen request failed:", err)
-            // Fallback to container if iframe/video fullscreen fails
+          .catch(() => {
             containerRef.current?.requestFullscreen().then(() => {
               setIsFullscreen(true)
             })
@@ -431,7 +416,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }
 
   const handleRetry = () => {
-    console.log("[v0] Retrying video load")
     setIsLoading(true)
     setHasError(false)
 
@@ -443,7 +427,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }
 
   const handleIframeLoad = () => {
-    console.log("[v0] Iframe loaded successfully")
     setIsLoading(false)
     setHasError(false)
     if (useIframe) {
@@ -452,27 +435,24 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
   }
 
   const handleIframeError = () => {
-    console.log("[v0] Iframe failed to load")
     setHasError(true)
     setIsLoading(false)
   }
 
   const handleVideoError = () => {
-    console.log("[v0] Video element failed to load")
     setHasError(true)
     setIsLoading(false)
   }
 
   const handleIframeClick = () => {
     if (useIframe && iframeRef.current) {
-      // Try to trigger play by sending a message to the iframe
       try {
         const iframe = iframeRef.current
         if (iframe.contentWindow) {
           iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*")
         }
       } catch (error) {
-        console.log("[v0] Could not send play command to iframe")
+        console.log("Could not send play command to iframe")
       }
     }
   }
@@ -537,7 +517,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </>
         )}
 
-        {/* Connection Status */}
         {connectionStatus === "offline" && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20">
             <div className="bg-red-600 text-white px-4 py-2 rounded-full flex items-center space-x-2 animate-pulse">
@@ -547,7 +526,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Buffering Indicator */}
         {isBuffering && !isLoading && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
             <div className="bg-black/80 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
@@ -557,12 +535,10 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Quality Badge */}
         <div className="absolute top-4 right-4 z-20">
           <div className="bg-black/60 text-white px-2 py-1 rounded text-xs backdrop-blur-sm">{videoQuality}</div>
         </div>
 
-        {/* Subtitles */}
         {showSubtitles && (
           <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20">
             <div className="bg-black/80 text-white px-4 py-2 rounded text-center max-w-md backdrop-blur-sm">
@@ -571,7 +547,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Loading Screen */}
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black">
             <div className="text-white text-center">
@@ -597,7 +572,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Error Screen */}
         {hasError && (
           <div className="absolute inset-0 flex items-center justify-center bg-black">
             <div className="text-white text-center max-w-md px-4">
@@ -618,7 +592,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
 
         {showControls && !isLocked && (
           <div className="absolute inset-0 z-10 pointer-events-none">
-            {/* Top Controls */}
             <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/80 to-transparent p-4 pointer-events-auto">
               <div className="flex justify-between items-center">
                 <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={onClose}>
@@ -651,9 +624,7 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
               </Button>
             </div>
 
-            {/* Bottom Controls */}
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 pointer-events-auto">
-              {/* Progress Bar - only for non-iframe videos */}
               {!useIframe && (
                 <div className="mb-4">
                   <Slider
@@ -670,7 +641,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                 </div>
               )}
 
-              {/* Control Buttons */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
                   <Button
@@ -707,7 +677,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                 <div className="flex items-center space-x-4">
                   {!useIframe && (
                     <>
-                      {/* Volume Control */}
                       <div className="flex items-center space-x-2">
                         <Button
                           variant="ghost"
@@ -722,7 +691,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                         </div>
                       </div>
 
-                      {/* Subtitles */}
                       <Button
                         variant="ghost"
                         size="icon"
@@ -732,7 +700,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                         <Subtitles className="w-5 h-5" />
                       </Button>
 
-                      {/* Settings */}
                       <div className="relative">
                         <Button
                           variant="ghost"
@@ -760,12 +727,10 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
                     </>
                   )}
 
-                  {/* Lock Button */}
                   <Button variant="ghost" size="icon" className="text-white hover:bg-white/20" onClick={toggleLock}>
                     <Lock className="w-5 h-5" />
                   </Button>
 
-                  {/* Fullscreen */}
                   <Button
                     variant="ghost"
                     size="icon"
@@ -780,7 +745,6 @@ export function VideoPlayer({ videoUrl, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Lock Screen */}
         {isLocked && (
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <Button
@@ -822,18 +786,14 @@ function extractFileId(driveUrl: string): string | null {
 }
 
 function convertPCloudLink(pcloudUrl: string): string {
-  console.log("[v0] Converting pCloud URL:", pcloudUrl)
-
   if (pcloudUrl.includes("u.pcloud.link/publink/show")) {
     const codeMatch = pcloudUrl.match(/code=([^&]+)/)
     if (codeMatch) {
       const code = codeMatch[1]
       const streamUrl = `https://u.pcloud.link/publink/download?code=${code}&forcedownload=0`
-      console.log("[v0] pCloud stream URL generated:", streamUrl)
       return streamUrl
     }
   } else if (pcloudUrl.includes("/publink/show")) {
-    // Convert to direct download format for video streaming
     const directUrl = pcloudUrl.replace("/publink/show", "/publink/download").replace("?", "?forcedownload=0&")
     return directUrl
   }
@@ -842,12 +802,10 @@ function convertPCloudLink(pcloudUrl: string): string {
 }
 
 function convertDropboxLink(dropboxUrl: string): string {
-  // Convert Dropbox share links to embed format
   return dropboxUrl.replace("dropbox.com", "dropbox.com/embed")
 }
 
 function convertOneDriveLink(onedriveUrl: string): string {
-  // Convert OneDrive share links to embed format
   if (onedriveUrl.includes("1drv.ms")) {
     return onedriveUrl + "&embed=1"
   }
@@ -855,6 +813,5 @@ function convertOneDriveLink(onedriveUrl: string): string {
 }
 
 function convertMegaLink(megaUrl: string): string {
-  // Mega.nz links - return as is for iframe embedding
   return megaUrl
 }
