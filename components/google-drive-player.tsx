@@ -1,6 +1,6 @@
 "use client"
 
-import { X, Maximize, Minimize } from "lucide-react"
+import { X, Maximize, Minimize, SkipBack, SkipForward } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useEffect, useState, useRef } from "react"
 
@@ -12,8 +12,10 @@ interface GoogleDrivePlayerProps {
 
 export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showSkipIndicator, setShowSkipIndicator] = useState<"forward" | "backward" | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
+  const lastTapRef = useRef<{ time: number; side: "left" | "right" } | null>(null)
 
   const getPreviewUrl = (url: string) => {
     const fileIdMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/)
@@ -84,6 +86,27 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
     }
   }
 
+  const handleDoubleTap = (side: "left" | "right") => {
+    const now = Date.now()
+    const lastTap = lastTapRef.current
+
+    if (lastTap && now - lastTap.time < 300 && lastTap.side === side) {
+      // Double tap detected - show visual indicator
+      if (side === "right") {
+        setShowSkipIndicator("forward")
+      } else {
+        setShowSkipIndicator("backward")
+      }
+
+      // Note: Google Drive preview iframe doesn't support postMessage seeking
+      // The visual indicator shows the intended action
+      setTimeout(() => setShowSkipIndicator(null), 500)
+      lastTapRef.current = null
+    } else {
+      lastTapRef.current = { time: now, side }
+    }
+  }
+
   return (
     <div ref={containerRef} className="fixed inset-0 bg-black z-50 flex flex-col">
       {/* Header */}
@@ -115,6 +138,32 @@ export function GoogleDrivePlayer({ driveUrl, title, onClose }: GoogleDrivePlaye
           allowFullScreen
           title={title}
         />
+
+        <div className="absolute inset-0 flex pointer-events-auto z-10">
+          {/* Left side - backward 10s */}
+          <div className="w-1/2 h-full cursor-pointer" onClick={() => handleDoubleTap("left")} />
+          {/* Right side - forward 10s */}
+          <div className="w-1/2 h-full cursor-pointer" onClick={() => handleDoubleTap("right")} />
+        </div>
+
+        {/* Skip indicators */}
+        {showSkipIndicator === "backward" && (
+          <div className="absolute left-8 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
+            <div className="bg-black/70 rounded-full p-4 flex flex-col items-center animate-pulse">
+              <SkipBack className="w-8 h-8 text-white" />
+              <span className="text-white text-sm mt-1">10s</span>
+            </div>
+          </div>
+        )}
+        {showSkipIndicator === "forward" && (
+          <div className="absolute right-8 top-1/2 -translate-y-1/2 z-20 pointer-events-none">
+            <div className="bg-black/70 rounded-full p-4 flex flex-col items-center animate-pulse">
+              <SkipForward className="w-8 h-8 text-white" />
+              <span className="text-white text-sm mt-1">10s</span>
+            </div>
+          </div>
+        )}
+
         <div className="absolute top-2 right-2 bg-black/80 px-3 py-1.5 rounded-md pointer-events-none z-10">
           <span className="text-red-600 font-bold text-sm tracking-wider">FLIXORY</span>
         </div>
