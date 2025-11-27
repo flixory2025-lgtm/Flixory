@@ -2104,7 +2104,7 @@ const seriesData: Series[] = [
   },
   {
     id: "toffy-original-18",
-    title: "Kurulus Osman – Season 2 (2020) EP-01-55 Added☑️",
+    title: "Kurulus Osman – Season 2 (2020) EP-01-95 Added☑️",
     poster: "/s18id.jpg",
     description: "অটোমান সাম্রাজ্য গঠনের পথে ওসমান বেইয়ের সামনে নতুন শত্রু, বিশ্বাসঘাতকতা ও রক্তক্ষয়ী লড়াই। পরিবার, রাষ্ট্র ও তূর্কি জাতির ভবিষ্যৎ রক্ষার জন্য সে শুরু করে তার শক্ততম অভিযান।",
     genre: "History | Action | Drama",
